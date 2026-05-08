@@ -85,11 +85,11 @@ export class EquipmentManagementComponent {
   });
 
   navigateToNew(): void {
-    this.router.navigate(['equipment', 'new']);
+    this.router.navigate(['equipments', 'new']);
   }
 
   navigateToEdit(row: EquipmentRow): void {
-    this.router.navigate(['equipment', row.id, 'edit'], { state: { equipment: row } });
+    this.router.navigate(['equipments', row.id, 'edit'], { state: { equipment: row } });
   }
 
   deleteEquipment(id: number): void {
