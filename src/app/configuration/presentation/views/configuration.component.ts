@@ -1,86 +1,31 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
-export interface AlertType {
-  key: string;
-  name: string;
-  description: string;
-  enabled: boolean;
-}
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-configuration',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatIconModule,
-    MatSnackBarModule,
-  ],
-  templateUrl: './configuration.component.html',
-  styleUrl: './configuration.component.scss',
+  imports: [MatIconModule, TranslateModule],
+  template: `
+    <div class="stub-page">
+      <mat-icon>settings</mat-icon>
+      <h1>{{ 'nav.configuration' | translate }}</h1>
+      <p>Coming soon</p>
+    </div>
+  `,
+  styles: [`
+    .stub-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 16px;
+      color: #aaa;
+    }
+    mat-icon { font-size: 64px; width: 64px; height: 64px; color: #4fc3f7; }
+    h1 { margin: 0; color: #fff; font-size: 1.5rem; }
+    p { margin: 0; }
+  `]
 })
-export class ConfigurationComponent {
-
-  // ── Maintenance Thresholds ──────────────────────────────────────────────
-  criticalHours   = 500;
-  maxIdleMinutes  = 15;
-  peakBuffer      = 2;
-
-  // ── IoT Configuration ───────────────────────────────────────────────────
-  batteryThreshold    = 20;
-  pingInterval        = '10';
-  offlineGraceMinutes = 3;
-
-  // ── Notifications ───────────────────────────────────────────────────────
-  notificationEmail = 'admin@spottrack.com';
-
-  alertTypes: AlertType[] = [
-    {
-      key: 'preventive_maintenance',
-      name: 'Mantenimiento Preventivo',
-      description: 'Umbral de horas alcanzado',
-      enabled: true,
-    },
-    {
-      key: 'sensors_offline',
-      name: 'Sensores Offline',
-      description: 'Conectividad perdida',
-      enabled: true,
-    },
-    {
-      key: 'low_battery',
-      name: 'Batería Baja',
-      description: 'Nivel crítico en sensores',
-      enabled: true,
-    },
-    {
-      key: 'weekly_reports',
-      name: 'Reportes Semanales',
-      description: 'Resumen de actividad',
-      enabled: true,
-    },
-  ];
-
-  // ── Financial Configuration ─────────────────────────────────────────────
-  downtimeCostPerHour  = 25;
-  avgMonthlyMembership = 89;
-  systemCurrency       = 'USD';
-
-  constructor(private snackBar: MatSnackBar) {}
-
-  onSave(): void {
-    this.snackBar.open('Configuración guardada correctamente', 'Cerrar', {
-      duration: 3000,
-    });
-  }
-
-  onCancel(): void {
-    this.snackBar.open('Cambios descartados', 'Cerrar', {
-      duration: 2000,
-    });
-  }
-}
+export class ConfigurationComponent {}
