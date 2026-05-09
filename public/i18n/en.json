@@ -10,24 +10,59 @@
   },
   "iot": {
     "title": "IoT Monitoring",
-    "subtitle": "Monitor IoT device status across all equipment",
-    "search": "Search by MAC address or equipment ID...",
+    "subtitle": "Real-time status of Edge IoT sensors installed on equipment",
+    "search": "Search by sensor ID, machine or zone...",
+    "actions": {
+      "refresh": "Refresh"
+    },
+    "filter": {
+      "status": "Status",
+      "allStatuses": "All Statuses"
+    },
     "stats": {
       "total": "Total Devices",
-      "active": "Active",
-      "inactive": "Inactive"
+      "online": "Sensors Online",
+      "offline": "Disconnected",
+      "avgBattery": "Average Battery",
+      "activeAlerts": "Active Alerts",
+      "ofTotal": "of {{total}} total"
     },
     "table": {
-      "id": "ID",
-      "equipmentId": "Equipment",
-      "macAddress": "MAC Address",
+      "title": "Sensor Status",
+      "id": "Sensor ID",
+      "machine": "Machine",
+      "location": "Location",
       "status": "Status",
-      "lastHeartbeat": "Last Heartbeat",
+      "lastPing": "Last Ping",
+      "battery": "Battery",
+      "signal": "Signal",
+      "firmware": "Firmware",
       "noData": "No devices found"
     },
     "status": {
-      "ACTIVE": "Active",
-      "INACTIVE": "Inactive"
+      "ONLINE":   "Online",
+      "OFFLINE":  "Disconnected",
+      "WARNING":  "Warning",
+      "ACTIVE":   "Online",
+      "INACTIVE": "Disconnected"
+    },
+    "alerts": {
+      "title": "Active Alerts",
+      "disconnectedTitle": "{{sensor}} - Sensor Disconnected",
+      "lowBatteryTitle": "{{sensor}} - Low Battery",
+      "lastPing": "Last ping:",
+      "battery": "Battery:",
+      "signal": "Signal:",
+      "investigate": "Investigate",
+      "scheduleReplacement": "Schedule Replacement",
+      "severity": {
+        "critical": "Critical",
+        "warning": "Warning"
+      }
+    },
+    "modal": {
+      "title": "Machine Reconnected",
+      "close": "Close"
     }
   },
   "configuration": {

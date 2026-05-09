@@ -2,6 +2,8 @@ html, body {
   margin: 0;
   height: 100%;
   background: #121212;
+  /* Prevent Material's light-theme typography from inheriting dark text into dark cards */
+  color: #e0e0e0;
 }
 
 app-root,
@@ -27,4 +29,21 @@ app-layout {
 .mdc-text-field__input {
   color: #fff !important;
   caret-color: #fff !important;
+}
+
+/* Mat-table dark theme — MDC resets cell color to near-black by default */
+.mat-mdc-header-cell,
+.mdc-data-table__header-cell {
+  color: #aaa !important;
+  border-bottom-color: #2a2a2a !important;
+}
+
+.mat-mdc-cell,
+.mdc-data-table__cell {
+  color: #e0e0e0 !important;
+  border-bottom-color: #2a2a2a !important;
+}
+
+.mat-mdc-no-data-row td {
+  color: #aaa !important;
 }
