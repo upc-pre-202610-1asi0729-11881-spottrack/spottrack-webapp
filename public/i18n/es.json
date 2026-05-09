@@ -10,24 +10,59 @@
   },
   "iot": {
     "title": "Monitoreo IoT",
-    "subtitle": "Monitorea el estado de los dispositivos IoT en todos los equipos",
-    "search": "Buscar por dirección MAC o ID de equipo...",
+    "subtitle": "Estado en tiempo real de sensores Edge IoT instalados en los equipos",
+    "search": "Buscar por ID sensor, máquina o zona...",
+    "actions": {
+      "refresh": "Actualizar"
+    },
+    "filter": {
+      "status": "Estado",
+      "allStatuses": "Todos los Estados"
+    },
     "stats": {
       "total": "Total Dispositivos",
-      "active": "Activos",
-      "inactive": "Inactivos"
+      "online": "Sensores en Línea",
+      "offline": "Desconectados",
+      "avgBattery": "Batería Promedio",
+      "activeAlerts": "Alertas Activas",
+      "ofTotal": "de {{total}} totales"
     },
     "table": {
-      "id": "ID",
-      "equipmentId": "Equipo",
-      "macAddress": "Dirección MAC",
+      "title": "Estado de Sensores",
+      "id": "ID Sensor",
+      "machine": "Máquina",
+      "location": "Ubicación",
       "status": "Estado",
-      "lastHeartbeat": "Último Heartbeat",
+      "lastPing": "Último Ping",
+      "battery": "Batería",
+      "signal": "Señal",
+      "firmware": "Firmware",
       "noData": "No se encontraron dispositivos"
     },
     "status": {
-      "ACTIVE": "Activo",
-      "INACTIVE": "Inactivo"
+      "ONLINE":   "En Línea",
+      "OFFLINE":  "Desconectado",
+      "WARNING":  "Advertencia",
+      "ACTIVE":   "En Línea",
+      "INACTIVE": "Desconectado"
+    },
+    "alerts": {
+      "title": "Alertas Activas",
+      "disconnectedTitle": "{{sensor}} - Sensor Desconectado",
+      "lowBatteryTitle": "{{sensor}} - Batería Baja",
+      "lastPing": "Último ping:",
+      "battery": "Batería:",
+      "signal": "Señal:",
+      "investigate": "Investigar",
+      "scheduleReplacement": "Programar Cambio",
+      "severity": {
+        "critical": "Crítico",
+        "warning": "Advertencia"
+      }
+    },
+    "modal": {
+      "title": "Máquina Reconectada",
+      "close": "Cerrar"
     }
   },
   "configuration": {
