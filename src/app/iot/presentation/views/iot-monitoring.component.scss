@@ -5,6 +5,7 @@
   gap: 24px;
 }
 
+// ── Header ──────────────────────────────────────────────────────────────────
 .iot-header {
   display: flex;
   align-items: center;
@@ -24,43 +25,119 @@
   font-size: 0.9rem;
 }
 
+.btn-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: #4fc3f7;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+  &:hover { background: #81d4fa; }
+}
+
+// ── KPI Cards ────────────────────────────────────────────────────────────────
 .iot-stats {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 
 .stat-card {
-  flex: 1;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 20px 24px;
   border-radius: 12px;
   background: #1e1e1e;
   border: 1px solid #2a2a2a;
+
+  mat-icon { font-size: 32px; width: 32px; height: 32px; flex-shrink: 0; }
+}
+
+.stat-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .stat-card__value {
   font-size: 2rem;
   font-weight: 700;
   color: #fff;
-  display: block;
+  line-height: 1;
 }
 
 .stat-card__label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #aaa;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.stat-card--total  { border-left: 3px solid #4fc3f7; }
-.stat-card--active { border-left: 3px solid #66bb6a; }
-.stat-card--inactive { border-left: 3px solid #ef5350; }
+.stat-card__sub {
+  font-size: 0.75rem;
+  color: #666;
+}
 
-.stat-card--active mat-icon   { color: #66bb6a; }
-.stat-card--inactive mat-icon { color: #ef5350; }
+.stat-card--online    { border-left: 3px solid #66bb6a; mat-icon { color: #66bb6a; } }
+.stat-card--offline   { border-left: 3px solid #ef5350; mat-icon { color: #ef5350; } }
+.stat-card--battery   { border-left: 3px solid #ffa726; mat-icon { color: #ffa726; } }
+.stat-card--alerts    { border-left: 3px solid #ef5350; mat-icon { color: #ef5350; } }
+.stat-card--no-alerts { border-left: 3px solid #66bb6a; mat-icon { color: #66bb6a; } }
 
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 1024px) {
+  .iot-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .iot-page {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .iot-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .btn-refresh {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .iot-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .iot-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .iot-search {
+    max-width: none;
+  }
+
+  .iot-filter-select {
+    width: 100%;
+  }
+}
+
+// ── Filters ──────────────────────────────────────────────────────────────────
 .iot-filters {
   display: flex;
   gap: 16px;
@@ -76,10 +153,10 @@
   border-radius: 8px;
   padding: 0 12px;
   flex: 1;
-  max-width: 400px;
+  max-width: 1500px;
 }
 
-.iot-search__icon { color: #aaa; font-size: 20px; }
+.iot-search__icon  { color: #aaa; font-size: 20px; }
 
 .iot-search__input {
   flex: 1;
@@ -91,12 +168,43 @@
   padding: 10px 0;
 }
 
+.iot-filter-select {
+  min-width: 180px;
+
+  ::ng-deep {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing { border-color: #333 !important; }
+
+    &:hover .mdc-notched-outline__leading,
+    &:hover .mdc-notched-outline__notch,
+    &:hover .mdc-notched-outline__trailing { border-color: #f5bc36 !important; }
+
+    .mdc-floating-label  { color: #aaa; }
+    .mat-mdc-select-value { color: #fff; }
+    .mat-mdc-select-arrow { color: #aaa; }
+  }
+}
+
+// ── Sensor Table Card ────────────────────────────────────────────────────────
 .iot-card {
   background: #1e1e1e;
   border-radius: 12px;
   border: 1px solid #2a2a2a;
   overflow: hidden;
   position: relative;
+}
+
+.iot-card__header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.iot-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
 }
 
 .iot-loading {
@@ -110,42 +218,52 @@
   background: transparent;
 }
 
-.iot-row:hover { background: rgba(255,255,255,0.03); }
+.iot-row:hover         { background: rgba(255,255,255,0.03); }
+.iot-row--offline      { opacity: 0.7; }
 
 .cell-id {
   font-weight: 600;
   color: #4fc3f7;
+  font-family: monospace;
 }
 
-.cell-mac {
+.cell-firmware {
   font-family: monospace;
-  font-size: 0.85rem;
-  color: #e0e0e0;
+  font-size: 0.83rem;
+  color: #aaa;
 }
 
 .cell-secondary { color: #aaa; }
 
+// Status badges
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
 
   mat-icon { font-size: 14px; width: 14px; height: 14px; }
 }
 
-.badge--active {
-  background: rgba(102, 187, 106, 0.15);
-  color: #66bb6a;
+.badge--online  { background: rgba(102,187,106,.15); color: #66bb6a; }
+.badge--offline { background: rgba(239,83,80,.15);   color: #ef5350; }
+.badge--warning { background: rgba(255,167,38,.15);  color: #ffa726; }
+
+// Battery cell
+.battery-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }
 
-.badge--inactive {
-  background: rgba(239, 83, 80, 0.15);
-  color: #ef5350;
-}
+.battery--ok       { color: #66bb6a; }
+.battery--low      { color: #ffa726; }
+.battery--critical { color: #ef5350; }
 
 .no-data-cell {
   padding: 48px;
@@ -157,4 +275,183 @@
   gap: 12px;
 
   mat-icon { font-size: 48px; width: 48px; height: 48px; }
+}
+
+// ── Active Alerts Section ────────────────────────────────────────────────────
+.alerts-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  border: 1px solid #2a2a2a;
+  overflow: hidden;
+}
+
+.alerts-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.alerts-card__icon { color: #ffa726; }
+
+.alerts-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #252525;
+  transition: background 0.15s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba(255,255,255,0.02); }
+
+  &--critical .alert-item__icon { color: #ef5350; }
+  &--warning  .alert-item__icon { color: #ffa726; }
+}
+
+.alert-item__icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.alert-item__content { flex: 1; }
+
+.alert-item__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.alert-item__subtitle {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.alert-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+
+  &--critical { background: rgba(239,83,80,.15);  color: #ef5350; }
+  &--warning  { background: rgba(255,167,38,.15); color: #ffa726; }
+}
+
+.btn-alert {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.85; }
+
+  &--primary   { background: #4fc3f7; color: #000; }
+  &--secondary { background: #2a2a2a; color: #fff; border: 1px solid #444; }
+}
+
+// ── Reconnection Modal (T04) ──────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 40px 48px;
+  width: 440px;
+  max-width: 90vw;
+  position: relative;
+  text-align: center;
+}
+
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+
+  &:hover { color: #fff; }
+}
+
+.modal__icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #66bb6a;
+  margin-bottom: 16px;
+}
+
+.modal__title {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal__subtitle {
+  margin: 0 0 4px;
+  color: #aaa;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.modal__detail {
+  margin: 0 0 28px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.btn-modal {
+  width: 100%;
+  padding: 14px;
+  background: #4fc3f7;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: #81d4fa; }
 }

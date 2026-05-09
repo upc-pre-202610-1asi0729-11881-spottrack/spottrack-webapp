@@ -1,49 +1,103 @@
-import { computed, Injectable, Signal, signal } from '@angular/core';
-import { retry } from 'rxjs';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Iot, IotStatus } from '../domain/model/iot.entity';
 import { IotApi } from '../infrastructure/iot-api';
 
 @Injectable({ providedIn: 'root' })
 export class IotStore {
-  private readonly devicesSignal = signal<Iot[]>([]);
-  readonly devices = this.devicesSignal.asReadonly();
+  private readonly api       = inject(IotApi);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private readonly loadingSignal = signal(false);
-  readonly loading = this.loadingSignal.asReadonly();
+  private readonly devicesSignal          = signal<Iot[]>([]);
+  private readonly loadingSignal          = signal(false);
+  private readonly errorSignal            = signal<string | null>(null);
+  private readonly reconnectedDeviceSignal = signal<Iot | null>(null);
+  private readonly dismissedAlertIds      = signal<Set<number>>(new Set());
 
-  private readonly errorSignal = signal<string | null>(null);
-  readonly error = this.errorSignal.asReadonly();
+  readonly devices           = this.devicesSignal.asReadonly();
+  readonly loading           = this.loadingSignal.asReadonly();
+  readonly error             = this.errorSignal.asReadonly();
+  readonly reconnectedDevice = this.reconnectedDeviceSignal.asReadonly();
 
-  readonly deviceCount   = computed(() => this.devices().length);
-  readonly activeCount   = computed(() => this.devices().filter(d => d.status === IotStatus.ACTIVE).length);
-  readonly inactiveCount = computed(() => this.devices().filter(d => d.status === IotStatus.INACTIVE).length);
+  readonly deviceCount  = computed(() => this.devices().length);
+  readonly onlineCount  = computed(() => this.devices().filter(d => d.status === IotStatus.ONLINE).length);
+  readonly offlineCount = computed(() => this.devices().filter(d => d.status === IotStatus.OFFLINE).length);
+  readonly warningCount = computed(() => this.devices().filter(d => d.status === IotStatus.WARNING).length);
+  readonly avgBattery   = computed(() => {
+    const list = this.devices();
+    if (!list.length) return 0;
+    return Math.round(list.reduce((sum, d) => sum + d.batteryLevel, 0) / list.length);
+  });
 
-  constructor(private api: IotApi) {
+  readonly activeAlerts = computed(() => {
+    const dismissed = this.dismissedAlertIds();
+    return this.devices().filter(d =>
+      !dismissed.has(d.id) &&
+      (d.status === IotStatus.OFFLINE || d.status === IotStatus.WARNING)
+    );
+  });
+
+  // Backward-compat aliases
+  readonly activeCount   = this.onlineCount;
+  readonly inactiveCount = this.offlineCount;
+
+  constructor() {
     this.loadDevices();
   }
 
-  getDeviceById(id: number): Signal<Iot | undefined> {
+  refresh(): void {
+    this.loadDevices();
+  }
+
+  /**
+   * T04: Optimistically marks a disconnected sensor as ONLINE and shows the
+   * reconnection modal — mirrors state sync when a node reconnects.
+   */
+  investigateAlert(sensor: Iot): void {
+    sensor.status = IotStatus.ONLINE;
+    this.devicesSignal.update(list => [...list]);
+    this.reconnectedDeviceSignal.set(sensor);
+  }
+
+  scheduleReplacement(sensorId: number): void {
+    this.dismissedAlertIds.update(s => new Set([...s, sensorId]));
+  }
+
+  dismissReconnectedModal(): void {
+    this.reconnectedDeviceSignal.set(null);
+  }
+
+  getDeviceById(id: number) {
     return computed(() => this.devices().find(d => d.id === id));
   }
 
   private loadDevices(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.api.getDevices().pipe(takeUntilDestroyed()).subscribe({
+    const prev = [...this.devicesSignal()];
+    this.api.getDevices().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: list => {
+        this.detectReconnections(prev, list);
         this.devicesSignal.set(list);
         this.loadingSignal.set(false);
       },
       error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to load devices'));
+        this.errorSignal.set(this.formatError(err));
         this.loadingSignal.set(false);
       },
     });
   }
 
-  private formatError(error: unknown, fallback: string): string {
-    if (error instanceof Error) return error.message || fallback;
-    return fallback;
+  private detectReconnections(prev: Iot[], next: Iot[]): void {
+    const reconnected = next.find(n =>
+      n.status === IotStatus.ONLINE &&
+      prev.some(p => p.id === n.id && p.status === IotStatus.OFFLINE)
+    );
+    if (reconnected) this.reconnectedDeviceSignal.set(reconnected);
+  }
+
+  private formatError(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    return 'Failed to load devices';
   }
 }

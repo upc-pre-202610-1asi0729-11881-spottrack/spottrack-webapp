@@ -1,29 +1,51 @@
 <div class="iot-page">
 
+  <!-- Header -->
   <div class="iot-header">
     <div class="iot-header__text">
       <h1 class="iot-header__title">{{ 'iot.title' | translate }}</h1>
       <p class="iot-header__subtitle">{{ 'iot.subtitle' | translate }}</p>
     </div>
+    <button class="btn-refresh" (click)="onRefresh()">
+      <mat-icon>refresh</mat-icon>
+      {{ 'iot.actions.refresh' | translate }}
+    </button>
   </div>
 
+  <!-- KPI Cards -->
   <div class="iot-stats">
-    <div class="stat-card stat-card--total">
-      <span class="stat-card__value">{{ deviceCount() }}</span>
-      <span class="stat-card__label">{{ 'iot.stats.total' | translate }}</span>
-    </div>
-    <div class="stat-card stat-card--active">
+    <div class="stat-card stat-card--online">
       <mat-icon>sensors</mat-icon>
-      <span class="stat-card__value">{{ activeCount() }}</span>
-      <span class="stat-card__label">{{ 'iot.stats.active' | translate }}</span>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ onlineCount() }}</span>
+        <span class="stat-card__label">{{ 'iot.stats.online' | translate }}</span>
+        <span class="stat-card__sub">{{ 'iot.stats.ofTotal' | translate:{ total: deviceCount() } }}</span>
+      </div>
     </div>
-    <div class="stat-card stat-card--inactive">
+    <div class="stat-card stat-card--offline">
       <mat-icon>sensors_off</mat-icon>
-      <span class="stat-card__value">{{ inactiveCount() }}</span>
-      <span class="stat-card__label">{{ 'iot.stats.inactive' | translate }}</span>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ offlineCount() }}</span>
+        <span class="stat-card__label">{{ 'iot.stats.offline' | translate }}</span>
+      </div>
+    </div>
+    <div class="stat-card stat-card--battery">
+      <mat-icon>battery_charging_full</mat-icon>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ avgBattery() }}%</span>
+        <span class="stat-card__label">{{ 'iot.stats.avgBattery' | translate }}</span>
+      </div>
+    </div>
+    <div class="stat-card" [ngClass]="activeAlerts().length > 0 ? 'stat-card--alerts' : 'stat-card--no-alerts'">
+      <mat-icon>notification_important</mat-icon>
+      <div class="stat-card__info">
+        <span class="stat-card__value">{{ activeAlerts().length }}</span>
+        <span class="stat-card__label">{{ 'iot.stats.activeAlerts' | translate }}</span>
+      </div>
     </div>
   </div>
 
+  <!-- Search + Filter -->
   <div class="iot-filters">
     <div class="iot-search">
       <mat-icon class="iot-search__icon">search</mat-icon>
@@ -35,9 +57,23 @@
         (ngModelChange)="onSearchChange($event)"
       />
     </div>
+    <mat-form-field appearance="outline" class="iot-filter-select">
+      <mat-label>{{ 'iot.filter.status' | translate }}</mat-label>
+      <mat-select [ngModel]="statusFilter()" (ngModelChange)="onStatusFilterChange($event)">
+        <mat-option value="">{{ 'iot.filter.allStatuses' | translate }}</mat-option>
+        <mat-option value="ONLINE">{{ 'iot.status.ONLINE' | translate }}</mat-option>
+        <mat-option value="WARNING">{{ 'iot.status.WARNING' | translate }}</mat-option>
+        <mat-option value="OFFLINE">{{ 'iot.status.OFFLINE' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
+  <!-- Sensor Table -->
   <div class="iot-card">
+    <div class="iot-card__header">
+      <h2 class="iot-card__title">{{ 'iot.table.title' | translate }} ({{ deviceCount() }})</h2>
+    </div>
+
     @if (isLoading()) {
       <div class="iot-loading">
         <mat-spinner diameter="48"></mat-spinner>
@@ -48,36 +84,61 @@
 
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.id' | translate }}</th>
-        <td mat-cell *matCellDef="let row"><span class="cell-id">{{ row.id }}</span></td>
+        <td mat-cell *matCellDef="let row"><span class="cell-id">{{ sensorId(row.id) }}</span></td>
       </ng-container>
 
       <ng-container matColumnDef="equipmentId">
-        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.equipmentId' | translate }}</th>
-        <td mat-cell *matCellDef="let row" class="cell-secondary">{{ row.equipmentId }}</td>
+        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.machine' | translate }}</th>
+        <td mat-cell *matCellDef="let row" class="cell-secondary">M-{{ row.equipmentId.toString().padStart(3, '0') }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="macAddress">
-        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.macAddress' | translate }}</th>
-        <td mat-cell *matCellDef="let row"><span class="cell-mac">{{ row.macAddress }}</span></td>
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.location' | translate }}</th>
+        <td mat-cell *matCellDef="let row" class="cell-secondary">{{ row.location }}</td>
       </ng-container>
 
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.status' | translate }}</th>
         <td mat-cell *matCellDef="let row">
-          <span class="badge" [ngClass]="row.status === IotStatus.ACTIVE ? 'badge--active' : 'badge--inactive'">
-            <mat-icon>{{ row.status === IotStatus.ACTIVE ? 'sensors' : 'sensors_off' }}</mat-icon>
+          <span class="badge" [ngClass]="{
+            'badge--online':  row.status === IotStatus.ONLINE,
+            'badge--offline': row.status === IotStatus.OFFLINE,
+            'badge--warning': row.status === IotStatus.WARNING
+          }">
+            <mat-icon>{{ statusIcon(row.status) }}</mat-icon>
             {{ 'iot.status.' + row.status | translate }}
           </span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="lastHeartbeat">
-        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.lastHeartbeat' | translate }}</th>
-        <td mat-cell *matCellDef="let row" class="cell-secondary">{{ row.lastHeartbeat | date:'medium' }}</td>
+        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.lastPing' | translate }}</th>
+        <td mat-cell *matCellDef="let row" class="cell-secondary">{{ row.lastHeartbeat | date:'HH:mm:ss' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="batteryLevel">
+        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.battery' | translate }}</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="battery-cell">
+            <mat-icon [ngClass]="batteryClass(row.batteryLevel)">{{ batteryIcon(row.batteryLevel) }}</mat-icon>
+            <span [ngClass]="batteryClass(row.batteryLevel)">{{ row.batteryLevel }}%</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="signalStrength">
+        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.signal' | translate }}</th>
+        <td mat-cell *matCellDef="let row" class="cell-secondary">{{ row.signalStrength }}%</td>
+      </ng-container>
+
+      <ng-container matColumnDef="firmwareVersion">
+        <th mat-header-cell *matHeaderCellDef>{{ 'iot.table.firmware' | translate }}</th>
+        <td mat-cell *matCellDef="let row"><span class="cell-firmware">{{ row.firmwareVersion }}</span></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="iot-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="iot-row"
+          [ngClass]="row.status === IotStatus.OFFLINE ? 'iot-row--offline' : ''"></tr>
 
       <tr class="mat-mdc-no-data-row" *matNoDataRow>
         <td [colSpan]="displayedColumns.length" class="no-data-cell">
@@ -89,4 +150,75 @@
     </table>
   </div>
 
+  <!-- Active Alerts -->
+  @if (activeAlerts().length > 0) {
+    <div class="alerts-card">
+      <div class="alerts-card__header">
+        <mat-icon class="alerts-card__icon">warning_amber</mat-icon>
+        <h2 class="alerts-card__title">{{ 'iot.alerts.title' | translate }} ({{ activeAlerts().length }})</h2>
+      </div>
+      <div class="alerts-list">
+        @for (sensor of activeAlerts(); track sensor.id) {
+          <div class="alert-item" [ngClass]="sensor.status === IotStatus.OFFLINE ? 'alert-item--critical' : 'alert-item--warning'">
+            <mat-icon class="alert-item__icon">
+              {{ sensor.status === IotStatus.OFFLINE ? 'sensors_off' : 'battery_alert' }}
+            </mat-icon>
+            <div class="alert-item__content">
+              <div class="alert-item__title">
+                @if (sensor.status === IotStatus.OFFLINE) {
+                  {{ 'iot.alerts.disconnectedTitle' | translate:{ sensor: sensorId(sensor.id) } }}
+                } @else {
+                  {{ 'iot.alerts.lowBatteryTitle' | translate:{ sensor: sensorId(sensor.id) } }}
+                }
+              </div>
+              <div class="alert-item__subtitle">
+                {{ sensorId(sensor.id) }} |
+                @if (sensor.status === IotStatus.OFFLINE) {
+                  {{ 'iot.alerts.lastPing' | translate }} {{ sensor.lastHeartbeat | date:'HH:mm' }}
+                } @else {
+                  {{ 'iot.alerts.battery' | translate }} {{ sensor.batteryLevel }}% | {{ 'iot.alerts.signal' | translate }} {{ sensor.signalStrength }}%
+                }
+              </div>
+            </div>
+            <span class="alert-badge" [ngClass]="sensor.status === IotStatus.OFFLINE ? 'alert-badge--critical' : 'alert-badge--warning'">
+              {{ (sensor.status === IotStatus.OFFLINE ? 'iot.alerts.severity.critical' : 'iot.alerts.severity.warning') | translate }}
+            </span>
+            @if (sensor.status === IotStatus.OFFLINE) {
+              <button class="btn-alert btn-alert--primary" (click)="onInvestigate(sensor)">
+                {{ 'iot.alerts.investigate' | translate }}
+              </button>
+            } @else {
+              <button class="btn-alert btn-alert--secondary" (click)="onScheduleReplacement(sensor.id)">
+                {{ 'iot.alerts.scheduleReplacement' | translate }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+
 </div>
+
+<!-- Reconnection Modal (T04) -->
+@if (reconnectedDevice()) {
+  <div class="modal-overlay" (click)="onDismissModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal__close" (click)="onDismissModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <div class="modal__content">
+        <mat-icon class="modal__icon">check_circle</mat-icon>
+        <h2 class="modal__title">{{ 'iot.modal.title' | translate }}</h2>
+        <p class="modal__subtitle">
+          {{ sensorId(reconnectedDevice()!.id) }} &mdash;
+          M-{{ reconnectedDevice()!.equipmentId.toString().padStart(3, '0') }}
+        </p>
+        <p class="modal__detail">{{ reconnectedDevice()!.location }}</p>
+        <button class="btn-modal" (click)="onDismissModal()">
+          {{ 'iot.modal.close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
