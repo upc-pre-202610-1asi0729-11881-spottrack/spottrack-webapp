@@ -1,3 +1,4 @@
+@use 'sass:color';
 // ─── Design tokens (mirrored from equipment) ─────────────────────────────────
 $bg-page:      #121212;
 $bg-card:      #1e1e1e;
@@ -373,7 +374,7 @@ $green:        #22c55e;
   cursor: pointer;
   transition: background 0.12s;
 
-  &:hover { background: lighten($bg-hover, 2%); }
+  &:hover { background: color.adjust($bg-hover, $lightness: 2%); }
 
   &--active .alert-item__name { color: $text-primary; }
 }
