@@ -99,6 +99,30 @@ $teal:         #00bcd4;
 .stat-card--maintenance { border-left: 3px solid $amber; mat-icon, .stat-card__value { color: $amber; } }
 .stat-card--inactive    { border-left: 3px solid $red;   mat-icon, .stat-card__value { color: $red; } }
 
+// ─── Responsive ──────────────────────────────────────────────────────────────
+@media (max-width: 1024px) {
+  .eq-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .eq-page {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .eq-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .eq-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
 // ─── Filters ─────────────────────────────────────────────────────────────────
 .eq-filters {
   display: flex;

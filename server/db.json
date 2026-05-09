@@ -98,23 +98,90 @@
     {
       "id": 1,
       "equipment_id": 1,
-      "mac_address": "AA:BB:CC:DD:01",
-      "status": "ACTIVE",
-      "last_heartbeat": "2026-05-04T10:00:00Z"
+      "mac_address": "AA:BB:CC:01:01:01",
+      "status": "ONLINE",
+      "last_heartbeat": "2026-05-09T09:59:57Z",
+      "location": "Zona Cardio",
+      "battery_level": 82,
+      "signal_strength": 95,
+      "firmware_version": "v2.3.1"
     },
     {
       "id": 2,
       "equipment_id": 2,
-      "mac_address": "AA:BB:CC:DD:02",
-      "status": "ACTIVE",
-      "last_heartbeat": "2026-05-04T10:02:00Z"
+      "mac_address": "AA:BB:CC:01:01:02",
+      "status": "ONLINE",
+      "last_heartbeat": "2026-05-09T09:59:55Z",
+      "location": "Zona Cardio",
+      "battery_level": 76,
+      "signal_strength": 88,
+      "firmware_version": "v2.3.1"
     },
     {
       "id": 3,
       "equipment_id": 3,
-      "mac_address": "AA:BB:CC:DD:03",
-      "status": "ACTIVE",
-      "last_heartbeat": "2026-05-04T10:05:00Z"
+      "mac_address": "AA:BB:CC:01:01:03",
+      "status": "WARNING",
+      "last_heartbeat": "2026-05-09T09:59:54Z",
+      "location": "Zona Cardio",
+      "battery_level": 45,
+      "signal_strength": 60,
+      "firmware_version": "v2.2.5"
+    },
+    {
+      "id": 4,
+      "equipment_id": 4,
+      "mac_address": "AA:BB:CC:01:01:04",
+      "status": "ONLINE",
+      "last_heartbeat": "2026-05-09T09:59:50Z",
+      "location": "Zona Fuerza",
+      "battery_level": 91,
+      "signal_strength": 97,
+      "firmware_version": "v2.3.1"
+    },
+    {
+      "id": 5,
+      "equipment_id": 5,
+      "mac_address": "AA:BB:CC:01:01:05",
+      "status": "ONLINE",
+      "last_heartbeat": "2026-05-09T09:59:48Z",
+      "location": "Zona Fuerza",
+      "battery_level": 68,
+      "signal_strength": 82,
+      "firmware_version": "v2.3.0"
+    },
+    {
+      "id": 6,
+      "equipment_id": 6,
+      "mac_address": "AA:BB:CC:01:01:06",
+      "status": "OFFLINE",
+      "last_heartbeat": "2026-05-09T09:44:03Z",
+      "location": "Zona Fuerza",
+      "battery_level": 0,
+      "signal_strength": 0,
+      "firmware_version": "v2.2.5"
+    },
+    {
+      "id": 7,
+      "equipment_id": 7,
+      "mac_address": "AA:BB:CC:01:01:07",
+      "status": "ONLINE",
+      "last_heartbeat": "2026-05-09T09:59:45Z",
+      "location": "Zona Funcional",
+      "battery_level": 88,
+      "signal_strength": 91,
+      "firmware_version": "v2.3.1"
+    },
+    {
+      "id": 8,
+      "equipment_id": 8,
+      "mac_address": "AA:BB:CC:01:01:08",
+      "status": "ONLINE",
+      "last_heartbeat": "2026-05-09T09:59:40Z",
+      "location": "Zona Funcional",
+      "battery_level": 73,
+      "signal_strength": 85,
+      "firmware_version": "v2.3.0"
     }
   ],
   "sensor_data": [

@@ -28,3 +28,20 @@ app-layout {
   color: #fff !important;
   caret-color: #fff !important;
 }
+
+/* Mat-table dark theme — MDC resets cell color to near-black by default */
+.mat-mdc-header-cell,
+.mdc-data-table__header-cell {
+  color: #aaa !important;
+  border-bottom-color: #2a2a2a !important;
+}
+
+.mat-mdc-cell,
+.mdc-data-table__cell {
+  color: #e0e0e0 !important;
+  border-bottom-color: #2a2a2a !important;
+}
+
+.mat-mdc-no-data-row td {
+  color: #aaa !important;
+}

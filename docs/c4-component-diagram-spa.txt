@@ -1,0 +1,303 @@
+workspace "SpotTrack" "SpotTrack Frontend SPA - Full C4 Architecture" {
+
+    model {
+
+        # ─── ACTORS & EXTERNAL SYSTEMS ──────────────────────────────────────────
+        user = person "SpotTrack User" "Fleet manager who monitors equipment, IoT devices, alerts and maintenance via the browser"
+
+        db = softwareSystem "REST API" "JSON Server backend (db.json in development). Single RESTful data store persisting all domain records." {
+            tags "External System"
+        }
+
+        # ─── SOFTWARE SYSTEM ────────────────────────────────────────────────────
+        spottrack = softwareSystem "SpotTrack" "Web application for real-time fleet equipment monitoring and management" {
+
+            # ── Level 2: Containers ────────────────────────────────────────────
+
+            spa = container "SpotTrack SPA" "Angular shell: routing, layout and application bootstrapping. Entry point for all bounded contexts." "Angular 19 / TypeScript"
+
+            shared_bc = container "Shared" "Cross-cutting base contracts (entities, assemblers, endpoints, stores) and the application shell UI inherited by all bounded contexts." "Angular 19 / TypeScript" {
+                shared_domain = component "Domain Layer"         "BaseEntity interface that all domain entities implement"                                                  "BaseEntity"
+                shared_infra  = component "Infrastructure Layer" "Abstract generic HTTP CRUD endpoint and DTO assembler contracts"                                         "BaseApi, BaseApiEndpoint<T>, BaseAssembler<T>, BaseResponse"
+                shared_store  = component "Application Layer"    "Abstract reactive state contract with loading, error and entity signals"                                 "BaseStore (Angular Signals)"
+                shared_pres   = component "Presentation Layer"   "Application shell: sidebar navigation and router outlet hosting all bounded-context views"               "Layout, Sidebar, LanguageSwitcher"
+            }
+
+            equipment_bc = container "Equipment" "Manages the lifecycle of physical equipment: registration, status tracking and zone assignment." "Angular 19 / TypeScript" {
+                eq_domain    = component "Domain Layer"        "Equipment entity: id, zoneId, name, brand, model, purchasePrice, status (OPERATIONAL / MAINTENANCE / OUT_OF_ORDER)" "Equipment, EquipmentStatus enum"
+                eq_assembler = component "Assembler"           "Maps EquipmentResource (snake_case JSON) to Equipment entity and back"                                              "EquipmentAssembler implements BaseAssembler"
+                eq_endpoint  = component "API Endpoint"        "HTTP CRUD against /equipment. Overrides create() to strip id from POST body."                                       "EquipmentApiEndpoint extends BaseApiEndpoint"
+                eq_api       = component "API Service"         "Orchestrates equipment CRUD operations by delegating to EquipmentApiEndpoint"                                       "EquipmentApi"
+                eq_store     = component "Application Layer"   "Signals: equipment[], loading, error. Computed counts by status. Dispatches add / update / delete."                "EquipmentStore"
+                eq_pres      = component "Presentation Layer"  "Equipment list table with status chips, add/edit dialog and delete confirmation"                                    "EquipmentManagement, AddEquipmentDialog"
+            }
+
+            iot_bc = container "IoT" "Tracks IoT sensor devices attached to equipment: registration, heartbeat monitoring and connectivity status." "Angular 19 / TypeScript" {
+                iot_domain    = component "Domain Layer"        "Iot entity: id, equipmentId, macAddress, status (ACTIVE / INACTIVE), lastHeartbeat"                        "Iot, IotStatus enum"
+                iot_assembler = component "Assembler"           "Maps IotResource (snake_case JSON) to Iot entity and back"                                                  "IotAssembler implements BaseAssembler"
+                iot_endpoint  = component "API Endpoint"        "HTTP CRUD against /iot. Overrides create() to strip id from POST body."                                     "IotApiEndpoint extends BaseApiEndpoint"
+                iot_api       = component "API Service"         "Orchestrates IoT device CRUD by delegating to IotApiEndpoint"                                               "IotApi"
+                iot_store     = component "Application Layer"   "Signals: devices[], loading, error. Filters by equipment and by connectivity status."                       "IotStore"
+                iot_pres      = component "Presentation Layer"  "Real-time monitoring grid with live status indicators and last-heartbeat timestamps"                        "IotMonitoring, DeviceStatusCard"
+            }
+
+            alerts_bc = container "Alerts" "Captures and manages threshold breach alerts generated by IoT devices and equipment status changes." "Angular 19 / TypeScript" {
+                alerts_domain    = component "Domain Layer"        "Alert entity: id, equipmentId, iotDeviceId, type, severity (LOW / MEDIUM / HIGH / CRITICAL), message, triggeredAt, resolvedAt, status (OPEN / ACKNOWLEDGED / RESOLVED)" "Alert, AlertSeverity, AlertStatus enums"
+                alerts_assembler = component "Assembler"           "Maps AlertResource (snake_case JSON) to Alert entity and back"                                                                                                            "AlertAssembler implements BaseAssembler"
+                alerts_endpoint  = component "API Endpoint"        "HTTP CRUD against /alerts. Supports filtering by status and severity via query params."                                                                                   "AlertApiEndpoint extends BaseApiEndpoint"
+                alerts_api       = component "API Service"         "Fetches alerts and dispatches status transitions (acknowledge / resolve)"                                                                                                  "AlertApi"
+                alerts_store     = component "Application Layer"   "Signals: alerts[], unreadCount, loading, error. Marks alerts as acknowledged or resolved."                                                                                "AlertStore"
+                alerts_pres      = component "Presentation Layer"  "Alert inbox with severity badges, status filter bar and detail side-panel"                                                                                                "AlertsView, AlertDetailPanel, AlertBadge"
+            }
+
+            analytics_bc = container "Analytics" "Provides equipment utilisation metrics, downtime analysis and KPI reporting over configurable time ranges." "Angular 19 / TypeScript" {
+                analytics_domain    = component "Domain Layer"        "EquipmentMetric entity: id, equipmentId, metricType (UTILISATION / DOWNTIME / MTBF / MTTR), value, unit, recordedAt" "EquipmentMetric, MetricType enum"
+                analytics_assembler = component "Assembler"           "Maps MetricResource (snake_case JSON) to EquipmentMetric entity and back"                                             "AnalyticsAssembler implements BaseAssembler"
+                analytics_endpoint  = component "API Endpoint"        "HTTP queries against /metrics. Supports date-range and equipment-id filters."                                         "AnalyticsApiEndpoint extends BaseApiEndpoint"
+                analytics_api       = component "API Service"         "Fetches metric time-series and aggregated KPIs from the REST API"                                                     "AnalyticsApi"
+                analytics_store     = component "Application Layer"   "Signals: metrics[], selectedPeriod, selectedEquipmentId. Derived KPI computeds (avg utilisation, total downtime)."   "AnalyticsStore"
+                analytics_pres      = component "Presentation Layer"  "KPI summary cards, utilisation line charts and period / equipment selector"                                           "AnalyticsView, KpiCard, UsageChart, PeriodSelector"
+            }
+
+            dashboard_bc = container "Dashboard" "Aggregates fleet-wide health data into a single overview for quick situational awareness." "Angular 19 / TypeScript" {
+                dashboard_domain    = component "Domain Layer"        "DashboardSummary entity: totalEquipment, operationalCount, activeAlerts, pendingMaintenance, lastUpdated" "DashboardSummary"
+                dashboard_assembler = component "Assembler"           "Maps DashboardResource to DashboardSummary entity"                                                       "DashboardAssembler implements BaseAssembler"
+                dashboard_endpoint  = component "API Endpoint"        "HTTP GET against /dashboard/summary to retrieve pre-aggregated fleet overview data"                      "DashboardApiEndpoint extends BaseApiEndpoint"
+                dashboard_api       = component "API Service"         "Fetches the dashboard summary snapshot from the REST API"                                                "DashboardApi"
+                dashboard_store     = component "Application Layer"   "Signal: summary. Auto-refreshes on a configurable polling interval."                                    "DashboardStore"
+                dashboard_pres      = component "Presentation Layer"  "Overview landing page with fleet health widgets and quick-action shortcuts"                             "DashboardView, SummaryWidget, QuickActionCard"
+            }
+
+            maintenance_bc = container "Maintenance" "Plans and tracks preventive, corrective and predictive maintenance orders for equipment." "Angular 19 / TypeScript" {
+                maint_domain    = component "Domain Layer"        "MaintenanceOrder entity: id, equipmentId, type (PREVENTIVE / CORRECTIVE / PREDICTIVE), scheduledDate, completedDate, technicianName, notes, status (PENDING / IN_PROGRESS / COMPLETED / CANCELLED)" "MaintenanceOrder, MaintenanceType, MaintenanceStatus enums"
+                maint_assembler = component "Assembler"           "Maps MaintenanceResource (snake_case JSON) to MaintenanceOrder entity and back"                                                                                                                        "MaintenanceAssembler implements BaseAssembler"
+                maint_endpoint  = component "API Endpoint"        "HTTP CRUD against /maintenance. Supports filtering by equipment and scheduled date range."                                                                                                            "MaintenanceApiEndpoint extends BaseApiEndpoint"
+                maint_api       = component "API Service"         "Orchestrates maintenance order CRUD and status transitions"                                                                                                                                           "MaintenanceApi"
+                maint_store     = component "Application Layer"   "Signals: orders[], upcomingCount, overdueCount, loading, error. Sorted by scheduledDate."                                                                                                            "MaintenanceStore"
+                maint_pres      = component "Presentation Layer"  "Maintenance calendar view, order list table and schedule-order dialog"                                                                                                                               "MaintenanceView, MaintenanceOrderDialog, MaintenanceCalendar"
+            }
+
+            configuration_bc = container "Configuration" "Manages system-wide application settings grouped by category." "Angular 19 / TypeScript" {
+                config_domain    = component "Domain Layer"        "SystemConfiguration entity: id, category (GENERAL / NOTIFICATIONS / INTEGRATIONS / SECURITY), key, value, dataType, isEditable" "SystemConfiguration, ConfigCategory enum"
+                config_assembler = component "Assembler"           "Maps ConfigResource (snake_case JSON) to SystemConfiguration entity and back"                                                    "ConfigurationAssembler implements BaseAssembler"
+                config_endpoint  = component "API Endpoint"        "HTTP CRUD against /configurations. Groups settings by category."                                                                "ConfigurationApiEndpoint extends BaseApiEndpoint"
+                config_api       = component "API Service"         "Fetches and persists application configuration entries"                                                                         "ConfigurationApi"
+                config_store     = component "Application Layer"   "Signals: configs grouped by category, loading, error. Optimistic updates on save."                                             "ConfigurationStore"
+                config_pres      = component "Presentation Layer"  "Settings page with category tabs and inline-editable value fields"                                                             "ConfigurationView, SettingRow, CategoryTab"
+            }
+
+            reservation_bc = container "Reservation" "Handles equipment reservation requests: booking time slots, approving requests and tracking reservation status." "Angular 19 / TypeScript" {
+                res_domain    = component "Domain Layer"        "Reservation entity: id, equipmentId, requestedBy, startDate, endDate, purpose, status (PENDING / APPROVED / REJECTED / CANCELLED / COMPLETED)" "Reservation, ReservationStatus enum"
+                res_assembler = component "Assembler"           "Maps ReservationResource (snake_case JSON) to Reservation entity and back"                                                                       "ReservationAssembler implements BaseAssembler"
+                res_endpoint  = component "API Endpoint"        "HTTP CRUD against /reservations. Supports filtering by equipment, date range and status."                                                       "ReservationApiEndpoint extends BaseApiEndpoint"
+                res_api       = component "API Service"         "Orchestrates reservation CRUD and status transitions (approve / reject / cancel)"                                                               "ReservationApi"
+                res_store     = component "Application Layer"   "Signals: reservations[], pendingCount, loading, error. Filters by equipment and by date range."                                                "ReservationStore"
+                res_pres      = component "Presentation Layer"  "Reservation calendar, request list table, new-reservation dialog and approval panel"                                                           "ReservationView, ReservationDialog, ApprovalPanel, ReservationCalendar"
+            }
+        }
+
+        # ─── RELATIONSHIPS ───────────────────────────────────────────────────────
+
+        # Level 1 — user to system
+        user -> spottrack "Monitors and manages fleet" "HTTPS / Browser"
+
+        # Level 2 — user loads the SPA
+        user -> spa "Loads and interacts with" "HTTPS / Browser"
+
+        # SPA hosts all bounded contexts
+        spa -> shared_bc        "Bootstraps and renders" "Angular DI"
+        spa -> equipment_bc     "Routes to /equipment"   "Angular Router"
+        spa -> iot_bc           "Routes to /iot"          "Angular Router"
+        spa -> alerts_bc        "Routes to /alerts"       "Angular Router"
+        spa -> analytics_bc     "Routes to /analytics"    "Angular Router"
+        spa -> dashboard_bc     "Routes to /dashboard"    "Angular Router"
+        spa -> maintenance_bc   "Routes to /maintenance"  "Angular Router"
+        spa -> configuration_bc "Routes to /settings"      "Angular Router"
+        spa -> reservation_bc   "Routes to /reservations" "Angular Router"
+
+        # ── Equipment internal flow ──────────────────────────────────────────────
+        eq_pres      -> eq_store     "Reads signals / dispatches actions"                "Angular DI"
+        eq_store     -> eq_api       "Calls getEquipment / register / update / delete"   "Angular DI"
+        eq_api       -> eq_endpoint  "Delegates HTTP operations"                          "Method call"
+        eq_endpoint  -> eq_assembler "Converts EquipmentResource <-> Equipment"           "In-process"
+        eq_assembler -> eq_domain    "Instantiates Equipment entities"                    "In-process"
+        eq_endpoint  -> db           "GET / POST / PUT / DELETE /equipment"               "HTTP / JSON"
+        eq_domain    -> shared_domain "implements BaseEntity"                             "TypeScript"
+        eq_assembler -> shared_infra  "implements BaseAssembler"                          "TypeScript"
+        eq_endpoint  -> shared_infra  "extends BaseApiEndpoint"                          "TypeScript"
+        eq_store     -> shared_store  "extends BaseStore"                                "TypeScript"
+
+        # ── IoT internal flow ────────────────────────────────────────────────────
+        iot_pres      -> iot_store     "Reads signals / dispatches actions"              "Angular DI"
+        iot_store     -> iot_api       "Calls getDevices / register / update / delete"   "Angular DI"
+        iot_api       -> iot_endpoint  "Delegates HTTP operations"                        "Method call"
+        iot_endpoint  -> iot_assembler "Converts IotResource <-> Iot"                    "In-process"
+        iot_assembler -> iot_domain    "Instantiates Iot entities"                        "In-process"
+        iot_endpoint  -> db            "GET / POST / PUT / DELETE /iot"                  "HTTP / JSON"
+        iot_domain    -> shared_domain "implements BaseEntity"                            "TypeScript"
+        iot_assembler -> shared_infra  "implements BaseAssembler"                         "TypeScript"
+        iot_endpoint  -> shared_infra  "extends BaseApiEndpoint"                         "TypeScript"
+        iot_store     -> shared_store  "extends BaseStore"                               "TypeScript"
+
+        # ── Alerts internal flow ─────────────────────────────────────────────────
+        alerts_pres      -> alerts_store     "Reads signals / dispatches actions"        "Angular DI"
+        alerts_store     -> alerts_api       "Calls getAlerts / acknowledge / resolve"   "Angular DI"
+        alerts_api       -> alerts_endpoint  "Delegates HTTP operations"                  "Method call"
+        alerts_endpoint  -> alerts_assembler "Converts AlertResource <-> Alert"           "In-process"
+        alerts_assembler -> alerts_domain    "Instantiates Alert entities"                "In-process"
+        alerts_endpoint  -> db               "GET / PATCH /alerts"                       "HTTP / JSON"
+        alerts_domain    -> shared_domain    "implements BaseEntity"                      "TypeScript"
+        alerts_assembler -> shared_infra     "implements BaseAssembler"                   "TypeScript"
+        alerts_endpoint  -> shared_infra     "extends BaseApiEndpoint"                   "TypeScript"
+        alerts_store     -> shared_store     "extends BaseStore"                         "TypeScript"
+
+        # ── Analytics internal flow ──────────────────────────────────────────────
+        analytics_pres      -> analytics_store     "Reads signals / changes filters"             "Angular DI"
+        analytics_store     -> analytics_api       "Calls getMetrics with date and equipment filters" "Angular DI"
+        analytics_api       -> analytics_endpoint  "Delegates HTTP query"                          "Method call"
+        analytics_endpoint  -> analytics_assembler "Converts MetricResource <-> EquipmentMetric"  "In-process"
+        analytics_assembler -> analytics_domain    "Instantiates EquipmentMetric entities"         "In-process"
+        analytics_endpoint  -> db                  "GET /metrics"                                 "HTTP / JSON"
+        analytics_domain    -> shared_domain       "implements BaseEntity"                         "TypeScript"
+        analytics_assembler -> shared_infra        "implements BaseAssembler"                      "TypeScript"
+        analytics_endpoint  -> shared_infra        "extends BaseApiEndpoint"                      "TypeScript"
+        analytics_store     -> shared_store        "extends BaseStore"                            "TypeScript"
+
+        # ── Dashboard internal flow ──────────────────────────────────────────────
+        dashboard_pres      -> dashboard_store     "Reads summary signal"                        "Angular DI"
+        dashboard_store     -> dashboard_api       "Calls getSummary on init and on interval"     "Angular DI"
+        dashboard_api       -> dashboard_endpoint  "Delegates HTTP GET"                           "Method call"
+        dashboard_endpoint  -> dashboard_assembler "Converts DashboardResource <-> DashboardSummary" "In-process"
+        dashboard_assembler -> dashboard_domain    "Instantiates DashboardSummary"                "In-process"
+        dashboard_endpoint  -> db                  "GET /dashboard/summary"                      "HTTP / JSON"
+        dashboard_domain    -> shared_domain       "implements BaseEntity"                        "TypeScript"
+        dashboard_assembler -> shared_infra        "implements BaseAssembler"                     "TypeScript"
+        dashboard_endpoint  -> shared_infra        "extends BaseApiEndpoint"                     "TypeScript"
+        dashboard_store     -> shared_store        "extends BaseStore"                           "TypeScript"
+
+        # ── Maintenance internal flow ────────────────────────────────────────────
+        maint_pres      -> maint_store     "Reads signals / dispatches actions"               "Angular DI"
+        maint_store     -> maint_api       "Calls getOrders / schedule / update / cancel"     "Angular DI"
+        maint_api       -> maint_endpoint  "Delegates HTTP operations"                         "Method call"
+        maint_endpoint  -> maint_assembler "Converts MaintenanceResource <-> MaintenanceOrder" "In-process"
+        maint_assembler -> maint_domain    "Instantiates MaintenanceOrder entities"             "In-process"
+        maint_endpoint  -> db              "GET / POST / PUT / DELETE /maintenance"            "HTTP / JSON"
+        maint_domain    -> shared_domain   "implements BaseEntity"                              "TypeScript"
+        maint_assembler -> shared_infra    "implements BaseAssembler"                           "TypeScript"
+        maint_endpoint  -> shared_infra    "extends BaseApiEndpoint"                           "TypeScript"
+        maint_store     -> shared_store    "extends BaseStore"                                 "TypeScript"
+
+        # ── Configuration internal flow ──────────────────────────────────────────
+        config_pres      -> config_store     "Reads grouped config signals / saves changes"       "Angular DI"
+        config_store     -> config_api       "Calls getConfigs / updateConfig"                    "Angular DI"
+        config_api       -> config_endpoint  "Delegates HTTP operations"                           "Method call"
+        config_endpoint  -> config_assembler "Converts ConfigResource <-> SystemConfiguration"    "In-process"
+        config_assembler -> config_domain    "Instantiates SystemConfiguration entries"            "In-process"
+        config_endpoint  -> db               "GET / PUT /configurations"                          "HTTP / JSON"
+        config_domain    -> shared_domain    "implements BaseEntity"                               "TypeScript"
+        config_assembler -> shared_infra     "implements BaseAssembler"                            "TypeScript"
+        config_endpoint  -> shared_infra     "extends BaseApiEndpoint"                            "TypeScript"
+        config_store     -> shared_store     "extends BaseStore"                                  "TypeScript"
+
+        # ── Reservation internal flow ────────────────────────────────────────────
+        res_pres      -> res_store     "Reads signals / dispatches actions"                        "Angular DI"
+        res_store     -> res_api       "Calls getReservations / request / approve / reject / cancel" "Angular DI"
+        res_api       -> res_endpoint  "Delegates HTTP operations"                                 "Method call"
+        res_endpoint  -> res_assembler "Converts ReservationResource <-> Reservation"              "In-process"
+        res_assembler -> res_domain    "Instantiates Reservation entities"                         "In-process"
+        res_endpoint  -> db            "GET / POST / PUT / DELETE /reservations"                  "HTTP / JSON"
+        res_domain    -> shared_domain "implements BaseEntity"                                     "TypeScript"
+        res_assembler -> shared_infra  "implements BaseAssembler"                                  "TypeScript"
+        res_endpoint  -> shared_infra  "extends BaseApiEndpoint"                                  "TypeScript"
+        res_store     -> shared_store  "extends BaseStore"                                        "TypeScript"
+    }
+
+    views {
+
+        # ── Level 1: System Context ──────────────────────────────────────────────
+        systemContext spottrack "01_SystemContext" "Who uses SpotTrack and what external systems does it depend on" {
+            include *
+            autoLayout
+        }
+
+        # ── Level 2: Containers ──────────────────────────────────────────────────
+        container spottrack "02_Containers" "The SpotTrack SPA and its bounded-context containers" {
+            include *
+            autoLayout
+        }
+
+        # ── Level 3: Component views — one per bounded context ───────────────────
+
+        component shared_bc "03a_Shared" "Internal layers of the Shared bounded context" {
+            include *
+            autoLayout
+        }
+
+        component equipment_bc "03b_Equipment" "Internal layers of the Equipment bounded context" {
+            include *
+            autoLayout
+        }
+
+        component iot_bc "03c_IoT" "Internal layers of the IoT bounded context" {
+            include *
+            autoLayout
+        }
+
+        component alerts_bc "03d_Alerts" "Internal layers of the Alerts bounded context" {
+            include *
+            autoLayout
+        }
+
+        component analytics_bc "03e_Analytics" "Internal layers of the Analytics bounded context" {
+            include *
+            autoLayout
+        }
+
+        component dashboard_bc "03f_Dashboard" "Internal layers of the Dashboard bounded context" {
+            include *
+            autoLayout
+        }
+
+        component maintenance_bc "03g_Maintenance" "Internal layers of the Maintenance bounded context" {
+            include *
+            autoLayout
+        }
+
+        component configuration_bc "03h_Configuration" "Internal layers of the Configuration bounded context" {
+            include *
+            autoLayout
+        }
+
+        component reservation_bc "03i_Reservation" "Internal layers of the Reservation bounded context" {
+            include *
+            autoLayout
+        }
+
+        # ── Styles ───────────────────────────────────────────────────────────────
+        styles {
+            element "Person" {
+                shape Person
+                background #08427B
+                color #ffffff
+            }
+            element "Software System" {
+                background #1168BD
+                color #ffffff
+            }
+            element "External System" {
+                background #999999
+                color #ffffff
+            }
+            element "Container" {
+                background #438DD5
+                color #ffffff
+            }
+            element "Component" {
+                background #85BBF0
+                color #000000
+            }
+        }
+
+        theme default
+    }
+}
