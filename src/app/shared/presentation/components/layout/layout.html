@@ -6,10 +6,12 @@
 
   <div class="shell__body">
     <header class="shell__topbar">
-      <button mat-stroked-button (click)="toggleRole()" style="margin-right: 16px;">
+      <button mat-stroked-button (click)="toggleMockRole()" style="margin-right: 16px;">
         <mat-icon>swap_horiz</mat-icon>
         {{ (currentRole === 'admin' ? 'role.switch_to_client' : 'role.switch_to_admin') | translate }}
       </button>
+
+      <div style="flex-grow: 1;"></div>
 
       <app-language-switcher></app-language-switcher>
     </header>

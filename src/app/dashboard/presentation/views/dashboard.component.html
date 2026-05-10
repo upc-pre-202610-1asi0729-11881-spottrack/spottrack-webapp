@@ -1,14 +1,7 @@
 <div class="dashboard-content">
 
   @if (currentRole === 'client') {
-    <div class="client-welcome">
-      <mat-card class="welcome-card">
-        <mat-card-content>
-          <h1>{{ 'dashboard.welcome' | translate:{ name: userName } }}</h1>
-          <p style="margin-top: 8px; color: #aaa;">{{ 'dashboard.client_intro' | translate }}</p>
-        </mat-card-content>
-      </mat-card>
-    </div>
+    <app-map [userName]="userName()"></app-map>
   }
 
   @if (currentRole === 'admin') {

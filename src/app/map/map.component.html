@@ -1,0 +1,95 @@
+<div class="map-view-container">
+
+  <!-- ===== TOP HEADER ===== -->
+  <header class="map-view-header">
+    <div class="header-left">
+      <h1 class="map-title">Mapa de Disponibilidad en Tiempo Real</h1>
+      <p class="map-subtitle">Visualiza el estado de todas las máquinas del gimnasio</p>
+    </div>
+    <div class="header-right">
+      <div class="gym-selector">
+        <mat-icon class="gym-location-icon">location_on</mat-icon>
+        <mat-select
+          [(ngModel)]="selectedGymId"
+          class="gym-select"
+          panelClass="gym-panel"
+          disableRipple
+        >
+          @for (gym of gyms; track gym.id) {
+            <mat-option [value]="gym.id">{{ gym.name }}</mat-option>
+          }
+        </mat-select>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== CATEGORY FILTER TABS ===== -->
+  <div class="filter-tabs-wrapper">
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter === 'ALL'"
+      (click)="setFilter('ALL')"
+    >Todos</button>
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter === 'STRENGTH'"
+      (click)="setFilter('STRENGTH')"
+    >Fuerza</button>
+    <button
+      class="filter-tab"
+      [class.active]="activeFilter === 'CARDIO'"
+      (click)="setFilter('CARDIO')"
+    >Cardio</button>
+  </div>
+
+  <!-- ===== MAP CARD ===== -->
+  <mat-card class="map-card">
+    <mat-card-header class="map-card-header">
+      <mat-card-title class="map-card-title">Mapa de Disponibilidad</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="map-card-content">
+      <!-- Map Canvas -->
+      <div class="map-canvas">
+        @for (machine of filteredMachines; track machine.id) {
+          <div
+            class="machine-pin"
+            [class.pin-available]="machine.status === 'AVAILABLE'"
+            [class.pin-in-use]="machine.status === 'IN_USE'"
+            [class.pin-reserved]="machine.status === 'RESERVED'"
+            [style.top]="machine.top"
+            [style.left]="machine.left"
+          >
+            <!-- Timer badge for reserved/in-use with countdown -->
+            @if (machine.timerSeconds !== undefined) {
+              <div class="pin-timer">{{ formatTimer(machine.timerSeconds) }}</div>
+            }
+            <div class="pin-circle">
+              <mat-icon class="pin-icon">{{ machine.icon }}</mat-icon>
+              <div class="pin-pulse"></div>
+            </div>
+            <span class="pin-label">{{ machine.name }}</span>
+          </div>
+        }
+      </div>
+    </mat-card-content>
+
+    <!-- ===== LEGEND ===== -->
+    <div class="map-legend">
+      <div class="legend-item">
+        <span class="legend-dot dot-available"></span>
+        <span>Libre ({{ availableCount }})</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot dot-in-use"></span>
+        <span>Ocupado ({{ inUseCount }})</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot dot-reserved"></span>
+        <span>Reservado ({{ reservedCount }})</span>
+      </div>
+    </div>
+  </mat-card>
+
+
+</div>

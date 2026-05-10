@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { Sidebar } from '../sidebar/sidebar';
 import { BottomBar } from '../bottom-bar/bottom-bar';
-import { SessionService } from '../../../application/session.service';
 import { AuthStore } from '../../../../auth/application/auth.store';
 
 @Component({
@@ -17,7 +16,7 @@ import { AuthStore } from '../../../../auth/application/auth.store';
     RouterOutlet,
     LanguageSwitcher,
     Sidebar,
-    BottomBar, // Añadir aquí
+    BottomBar,
     MatButtonModule,
     MatIconModule,
     TranslateModule,
@@ -27,16 +26,22 @@ import { AuthStore } from '../../../../auth/application/auth.store';
   styleUrl: './layout.css',
 })
 export class Layout {
-  private sessionService = inject(SessionService);
   private router = inject(Router);
   private authStore = inject(AuthStore);
 
   get currentRole(): 'admin' | 'client' {
-    return this.sessionService.currentRole();
+    return this.authStore.isClient() ? 'client' : 'admin';
   }
 
-  toggleRole() {
-    this.sessionService.toggleRole();
+  // --- NUEVA FUNCIÓN PARA PRUEBAS RÁPIDAS ---
+  toggleMockRole() {
+    if (this.currentRole === 'admin') {
+      // Inicia sesión como cliente con cualquier contraseña (el mock solo valida que no esté vacía)
+      this.authStore.login('cliente@email.com', '1234');
+    } else {
+      // Inicia sesión como admin
+      this.authStore.login('admin@spottrack.com', '1234');
+    }
   }
 
   logout() {

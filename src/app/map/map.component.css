@@ -1,0 +1,282 @@
+/* ============================================================
+   MAP COMPONENT — SpotTrack Dark Theme
+   ============================================================ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.map-view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px 24px 0;
+  box-sizing: border-box;
+  background-color: #0f0f0f;
+  font-family: 'Segoe UI', sans-serif;
+  gap: 16px;
+}
+
+/* ===================== HEADER ===================== */
+.map-view-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.map-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+
+.map-subtitle {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* Gym selector */
+.gym-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.gym-location-icon {
+  color: #f5c518;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.gym-select {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
+  min-width: 140px;
+}
+
+/* Override Angular Material select styles */
+.gym-select .mat-mdc-select-trigger {
+  color: #ffffff;
+}
+.gym-select .mat-mdc-select-arrow {
+  color: #888;
+}
+
+/* ===================== FILTER TABS ===================== */
+.filter-tabs-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-tab {
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #2e2e2e;
+  cursor: pointer;
+  background-color: transparent;
+  color: #aaa;
+  transition: all 0.2s ease;
+}
+
+.filter-tab:hover {
+  border-color: #555;
+  color: #ddd;
+}
+
+.filter-tab.active {
+  background-color: #f5c518;
+  border-color: #f5c518;
+  color: #000000;
+}
+
+/* ===================== MAP CARD ===================== */
+.map-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1a1a !important;
+  border-radius: 16px !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.map-card-header {
+  padding: 16px 20px 0 !important;
+}
+
+.map-card-title {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #cccccc !important;
+}
+
+.map-card-content {
+  flex: 1;
+  padding: 0 !important;
+  min-height: 0;
+}
+
+/* ===================== MAP CANVAS ===================== */
+.map-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+}
+
+/* ===================== MACHINE PINS ===================== */
+.machine-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* The circle icon */
+.pin-circle {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a2a2a;
+  border: 2.5px solid transparent;
+  transition: transform 0.15s ease;
+}
+
+.machine-pin:hover .pin-circle {
+  transform: scale(1.1);
+}
+
+.machine-pin:active .pin-circle {
+  transform: scale(0.95);
+}
+
+.pin-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  color: #ffffff;
+}
+
+/* Status colours */
+.pin-available .pin-circle {
+  border-color: #4caf50;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.35);
+  background-color: #1e3a22;
+}
+
+.pin-in-use .pin-circle {
+  border-color: #f44336;
+  box-shadow: 0 0 12px rgba(244, 67, 54, 0.35);
+  background-color: #3a1e1e;
+}
+
+.pin-reserved .pin-circle {
+  border-color: #f5c518;
+  box-shadow: 0 0 12px rgba(245, 197, 24, 0.35);
+  background-color: #3a351a;
+}
+
+/* Pulse animation */
+.pin-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse 2.5s infinite;
+}
+
+.pin-available .pin-pulse  { background-color: rgba(76, 175, 80, 0.25); animation-duration: 3s; }
+.pin-in-use .pin-pulse     { background-color: rgba(244, 67, 54, 0.3); }
+.pin-reserved .pin-pulse   { background-color: rgba(245, 197, 24, 0.25); animation-duration: 2s; }
+
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Timer badge (floats above the pin) */
+.pin-timer {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #f5c518;
+  color: #000;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  z-index: 20;
+}
+
+/* Machine label below pin */
+.pin-label {
+  font-size: 11px;
+  color: #aaaaaa;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ===================== LEGEND ===================== */
+.map-legend {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 14px 16px;
+  border-top: 1px solid #2a2a2a;
+  background-color: #1a1a1a;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: #aaaaaa;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-available { background-color: #4caf50; }
+.dot-in-use    { background-color: #f44336; }
+.dot-reserved  { background-color: #f5c518; }
+

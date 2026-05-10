@@ -62,10 +62,20 @@ export const routes: Routes = [
 
       // ── Client routes ───────────────────────────────────────────────────────
       {
-        path: 'client',
+        path: '',
         canActivate: [clientGuard],
-        loadComponent: () =>
-          import('./client/presentation/views/client-home.component').then(m => m.ClientHomeComponent),
+        children: [
+          {
+            path: 'client',
+            loadComponent: () =>
+              import('./client/presentation/views/client-home.component').then(m => m.ClientHomeComponent),
+          },
+          {
+            path: 'map',
+            loadComponent: () =>
+              import('./map/map.component').then(m => m.MapComponent),
+          },
+        ],
       },
     ],
   },

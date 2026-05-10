@@ -12,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class BottomBar {
   navItems = [
-    { path: '/dashboard', icon: 'map', labelKey: 'nav.map' },
+    { path: '/map', icon: 'map', labelKey: 'nav.map' },
     { path: '/routines', icon: 'fitness_center', labelKey: 'nav.routines' },
     { path: '/bookings', icon: 'event_available', labelKey: 'nav.bookings' },
     { path: '/profile', icon: 'person', labelKey: 'nav.profile' },
