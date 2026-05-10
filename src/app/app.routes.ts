@@ -80,6 +80,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./booking/presentation/views/booking.component').then(m => m.BookingComponent),
           },
+          {
+            path: 'routines',
+            loadComponent: () =>
+              import('./routines/presentation/views/routines.component').then(m => m.RoutinesComponent),
+          },
         ],
       },
     ],

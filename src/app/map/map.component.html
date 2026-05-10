@@ -46,6 +46,7 @@
             [class.pin-reserved]="machine.status === 'RESERVED'"
             [style.top]="machine.top"
             [style.left]="machine.left"
+            (click)="openMachineDetail(machine, $event)"
           >
             @if (machine.timerSeconds !== undefined) {
               <div class="pin-timer">{{ formatTimer(machine.timerSeconds) }}</div>
@@ -78,3 +79,111 @@
   </mat-card>
 
 </div>
+
+<!-- ===== MACHINE DETAIL POPUP ===== -->
+@if (selectedMachine()) {
+  <div class="detail-backdrop" (click)="closeMachineDetail()">
+
+    @if (!showAlternativesPanel()) {
+      <!-- Main detail panel -->
+      <div class="detail-popup" (click)="$event.stopPropagation()">
+
+        <div class="detail-header">
+          <div>
+            <h3 class="detail-name">{{ 'machines.names.' + selectedMachine()!.nameKey | translate }}</h3>
+            <p class="detail-status-row">
+              {{ 'map.detail.statusLabel' | translate }}:
+              <span
+                [class.status-available]="selectedMachine()!.status === 'AVAILABLE'"
+                [class.status-in-use]="selectedMachine()!.status === 'IN_USE'"
+                [class.status-reserved]="selectedMachine()!.status === 'RESERVED'"
+              >
+                {{ 'map.detail.status.' + selectedMachine()!.status | translate }}
+              </span>
+            </p>
+          </div>
+          <button class="detail-close" (click)="closeMachineDetail()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <!-- RESERVED: show timer -->
+        @if (selectedMachine()!.status === 'RESERVED') {
+          <div class="detail-body-reserved">
+            <p class="reserved-msg">{{ 'map.detail.reservedByUser' | translate }}</p>
+            <div class="reserved-timer">{{ formatTimer(selectedMachine()!.timerSeconds ?? 0) }}</div>
+          </div>
+        }
+
+        <!-- IN_USE: notify / alternatives / report free -->
+        @if (selectedMachine()!.status === 'IN_USE') {
+          <div class="detail-actions">
+            <button class="btn-notify" (click)="notifyWhenFree()">
+              <mat-icon>notifications</mat-icon>
+              {{ 'map.detail.notifyBtn' | translate }}
+            </button>
+            <button class="btn-action-dark" (click)="openAlternatives()">
+              <mat-icon>autorenew</mat-icon>
+              {{ 'map.detail.alternativesBtn' | translate }}
+            </button>
+            <button class="btn-action-dark" (click)="reportAsFree()">
+              <mat-icon>flag</mat-icon>
+              {{ 'map.detail.reportFreeBtn' | translate }}
+            </button>
+          </div>
+        }
+
+        <!-- AVAILABLE: reserve / report occupied -->
+        @if (selectedMachine()!.status === 'AVAILABLE') {
+          <div class="detail-actions">
+            <button class="btn-action-yellow" (click)="reserveMachine()">
+              <mat-icon>event</mat-icon>
+              {{ 'map.detail.reserveBtn' | translate }}
+            </button>
+            <button class="btn-action-dark" (click)="reportAsOccupied()">
+              <mat-icon>flag</mat-icon>
+              {{ 'map.detail.reportOccupiedBtn' | translate }}
+            </button>
+          </div>
+        }
+
+      </div>
+    } @else {
+      <!-- Alternatives panel -->
+      <div class="detail-popup" (click)="$event.stopPropagation()">
+
+        <div class="detail-header">
+          <h3 class="detail-name">{{ 'map.alternatives.title' | translate }}</h3>
+          <button class="detail-close" (click)="closeMachineDetail()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <p class="alt-popup-subtitle">{{ 'map.alternatives.subtitle' | translate }}</p>
+
+        <div class="alt-popup-list">
+          @for (alt of alternativeMachines(); track alt.id) {
+            <div class="alt-popup-item">
+              <div class="alt-popup-info">
+                <span class="alt-popup-name">{{ 'machines.names.' + alt.nameKey | translate }}</span>
+                <span class="alt-popup-group">{{ 'map.muscleGroups.' + alt.muscleGroupKey | translate }}</span>
+              </div>
+              <div class="alt-popup-status">
+                <span class="alt-free-dot"></span>
+                <span class="alt-free-text">{{ 'map.alternatives.free' | translate }}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="alt-popup-footer">
+          <button class="btn-action-yellow btn-full-width" (click)="reserveMachine()">
+            {{ 'map.alternatives.reserveBtn' | translate }}
+          </button>
+        </div>
+
+      </div>
+    }
+
+  </div>
+}

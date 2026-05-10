@@ -1,5 +1,5 @@
 /* ============================================================
-   MAP COMPONENT — SpotTrack Dark Theme
+   MAP COMPONENT
    ============================================================ */
 
 :host {
@@ -279,4 +279,236 @@
 .dot-available { background-color: #4caf50; }
 .dot-in-use    { background-color: #f44336; }
 .dot-reserved  { background-color: #f5c518; }
+
+/* ===================== MACHINE DETAIL POPUP ===================== */
+.detail-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.detail-popup {
+  background-color: #1e1e1e;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+/* Header */
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18px 18px 10px;
+  gap: 12px;
+}
+
+.detail-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.detail-status-row {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
+}
+
+.status-available { color: #4caf50; font-weight: 600; }
+.status-in-use    { color: #f44336; font-weight: 600; }
+.status-reserved  { color: #f5c518; font-weight: 600; }
+
+.detail-close {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.detail-close:hover { color: #fff; }
+
+.detail-close mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Reserved body */
+.detail-body-reserved {
+  padding: 8px 18px 22px;
+  text-align: center;
+}
+
+.reserved-msg {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0 0 14px;
+}
+
+.reserved-timer {
+  font-size: 38px;
+  font-weight: 700;
+  color: #f5c518;
+  letter-spacing: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Action buttons */
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 18px 20px;
+}
+
+.btn-notify {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #00bcd4;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-notify:hover { background-color: #00a5b9; }
+
+.btn-notify mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+.btn-action-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #111111;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-action-dark:hover { background-color: #1a1a1a; }
+
+.btn-action-dark mat-icon { font-size: 20px; width: 20px; height: 20px; color: #aaa; }
+
+.btn-action-yellow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #f5c518;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-action-yellow:hover { background-color: #e0b214; }
+
+.btn-action-yellow mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+.btn-full-width { width: 100%; box-sizing: border-box; }
+
+/* ===================== ALTERNATIVES POPUP ===================== */
+.alt-popup-subtitle {
+  font-size: 12px;
+  color: #888;
+  margin: 0 18px 12px;
+  line-height: 1.5;
+}
+
+.alt-popup-list {
+  margin: 0 18px 14px;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.alt-popup-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #2a2a2a;
+  background-color: #1a1a1a;
+}
+
+.alt-popup-item:last-child { border-bottom: none; }
+
+.alt-popup-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alt-popup-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.alt-popup-group {
+  font-size: 12px;
+  color: #888;
+}
+
+.alt-popup-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.alt-free-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #4caf50;
+  flex-shrink: 0;
+}
+
+.alt-free-text {
+  font-size: 13px;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.alt-popup-footer {
+  padding: 0 18px 18px;
+}
+
+/* Pin label — truncate if name is long */
+.pin-label {
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
