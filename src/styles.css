@@ -47,3 +47,25 @@ app-layout {
 .mat-mdc-no-data-row td {
   color: #aaa !important;
 }
+
+/* Booking modal select panel */
+.booking-select-panel {
+  background: #1a1a1a !important;
+}
+
+.booking-select-panel .mat-mdc-option {
+  color: #fff !important;
+}
+
+.booking-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background: rgba(245, 197, 24, 0.12) !important;
+}
+
+.booking-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background: #f5c518 !important;
+}
+
+.booking-select-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: #000 !important;
+  font-weight: 600;
+}

@@ -3,8 +3,8 @@
   <!-- ===== TOP HEADER ===== -->
   <header class="map-view-header">
     <div class="header-left">
-      <h1 class="map-title">Mapa de Disponibilidad en Tiempo Real</h1>
-      <p class="map-subtitle">Visualiza el estado de todas las máquinas del gimnasio</p>
+      <h1 class="map-title">{{ 'map.title' | translate }}</h1>
+      <p class="map-subtitle">{{ 'map.subtitle' | translate }}</p>
     </div>
     <div class="header-right">
       <div class="gym-selector">
@@ -16,7 +16,7 @@
           disableRipple
         >
           @for (gym of gyms; track gym.id) {
-            <mat-option [value]="gym.id">{{ gym.name }}</mat-option>
+            <mat-option [value]="gym.id">{{ 'map.gyms.' + gym.id | translate }}</mat-option>
           }
         </mat-select>
       </div>
@@ -25,31 +25,18 @@
 
   <!-- ===== CATEGORY FILTER TABS ===== -->
   <div class="filter-tabs-wrapper">
-    <button
-      class="filter-tab"
-      [class.active]="activeFilter === 'ALL'"
-      (click)="setFilter('ALL')"
-    >Todos</button>
-    <button
-      class="filter-tab"
-      [class.active]="activeFilter === 'STRENGTH'"
-      (click)="setFilter('STRENGTH')"
-    >Fuerza</button>
-    <button
-      class="filter-tab"
-      [class.active]="activeFilter === 'CARDIO'"
-      (click)="setFilter('CARDIO')"
-    >Cardio</button>
+    <button class="filter-tab" [class.active]="activeFilter() === 'ALL'"      (click)="setFilter('ALL')">{{ 'map.filter.all' | translate }}</button>
+    <button class="filter-tab" [class.active]="activeFilter() === 'STRENGTH'" (click)="setFilter('STRENGTH')">{{ 'map.filter.strength' | translate }}</button>
+    <button class="filter-tab" [class.active]="activeFilter() === 'CARDIO'"   (click)="setFilter('CARDIO')">{{ 'map.filter.cardio' | translate }}</button>
   </div>
 
   <!-- ===== MAP CARD ===== -->
   <mat-card class="map-card">
     <mat-card-header class="map-card-header">
-      <mat-card-title class="map-card-title">Mapa de Disponibilidad</mat-card-title>
+      <mat-card-title class="map-card-title">{{ 'map.cardTitle' | translate }}</mat-card-title>
     </mat-card-header>
 
     <mat-card-content class="map-card-content">
-      <!-- Map Canvas -->
       <div class="map-canvas">
         @for (machine of filteredMachines; track machine.id) {
           <div
@@ -60,7 +47,6 @@
             [style.top]="machine.top"
             [style.left]="machine.left"
           >
-            <!-- Timer badge for reserved/in-use with countdown -->
             @if (machine.timerSeconds !== undefined) {
               <div class="pin-timer">{{ formatTimer(machine.timerSeconds) }}</div>
             }
@@ -68,7 +54,7 @@
               <mat-icon class="pin-icon">{{ machine.icon }}</mat-icon>
               <div class="pin-pulse"></div>
             </div>
-            <span class="pin-label">{{ machine.name }}</span>
+            <span class="pin-label">{{ 'machines.names.' + machine.nameKey | translate }}</span>
           </div>
         }
       </div>
@@ -78,18 +64,17 @@
     <div class="map-legend">
       <div class="legend-item">
         <span class="legend-dot dot-available"></span>
-        <span>Libre ({{ availableCount }})</span>
+        <span>{{ 'map.legend.available' | translate: { count: availableCount } }}</span>
       </div>
       <div class="legend-item">
         <span class="legend-dot dot-in-use"></span>
-        <span>Ocupado ({{ inUseCount }})</span>
+        <span>{{ 'map.legend.inUse' | translate: { count: inUseCount } }}</span>
       </div>
       <div class="legend-item">
         <span class="legend-dot dot-reserved"></span>
-        <span>Reservado ({{ reservedCount }})</span>
+        <span>{{ 'map.legend.reserved' | translate: { count: reservedCount } }}</span>
       </div>
     </div>
   </mat-card>
-
 
 </div>

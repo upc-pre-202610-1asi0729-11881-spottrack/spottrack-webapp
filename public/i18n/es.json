@@ -1,4 +1,74 @@
 {
+  "machines": {
+    "zones": {
+      "fuerza": "Zona Fuerza",
+      "cardio": "Zona Cardio"
+    },
+    "names": {
+      "cinta1":             "Cinta 1",
+      "cinta2":             "Cinta 2",
+      "prensa":             "Prensa",
+      "prensaPiernas":      "Prensa de Piernas",
+      "poleaAlta":          "Polea Alta",
+      "rackSentadilla1":    "Rack Sentadilla #1",
+      "rackSentadilla2":    "Rack Sentadilla #2",
+      "bancoPecho":         "Banco Pecho",
+      "bancoPechoPlano":    "Banco Pecho Plano",
+      "bancoPechoInclinado":"Banco Pecho Inclinado",
+      "maquinaRemo":        "Máquina de Remo",
+      "remo":               "Remo",
+      "eliptica":           "Elíptica",
+      "raquetmaquina":      "Raquetmáquina"
+    }
+  },
+  "map": {
+    "title":    "Mapa de Disponibilidad en Tiempo Real",
+    "subtitle": "Visualiza el estado de todas las máquinas del gimnasio",
+    "cardTitle":"Mapa de Disponibilidad",
+    "filter": {
+      "all":      "Todos",
+      "strength": "Fuerza",
+      "cardio":   "Cardio"
+    },
+    "legend": {
+      "available": "Libre ({{count}})",
+      "inUse":     "Ocupado ({{count}})",
+      "reserved":  "Reservado ({{count}})"
+    },
+    "gyms": {
+      "gym1": "Gimnasio Centro",
+      "gym2": "Gimnasio Norte",
+      "gym3": "Gimnasio Sur"
+    }
+  },
+  "booking": {
+    "title": "Mis Reservas",
+    "subtitle": "Gestiona tus reservas activas y crea nuevas reservas",
+    "newBooking": "Nueva Reserva",
+    "timeRemaining": "Tiempo restante",
+    "expired": {
+      "title": "Reserva expirada",
+      "subtitle": "La máquina ha vuelto a estar disponible para otros usuarios"
+    },
+    "how": {
+      "title": "¿Cómo funcionan las reservas?",
+      "item1": "Puedes reservar una máquina libre por 10-15 minutos",
+      "item2": "Las reservas solo están disponibles en horas pico",
+      "item3": "Si no ocupas la máquina, volverá a estar disponible",
+      "item4": "Cancela tu reserva si cambias de plan"
+    },
+    "modal": {
+      "title": "Nueva Reserva",
+      "subtitle": "Reserva una máquina disponible por un tiempo limitado",
+      "machine": "Máquina",
+      "selectMachine": "Selecciona una máquina",
+      "duration": "Duración",
+      "minutesSuffix": "minutos",
+      "warning": "Las reservas solo están disponibles en horas pico. Si no ocupas la máquina en el tiempo establecido, la reserva expirará automáticamente.",
+      "cancel": "Cancelar",
+      "create": "Crear Reserva"
+    }
+  },
   "nav": {
     "dashboard": "Panel Principal",
     "equipment": "Equipos",

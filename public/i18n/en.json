@@ -1,4 +1,74 @@
 {
+  "machines": {
+    "zones": {
+      "fuerza": "Strength Zone",
+      "cardio": "Cardio Zone"
+    },
+    "names": {
+      "cinta1":             "Treadmill 1",
+      "cinta2":             "Treadmill 2",
+      "prensa":             "Leg Press",
+      "prensaPiernas":      "Leg Press",
+      "poleaAlta":          "High Cable",
+      "rackSentadilla1":    "Squat Rack #1",
+      "rackSentadilla2":    "Squat Rack #2",
+      "bancoPecho":         "Bench Press",
+      "bancoPechoPlano":    "Flat Bench Press",
+      "bancoPechoInclinado":"Incline Bench Press",
+      "maquinaRemo":        "Rowing Machine",
+      "remo":               "Rowing",
+      "eliptica":           "Elliptical",
+      "raquetmaquina":      "Multi-Function Machine"
+    }
+  },
+  "map": {
+    "title":    "Real-Time Availability Map",
+    "subtitle": "View the status of all gym machines",
+    "cardTitle":"Availability Map",
+    "filter": {
+      "all":      "All",
+      "strength": "Strength",
+      "cardio":   "Cardio"
+    },
+    "legend": {
+      "available": "Free ({{count}})",
+      "inUse":     "In Use ({{count}})",
+      "reserved":  "Reserved ({{count}})"
+    },
+    "gyms": {
+      "gym1": "Gym Center",
+      "gym2": "North Gym",
+      "gym3": "South Gym"
+    }
+  },
+  "booking": {
+    "title": "My Bookings",
+    "subtitle": "Manage your active bookings and create new ones",
+    "newBooking": "New Booking",
+    "timeRemaining": "Time remaining",
+    "expired": {
+      "title": "Booking expired",
+      "subtitle": "The machine is now available for other users"
+    },
+    "how": {
+      "title": "How do bookings work?",
+      "item1": "You can book a free machine for 10–15 minutes",
+      "item2": "Bookings are only available during peak hours",
+      "item3": "If you don't use the machine, it will become available again",
+      "item4": "Cancel your booking if your plans change"
+    },
+    "modal": {
+      "title": "New Booking",
+      "subtitle": "Book an available machine for a limited time",
+      "machine": "Machine",
+      "selectMachine": "Select a machine",
+      "duration": "Duration",
+      "minutesSuffix": "minutes",
+      "warning": "Bookings are only available during peak hours. If you don't use the machine within the set time, the booking will expire automatically.",
+      "cancel": "Cancel",
+      "create": "Create Booking"
+    }
+  },
   "nav": {
     "dashboard": "Dashboard",
     "equipment": "Equipment",
