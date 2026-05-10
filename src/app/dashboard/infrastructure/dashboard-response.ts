@@ -9,3 +9,13 @@ export interface EquipmentUsageStatResource extends BaseResource {
 }
 
 export type EquipmentUsageStatResponse = EquipmentUsageStatResource[];
+
+export interface UsageSessionResource extends BaseResource {
+  id:                  number;
+  equipment_id:        number;
+  start_time:          string;
+  end_time:            string;
+  calories_burned_est: number;
+}
+
+export type UsageSessionResponse = UsageSessionResource[];
