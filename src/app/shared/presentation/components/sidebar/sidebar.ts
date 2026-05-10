@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -33,9 +33,31 @@ const CLIENT_NAV: NavItem[] = [
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-  private auth = inject(AuthStore);
+  // Recibe el rol desde el layout
+  @Input() role: 'admin' | 'client' = 'admin';
 
-  readonly navItems = computed<NavItem[]>(() =>
-    this.auth.currentUser()?.role === UserRole.ADMIN ? ADMIN_NAV : CLIENT_NAV
-  );
+  // Rutas para el administrador
+  private readonly adminNavItems: NavItem[] = [
+    { path: '/dashboard', icon: 'home', labelKey: 'nav.dashboard' },
+    { path: '/equipment', icon: 'fitness_center', labelKey: 'nav.equipment' },
+    { path: '/iot', icon: 'sensors', labelKey: 'nav.iot' },
+    { path: '/maintenance', icon: 'build', labelKey: 'nav.maintenance' },
+    { path: '/analytics', icon: 'bar_chart', labelKey: 'nav.analytics' },
+    { path: '/alerts', icon: 'notifications', labelKey: 'nav.alerts' },
+    { path: '/configuration', icon: 'settings', labelKey: 'nav.configuration' },
+  ];
+
+  // Rutas para la vista del cliente
+  private readonly clientNavItems: NavItem[] = [
+    { path: '/dashboard', icon: 'home', labelKey: 'nav.dashboard' },
+    { path: '/map', icon: 'map', labelKey: 'nav.map' },
+    { path: '/routines', icon: 'fitness_center', labelKey: 'nav.routines' },
+    { path: '/bookings', icon: 'event_available', labelKey: 'nav.bookings' },
+    { path: '/profile', icon: 'person', labelKey: 'nav.profile' },
+  ];
+
+  // Devuelve el array correspondiente según el rol activo
+  get navItems(): NavItem[] {
+    return this.role === 'admin' ? this.adminNavItems : this.clientNavItems;
+  }
 }

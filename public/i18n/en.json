@@ -1,38 +1,25 @@
 {
   "nav": {
-    "dashboard":     "Dashboard",
-    "equipment":     "Equipment",
-    "iot":           "IoT Monitoring",
-    "maintenance":   "Maintenance",
-    "analytics":     "Analytics",
-    "alerts":        "Alerts",
+    "dashboard": "Dashboard",
+    "equipment": "Equipment",
+    "iot": "IoT Monitoring",
+    "maintenance": "Maintenance",
+    "analytics": "Analytics",
+    "alerts": "Alerts",
     "configuration": "Configuration",
-    "clientHome":    "My Home"
+    "map": "Map",
+    "routines": "Routines",
+    "bookings": "My Bookings",
+    "profile": "My Profile"
   },
-  "auth": {
-    "login": {
-      "title":              "Sign In",
-      "subtitle":           "Enter your credentials to access the platform",
-      "emailLabel":         "Email",
-      "emailPlaceholder":   "you@email.com",
-      "passwordLabel":      "Password",
-      "passwordPlaceholder":"••••••••",
-      "submitBtn":          "Sign In",
-      "noAccount":          "Don't have an account?",
-      "register":           "Register here",
-      "demoTitle":          "Test demo:",
-      "demoPassword":       "Password: anything"
-    },
-    "error": {
-      "emptyFields":         "Please fill in all fields",
-      "invalidCredentials":  "Email not recognized. Use a demo account."
-    },
-    "logout": "Log out"
+  "dashboard": {
+    "welcome": "Welcome back, {{name}}!",
+    "client_intro": "Here is a summary of your activity.",
+    "admin_panel": "Administration Panel"
   },
-  "client": {
-    "welcome":  "Welcome",
-    "subtitle": "This is your client area. More features coming soon.",
-    "role":     "Client"
+  "role": {
+    "switch_to_client": "View as Client",
+    "switch_to_admin": "View as Admin"
   },
   "iot": {
     "title": "IoT Monitoring",
@@ -66,10 +53,10 @@
       "noData": "No devices found"
     },
     "status": {
-      "ONLINE":   "Online",
-      "OFFLINE":  "Disconnected",
-      "WARNING":  "Warning",
-      "ACTIVE":   "Online",
+      "ONLINE": "Online",
+      "OFFLINE": "Disconnected",
+      "WARNING": "Warning",
+      "ACTIVE": "Online",
       "INACTIVE": "Disconnected"
     },
     "alerts": {

@@ -1,25 +1,34 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { TitleCasePipe } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { SessionService } from '../../../application/session.service';
+import { RouterOutlet } from '@angular/router';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { Sidebar } from '../sidebar/sidebar';
-import { AuthStore } from '../../../../auth/application/auth.store';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-layout',
-  standalone: true,
-  imports: [RouterOutlet, LanguageSwitcher, Sidebar, MatIconModule, TranslateModule, TitleCasePipe],
+  standalone: true, // Asumiendo que es standalone por tu estructura
+  imports: [
+    RouterOutlet,
+    LanguageSwitcher,
+    Sidebar,
+    MatButtonModule,
+    MatIconModule,
+    TranslateModule,
+  ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
 export class Layout {
-  readonly auth  = inject(AuthStore);
-  private router = inject(Router);
+  private sessionService = inject(SessionService);
 
-  logout(): void {
-    this.auth.logout();
-    this.router.navigate(['/login']);
+  // Reemplazamos la variable por un Getter
+  get currentRole(): 'admin' | 'client' {
+    return this.sessionService.currentRole();
+  }
+  toggleRole() {
+    this.sessionService.toggleRole();
   }
 }
