@@ -1,8 +1,5 @@
 <div class="dash-page">
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       KPI Summary Row
-  ═══════════════════════════════════════════════════════════════════════ -->
   <div class="kpi-row">
 
     <div class="kpi-card">
@@ -10,7 +7,7 @@
         <mat-icon>check_circle</mat-icon>
       </div>
       <div class="kpi-card__body">
-        <p class="kpi-card__label">Equipos Operativos</p>
+        <p class="kpi-card__label">{{ 'dashboardAdmin.kpis.operationalEquipment' | translate }}</p>
         <p class="kpi-card__value">{{ store.operationalCount() }}</p>
       </div>
     </div>
@@ -20,7 +17,7 @@
         <mat-icon>build</mat-icon>
       </div>
       <div class="kpi-card__body">
-        <p class="kpi-card__label">En Mantenimiento</p>
+        <p class="kpi-card__label">{{ 'dashboardAdmin.kpis.maintenance' | translate }}</p>
         <p class="kpi-card__value kpi-card__value--amber">{{ store.maintenanceCount() }}</p>
       </div>
     </div>
@@ -30,7 +27,7 @@
         <mat-icon>cancel</mat-icon>
       </div>
       <div class="kpi-card__body">
-        <p class="kpi-card__label">Fuera de Servicio</p>
+        <p class="kpi-card__label">{{ 'dashboardAdmin.kpis.outOfService' | translate }}</p>
         <p class="kpi-card__value kpi-card__value--red">{{ store.outOfOrderCount() }}</p>
       </div>
     </div>
@@ -40,21 +37,17 @@
         <mat-icon>confirmation_number</mat-icon>
       </div>
       <div class="kpi-card__body">
-        <p class="kpi-card__label">Tickets Totales</p>
+        <p class="kpi-card__label">{{ 'dashboardAdmin.kpis.totalTickets' | translate }}</p>
         <p class="kpi-card__value">{{ store.totalTickets() }}</p>
       </div>
     </div>
 
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       Charts Row
-  ═══════════════════════════════════════════════════════════════════════ -->
   <div class="charts-row">
 
-    <!-- ── Horas Pico de Capacidad ──────────────────────────────────────── -->
     <div class="chart-card">
-      <h2 class="chart-card__title">Horas Pico de Capacidad</h2>
+      <h2 class="chart-card__title">{{ 'dashboardAdmin.charts.peakCapacityHours' | translate }}</h2>
 
       <div class="line-chart-wrap">
         <svg
@@ -69,7 +62,6 @@
             </linearGradient>
           </defs>
 
-          <!-- Y-axis grid lines -->
           @for (tick of yTicks; track tick.label) {
             <line
               [attr.x1]="0"
@@ -86,13 +78,10 @@
             >{{ tick.label }}</text>
           }
 
-          <!-- Area fill -->
           <path [attr.d]="store.areaPath()" class="area-fill"/>
 
-          <!-- Line -->
           <polyline [attr.points]="store.polylinePoints()" class="line-stroke"/>
 
-          <!-- Data points -->
           @for (pt of store.linePoints(); track pt.hour) {
             <circle
               [attr.cx]="pt.x"
@@ -102,7 +91,6 @@
             />
           }
 
-          <!-- X-axis labels -->
           @for (pt of store.linePoints(); track pt.hour; let i = $index) {
             @if (i % 2 === 0 || i === store.linePoints().length - 1) {
               <text
@@ -117,9 +105,8 @@
       </div>
     </div>
 
-    <!-- ── Uso de Máquinas (Horas) ──────────────────────────────────────── -->
     <div class="chart-card">
-      <h2 class="chart-card__title">Uso de Máquinas (Horas)</h2>
+      <h2 class="chart-card__title">{{ 'dashboardAdmin.charts.machineUsage' | translate }}</h2>
 
       @if (store.loading()) {
         <div class="chart-state">
@@ -128,7 +115,7 @@
       } @else if (store.machineUsageBars().length === 0) {
         <div class="chart-state">
           <mat-icon>bar_chart</mat-icon>
-          <p>Sin datos de uso</p>
+          <p>{{ 'dashboardAdmin.charts.noUsageData' | translate }}</p>
         </div>
       } @else {
         <div class="bar-chart-wrap">
@@ -152,23 +139,19 @@
 
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       Bottom Row: Underutilized Table + Maintenance Kanban
-  ═══════════════════════════════════════════════════════════════════════ -->
   <div class="bottom-row">
 
-    <!-- ── Equipos Subutilizados ─────────────────────────────────────────── -->
     <div class="table-card">
-      <h2 class="chart-card__title">Equipos Subutilizados</h2>
+      <h2 class="chart-card__title">{{ 'dashboardAdmin.table.title' | translate }}</h2>
 
       <table class="data-table">
         <thead>
-          <tr>
-            <th>ID Máquina</th>
-            <th>Ubicación</th>
-            <th>Horas</th>
-            <th>ROI</th>
-          </tr>
+        <tr>
+          <th>{{ 'dashboardAdmin.table.headers.machineId' | translate }}</th>
+          <th>{{ 'dashboardAdmin.table.headers.location' | translate }}</th>
+          <th>{{ 'dashboardAdmin.table.headers.hours' | translate }}</th>
+          <th>{{ 'dashboardAdmin.table.headers.roi' | translate }}</th>
+        </tr>
         </thead>
         <tbody>
           @if (store.loading()) {
@@ -180,7 +163,7 @@
           } @else if (store.underutilizedEquipment().length === 0) {
             <tr>
               <td colspan="4" class="table-state table-state--empty">
-                Sin equipos subutilizados
+                {{ 'dashboardAdmin.table.empty' | translate }}
               </td>
             </tr>
           } @else {
@@ -201,18 +184,16 @@
       </table>
     </div>
 
-    <!-- ── Centro de Mantenimiento ─────────────────────────────────────────── -->
     <div class="kanban-card">
-      <h2 class="chart-card__title">Centro de Mantenimiento</h2>
+      <h2 class="chart-card__title">{{ 'dashboardAdmin.maintenanceCenter.title' | translate }}</h2>
 
       <div class="kanban-board">
 
-        <!-- Por Hacer -->
         <div class="kanban-col">
-          <p class="kanban-col__header">Por Hacer</p>
+          <p class="kanban-col__header">{{ 'dashboardAdmin.maintenanceCenter.columns.todo' | translate }}</p>
           <div class="kanban-col__items">
             @if (store.pendingTickets().length === 0) {
-              <p class="kanban-empty">Sin tickets</p>
+              <p class="kanban-empty">{{ 'dashboardAdmin.maintenanceCenter.empty' | translate }}</p>
             }
             @for (ticket of store.pendingTickets(); track ticket.id) {
               <div class="kanban-item kanban-item--open">
@@ -227,12 +208,11 @@
           </div>
         </div>
 
-        <!-- En Progreso -->
         <div class="kanban-col">
-          <p class="kanban-col__header">En Progreso</p>
+          <p class="kanban-col__header">{{ 'dashboardAdmin.maintenanceCenter.columns.inProgress' | translate }}</p>
           <div class="kanban-col__items">
             @if (store.inProgressTickets().length === 0) {
-              <p class="kanban-empty">Sin tickets</p>
+              <p class="kanban-empty">{{ 'dashboardAdmin.maintenanceCenter.empty' | translate }}</p>
             }
             @for (ticket of store.inProgressTickets(); track ticket.id) {
               <div class="kanban-item kanban-item--progress">
@@ -247,12 +227,11 @@
           </div>
         </div>
 
-        <!-- Completado -->
         <div class="kanban-col">
-          <p class="kanban-col__header">Completado</p>
+          <p class="kanban-col__header">{{ 'dashboardAdmin.maintenanceCenter.columns.completed' | translate }}</p>
           <div class="kanban-col__items">
             @if (store.resolvedTickets().length === 0) {
-              <p class="kanban-empty">Sin tickets</p>
+              <p class="kanban-empty">{{ 'dashboardAdmin.maintenanceCenter.empty' | translate }}</p>
             }
             @for (ticket of store.resolvedTickets(); track ticket.id) {
               <div class="kanban-item kanban-item--resolved">

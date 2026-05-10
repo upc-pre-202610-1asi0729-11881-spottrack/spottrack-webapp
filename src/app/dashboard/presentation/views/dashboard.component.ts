@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardStore } from '../../application/dashboard.store';
 import { TicketType } from '../../../maintenance/domain/model/maintenance-ticket.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIconModule, TranslatePipe],
   templateUrl: './dashboard.component.html',
-  styleUrls:   ['./dashboard.component.css'],
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
   readonly store = inject(DashboardStore);
@@ -18,9 +19,9 @@ export class DashboardComponent {
   readonly SVG_H = 160;
 
   // ── Y-axis ticks for line chart ───────────────────────────────────────
-  readonly yTicks = [0, 25, 50, 75, 100].map(v => ({
+  readonly yTicks = [0, 25, 50, 75, 100].map((v) => ({
     label: String(v),
-    y:     this.SVG_H - (v / 100) * this.SVG_H,
+    y: this.SVG_H - (v / 100) * this.SVG_H,
   }));
 
   // ── Bar chart Y reference ticks ────────────────────────────────────────
@@ -29,12 +30,12 @@ export class DashboardComponent {
   // ── Helpers ────────────────────────────────────────────────────────────
   barShortName(name: string): string {
     const map: Record<string, string> = {
-      'Treadmill':               'Cintas',
-      'Stationary Bike':         'Bicicleta',
-      'Chest Press Machine':     'Prensa',
-      'Lat Pulldown Machine':    'Polea',
-      'Rack':                    'Rack',
-      'Elíptica':                'Elíptica',
+      Treadmill: 'Cintas',
+      'Stationary Bike': 'Bicicleta',
+      'Chest Press Machine': 'Prensa',
+      'Lat Pulldown Machine': 'Polea',
+      Rack: 'Rack',
+      Elíptica: 'Elíptica',
     };
     return map[name] ?? name.split(' ')[0];
   }
