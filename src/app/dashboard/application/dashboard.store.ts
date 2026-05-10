@@ -1,28 +1,16 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin } from 'rxjs';
 import { DashboardApi } from '../infrastructure/dashboard-api';
 import { EquipmentUsageStat } from '../domain/model/equipment-usage-stat.entity';
+import { UsageSessionResource } from '../infrastructure/dashboard-response';
 import { EquipmentStore } from '../../equipment/application/equipment.store';
 import { MaintenanceStore } from '../../maintenance/application/maintenance.store';
-import { EquipmentStatus } from '../../equipment/domain/model/equipment.entity';
 
-// ── Static hourly capacity data (IoT sensor aggregation) ─────────────────────
 export interface HourlyCapacityPoint {
   hour:  string;
   value: number;
 }
-
-export const HOURLY_CAPACITY_DATA: HourlyCapacityPoint[] = [
-  { hour: '6:00',  value: 40 },
-  { hour: '8:00',  value: 78 },
-  { hour: '10:00', value: 52 },
-  { hour: '12:00', value: 48 },
-  { hour: '14:00', value: 98 },
-  { hour: '16:00', value: 85 },
-  { hour: '18:00', value: 75 },
-  { hour: '20:00', value: 60 },
-  { hour: '22:00', value: 35 },
-];
 
 @Injectable({ providedIn: 'root' })
 export class DashboardStore {
@@ -31,29 +19,69 @@ export class DashboardStore {
   private readonly equipmentStore   = inject(EquipmentStore);
   private readonly maintenanceStore = inject(MaintenanceStore);
 
-  private readonly usageStatsSignal = signal<EquipmentUsageStat[]>([]);
-  private readonly loadingSignal    = signal(false);
-  private readonly errorSignal      = signal<string | null>(null);
+  private readonly usageStatsSignal  = signal<EquipmentUsageStat[]>([]);
+  private readonly sessionsSignal    = signal<UsageSessionResource[]>([]);
+  private readonly loadingSignal     = signal(false);
+  private readonly errorSignal       = signal<string | null>(null);
 
   readonly usageStats = this.usageStatsSignal.asReadonly();
   readonly loading    = this.loadingSignal.asReadonly();
   readonly error      = this.errorSignal.asReadonly();
 
-  // ── KPI summary cards ────────────────────────────────────────────────────
+  // ── KPI summary cards ─────────────────────────────────────────────────────
   readonly operationalCount = computed(() => this.equipmentStore.operationalCount());
   readonly maintenanceCount = computed(() => this.equipmentStore.maintenanceCount());
   readonly outOfOrderCount  = computed(() => this.equipmentStore.outOfOrderCount());
   readonly totalTickets     = computed(() => this.maintenanceStore.totalTickets());
 
-  // ── Horas Pico de Capacidad (SVG line chart) ─────────────────────────────
-  readonly hourlyCapacityData = HOURLY_CAPACITY_DATA;
+  // ── Horas Pico de Capacidad — derived from usage_sessions ────────────────
+  /**
+   * Aggregates usage_sessions by hour-of-day and computes occupancy % as
+   * (sessions_in_that_hour / max_sessions_in_any_hour) × 100.
+   * Falls back to a default curve when the API has not returned sessions yet.
+   */
+  readonly hourlyCapacityData = computed<HourlyCapacityPoint[]>(() => {
+    const sessions = this.sessionsSignal();
+
+    if (!sessions.length) {
+      // Sensible fallback until API responds
+      return [
+        { hour: '6:00',  value: 40 },
+        { hour: '8:00',  value: 78 },
+        { hour: '10:00', value: 52 },
+        { hour: '12:00', value: 48 },
+        { hour: '14:00', value: 98 },
+        { hour: '16:00', value: 85 },
+        { hour: '18:00', value: 75 },
+        { hour: '20:00', value: 60 },
+        { hour: '22:00', value: 35 },
+      ];
+    }
+
+    // Count sessions per hour-of-day bucket
+    const counts: Record<number, number> = {};
+    for (const s of sessions) {
+      const h = new Date(s.start_time).getHours();
+      counts[h] = (counts[h] ?? 0) + 1;
+    }
+
+    const maxCount = Math.max(...Object.values(counts), 1);
+
+    // Build points for every hour that has data, sorted
+    return Object.entries(counts)
+      .map(([h, c]) => ({
+        hour:  `${h}:00`,
+        value: Math.round((c / maxCount) * 100),
+      }))
+      .sort((a, b) => parseInt(a.hour) - parseInt(b.hour));
+  });
 
   private readonly SVG_W = 680;
   private readonly SVG_H = 160;
 
   readonly linePoints = computed(() =>
-    this.hourlyCapacityData.map((d, i) => ({
-      x: (i / (this.hourlyCapacityData.length - 1)) * this.SVG_W,
+    this.hourlyCapacityData().map((d, i) => ({
+      x: (i / Math.max(this.hourlyCapacityData().length - 1, 1)) * this.SVG_W,
       y: this.SVG_H - (d.value / 100) * this.SVG_H,
       ...d,
     }))
@@ -65,6 +93,7 @@ export class DashboardStore {
 
   readonly areaPath = computed(() => {
     const pts = this.linePoints();
+    if (!pts.length) return '';
     return (
       `M${pts[0].x},${this.SVG_H} ` +
       pts.map(p => `L${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') +
@@ -72,7 +101,7 @@ export class DashboardStore {
     );
   });
 
-  // ── Uso de Máquinas (bar chart from API) ─────────────────────────────────
+  // ── Uso de Máquinas (bar chart from API) ──────────────────────────────────
   readonly machineUsageBars = computed(() => {
     const stats      = this.usageStats();
     const equipments = this.equipmentStore.equipment();
@@ -137,11 +166,21 @@ export class DashboardStore {
 
   private load(): void {
     this.loadingSignal.set(true);
-    this.api.getEquipmentUsageStats()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next:  stats => { this.usageStatsSignal.set(stats); this.loadingSignal.set(false); },
-        error: err   => { this.errorSignal.set(err instanceof Error ? err.message : 'Error'); this.loadingSignal.set(false); },
-      });
+    forkJoin({
+      stats:    this.api.getEquipmentUsageStats(),
+      sessions: this.api.getUsageSessions(),
+    })
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: ({ stats, sessions }) => {
+        this.usageStatsSignal.set(stats);
+        this.sessionsSignal.set(sessions);
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(err instanceof Error ? err.message : 'Error');
+        this.loadingSignal.set(false);
+      },
+    });
   }
 }

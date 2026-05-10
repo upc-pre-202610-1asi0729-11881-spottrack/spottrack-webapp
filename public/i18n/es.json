@@ -5,35 +5,35 @@
       "cardio": "Zona Cardio"
     },
     "names": {
-      "cinta1":             "Cinta 1",
-      "cinta2":             "Cinta 2",
-      "prensa":             "Prensa",
-      "prensaPiernas":      "Prensa de Piernas",
-      "poleaAlta":          "Polea Alta",
-      "rackSentadilla1":    "Rack Sentadilla #1",
-      "rackSentadilla2":    "Rack Sentadilla #2",
-      "bancoPecho":         "Banco Pecho",
-      "bancoPechoPlano":    "Banco Pecho Plano",
-      "bancoPechoInclinado":"Banco Pecho Inclinado",
-      "maquinaRemo":        "Máquina de Remo",
-      "remo":               "Remo",
-      "eliptica":           "Elíptica",
-      "raquetmaquina":      "Raquetmáquina"
+      "cinta1": "Cinta 1",
+      "cinta2": "Cinta 2",
+      "prensa": "Prensa",
+      "prensaPiernas": "Prensa de Piernas",
+      "poleaAlta": "Polea Alta",
+      "rackSentadilla1": "Rack Sentadilla #1",
+      "rackSentadilla2": "Rack Sentadilla #2",
+      "bancoPecho": "Banco Pecho",
+      "bancoPechoPlano": "Banco Pecho Plano",
+      "bancoPechoInclinado": "Banco Pecho Inclinado",
+      "maquinaRemo": "Máquina de Remo",
+      "remo": "Remo",
+      "eliptica": "Elíptica",
+      "raquetmaquina": "Raquetmáquina"
     }
   },
   "map": {
-    "title":    "Mapa de Disponibilidad en Tiempo Real",
+    "title": "Mapa de Disponibilidad en Tiempo Real",
     "subtitle": "Visualiza el estado de todas las máquinas del gimnasio",
-    "cardTitle":"Mapa de Disponibilidad",
+    "cardTitle": "Mapa de Disponibilidad",
     "filter": {
-      "all":      "Todos",
+      "all": "Todos",
       "strength": "Fuerza",
-      "cardio":   "Cardio"
+      "cardio": "Cardio"
     },
     "legend": {
       "available": "Libre ({{count}})",
-      "inUse":     "Ocupado ({{count}})",
-      "reserved":  "Reservado ({{count}})"
+      "inUse": "Ocupado ({{count}})",
+      "reserved": "Reservado ({{count}})"
     },
     "gyms": {
       "gym1": "Gimnasio Centro",
@@ -250,6 +250,38 @@
       }
     }
   },
+  "dashboardAdmin": {
+    "kpis": {
+      "operationalEquipment": "Equipos Operativos",
+      "maintenance": "En Mantenimiento",
+      "outOfService": "Fuera de Servicio",
+      "totalTickets": "Tickets Totales"
+    },
+    "charts": {
+      "peakCapacityHours": "Horas Pico de Capacidad",
+      "machineUsage": "Uso de Máquinas (Horas)",
+      "noUsageData": "Sin datos de uso"
+    },
+    "table": {
+      "title": "Equipos Subutilizados",
+      "headers": {
+        "machineId": "ID Máquina",
+        "location": "Ubicación",
+        "hours": "Horas",
+        "roi": "ROI"
+      },
+      "empty": "Sin equipos subutilizados"
+    },
+    "maintenanceCenter": {
+      "title": "Centro de Mantenimiento",
+      "columns": {
+        "todo": "Por Hacer",
+        "inProgress": "En Progreso",
+        "completed": "Completado"
+      },
+      "empty": "Sin tickets"
+    }
+  },
   "equipment": {
     "title": "Gestión de Equipos",
     "subtitle": "Monitorea y gestiona todos los equipos del gimnasio",
@@ -399,124 +431,124 @@
     "generatePdf": "Generar PDF",
     "filters": {
       "period": {
-        "label":   "Período",
-        "month":   "Último mes",
+        "label": "Período",
+        "month": "Último mes",
         "quarter": "Últimos 3 meses",
-        "year":    "Último año"
+        "year": "Último año"
       },
       "branch": {
         "label": "Sede",
-        "all":   "Todas las sedes",
-        "main":  "Sede Principal"
+        "all": "Todas las sedes",
+        "main": "Sede Principal"
       },
       "customRange": "Rango Personalizado",
-      "dateStart":   "Inicio",
-      "dateEnd":     "Fin"
+      "dateStart": "Inicio",
+      "dateEnd": "Fin"
     },
     "stats": {
-      "totalHours":    "Horas Totales de Uso",
+      "totalHours": "Horas Totales de Uso",
       "occupancyRate": "Tasa de Ocupación",
-      "peakUsage":     "Pico Máximo",
-      "inactiveTime":  "Tiempo Inactivo",
-      "vsLastMonth":   "vs mes anterior"
+      "peakUsage": "Pico Máximo",
+      "inactiveTime": "Tiempo Inactivo",
+      "vsLastMonth": "vs mes anterior"
     },
     "charts": {
-      "weeklyUsage":    "Uso Semanal vs Capacidad",
+      "weeklyUsage": "Uso Semanal vs Capacidad",
       "showComparison": "Mostrar Comparativa",
       "hideComparison": "Ocultar Comparativa",
-      "prevMonth":      "Mes anterior",
-      "usage":          "Uso",
-      "capacity":       "Capacidad",
-      "machineTypes":   "Distribución por Tipo de Máquina",
-      "stressPeaks":    "Picos de Estrés por Hora (Aforo > 90%)"
+      "prevMonth": "Mes anterior",
+      "usage": "Uso",
+      "capacity": "Capacidad",
+      "machineTypes": "Distribución por Tipo de Máquina",
+      "stressPeaks": "Picos de Estrés por Hora (Aforo > 90%)"
     },
     "relocation": {
-      "title":         "Recomendaciones de Reubicación",
-      "subtitle":      "Máquinas infrautilizadas detectadas entre sedes — reubicarlas maximiza el ROI de activos",
+      "title": "Recomendaciones de Reubicación",
+      "subtitle": "Máquinas infrautilizadas detectadas entre sedes — reubicarlas maximiza el ROI de activos",
       "opportunities": "oportunidades",
-      "action":        "Reubicar"
+      "action": "Reubicar"
     },
     "executive": {
       "title": "Resumen Ejecutivo",
       "positive": {
-        "title":       "Rendimiento Positivo",
+        "title": "Rendimiento Positivo",
         "description": "El uso de máquinas ha aumentado un 12% este mes, indicando mayor retención de clientes y mejor aprovechamiento de activos."
       },
       "bottleneck": {
-        "title":       "Cuello de Botella Detectado",
+        "title": "Cuello de Botella Detectado",
         "description": "Las horas de 18:00 a 20:00 consistentemente superan el 90% de capacidad. Recomendación: Considerar adquirir 2 máquinas adicionales de alto uso o implementar sistema de reservas."
       },
       "optimization": {
-        "title":       "Optimización Requerida",
+        "title": "Optimización Requerida",
         "description": "Se registraron 124 horas de inactividad programada por mantenimiento. Aplicar el calendario inteligente podría reducir este número en un 30%."
       }
     }
   },
   "maintenance": {
-    "title":       "Centro de Mantenimiento",
-    "subtitle":    "Gestiona tickets de mantenimiento preventivo y correctivo",
-    "newTicket":   "Nuevo Ticket",
-    "search":      "Buscar por ID, máquina o descripción...",
-    "assignedTo":  "Asignado a",
+    "title": "Centro de Mantenimiento",
+    "subtitle": "Gestiona tickets de mantenimiento preventivo y correctivo",
+    "newTicket": "Nuevo Ticket",
+    "search": "Buscar por ID, máquina o descripción...",
+    "assignedTo": "Asignado a",
     "completedBy": "Completado por",
     "stats": {
       "totalTickets": "Total Tickets",
-      "pending":      "Pendientes",
-      "inProgress":   "En Progreso",
-      "completed":    "Completados"
+      "pending": "Pendientes",
+      "inProgress": "En Progreso",
+      "completed": "Completados"
     },
     "filter": {
-      "allStatuses":   "Todos los Estados",
+      "allStatuses": "Todos los Estados",
       "allPriorities": "Todas las Prioridades"
     },
     "col": {
-      "pending":    "Pendiente",
+      "pending": "Pendiente",
       "inProgress": "En Progreso",
-      "completed":  "Completado",
-      "empty":      "Sin tickets"
+      "completed": "Completado",
+      "empty": "Sin tickets"
     },
     "action": {
-      "start":    "Iniciar",
+      "start": "Iniciar",
       "complete": "Completar"
     },
     "form": {
-      "title":       "Nuevo Ticket de Mantenimiento",
-      "equipment":   "Equipo",
-      "priority":    "Prioridad",
-      "type":        "Tipo",
-      "date":        "Fecha Programada",
-      "time":        "Hora Programada",
+      "title": "Nuevo Ticket de Mantenimiento",
+      "equipment": "Equipo",
+      "priority": "Prioridad",
+      "type": "Tipo",
+      "date": "Fecha Programada",
+      "time": "Hora Programada",
       "description": "Descripción",
-      "cancel":      "Cancelar",
-      "submit":      "Crear Ticket"
+      "cancel": "Cancelar",
+      "submit": "Crear Ticket"
     },
     "scheduler": {
-      "peakWarning":    "Hora de alta demanda",
+      "peakWarning": "Hora de alta demanda",
       "peakWarningMsg": "Esta franja tiene alto tráfico de miembros. Programar mantenimiento puede afectar la disponibilidad.",
-      "peakHint":       "Alta demanda — considera un horario valle",
-      "suggestions":    "Horarios valle sugeridos:",
-      "confirmedMsg":   "Horario valle — no afectará a los miembros"
+      "peakHint": "Alta demanda — considera un horario valle",
+      "suggestions": "Horarios valle sugeridos:",
+      "confirmedMsg": "Horario valle — no afectará a los miembros"
     },
     "status": {
-      "OPEN":        "Abierto",
+      "OPEN": "Abierto",
       "IN_PROGRESS": "En Progreso",
-      "RESOLVED":    "Resuelto",
-      "PENDING":     "Pendiente",
-      "CONFIRMED":   "Confirmado",
-      "CANCELLED":   "Cancelado"
+      "RESOLVED": "Resuelto",
+      "PENDING": "Pendiente",
+      "CONFIRMED": "Confirmado",
+      "CANCELLED": "Cancelado"
     },
     "priority": {
-      "LOW":    "Baja",
+      "LOW": "Baja",
       "MEDIUM": "Media",
-      "HIGH":   "Alta",
+      "HIGH": "Alta",
       "URGENT": "Urgente"
     },
     "type": {
-      "CORRECTIVE":  "Correctivo",
-      "PREVENTIVE":  "Preventivo",
+      "CORRECTIVE": "Correctivo",
+      "PREVENTIVE": "Preventivo",
       "LUBRICATION": "Lubricación",
-      "INSPECTION":  "Inspección",
-      "OVERHAUL":    "Revisión General"
+      "INSPECTION": "Inspección",
+      "OVERHAUL": "Revisión General"
     }
   }
 }

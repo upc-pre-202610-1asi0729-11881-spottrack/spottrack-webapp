@@ -21,7 +21,6 @@ import { AuthStore } from '../../../../auth/application/auth.store';
     MatButtonModule,
     MatIconModule,
     TranslateModule,
-    TitleCasePipe,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
