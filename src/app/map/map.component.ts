@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,18 +14,17 @@ export type MachineCategory = 'CARDIO' | 'STRENGTH';
 
 export interface MachineMarker {
   id: string;
-  name: string;
+  nameKey: string;
   status: MachineStatus;
   category: MachineCategory;
   top: string;
   left: string;
   icon: string;
-  timerSeconds?: number; // remaining seconds if IN_USE
+  timerSeconds?: number;
 }
 
 export interface Gym {
   id: string;
-  name: string;
 }
 
 export type FilterTab = 'ALL' | 'STRENGTH' | 'CARDIO';
@@ -51,117 +50,47 @@ export class MapComponent implements OnInit, OnDestroy {
   @Input() userName: string = 'Usuario';
 
   selectedGymId = 'gym1';
-  activeFilter: FilterTab = 'ALL';
 
-  gyms: Gym[] = [
-    { id: 'gym1', name: 'Gimnasio Centro' },
-    { id: 'gym2', name: 'Gimnasio Norte' },
-    { id: 'gym3', name: 'Gimnasio Sur' },
-  ];
+  // Signals — updates inside setInterval are tracked by Angular 21's scheduler
+  activeFilter = signal<FilterTab>('ALL');
 
-  allMachines: MachineMarker[] = [
-    {
-      id: '1',
-      name: 'Cinta 1',
-      status: 'AVAILABLE',
-      category: 'CARDIO',
-      top: '22%',
-      left: '18%',
-      icon: 'directions_run',
-    },
-    {
-      id: '2',
-      name: 'Prensa',
-      status: 'AVAILABLE',
-      category: 'STRENGTH',
-      top: '22%',
-      left: '48%',
-      icon: 'fitness_center',
-    },
-    {
-      id: '3',
-      name: 'Polea Alta',
-      status: 'AVAILABLE',
-      category: 'STRENGTH',
-      top: '22%',
-      left: '76%',
-      icon: 'fitness_center',
-    },
-    {
-      id: '4',
-      name: 'Cinta 2',
-      status: 'AVAILABLE',
-      category: 'CARDIO',
-      top: '48%',
-      left: '18%',
-      icon: 'directions_run',
-    },
-    {
-      id: '5',
-      name: 'Raquetmáquina',
-      status: 'RESERVED',
-      category: 'STRENGTH',
-      top: '48%',
-      left: '48%',
-      icon: 'sports_tennis',
-      timerSeconds: 599,
-    },
-    {
-      id: '6',
-      name: 'Remo',
-      status: 'IN_USE',
-      category: 'CARDIO',
-      top: '48%',
-      left: '76%',
-      icon: 'rowing',
-    },
-    {
-      id: '7',
-      name: 'Elíptica',
-      status: 'IN_USE',
-      category: 'CARDIO',
-      top: '72%',
-      left: '18%',
-      icon: 'directions_bike',
-    },
-    {
-      id: '8',
-      name: 'Banco Pecho',
-      status: 'IN_USE',
-      category: 'STRENGTH',
-      top: '72%',
-      left: '48%',
-      icon: 'fitness_center',
-    },
-  ];
+  allMachines = signal<MachineMarker[]>([
+    { id: '1', nameKey: 'cinta1',        status: 'AVAILABLE', category: 'CARDIO',   top: '22%', left: '18%', icon: 'directions_run' },
+    { id: '2', nameKey: 'prensa',        status: 'AVAILABLE', category: 'STRENGTH', top: '22%', left: '48%', icon: 'fitness_center' },
+    { id: '3', nameKey: 'poleaAlta',     status: 'AVAILABLE', category: 'STRENGTH', top: '22%', left: '76%', icon: 'fitness_center' },
+    { id: '4', nameKey: 'cinta2',        status: 'AVAILABLE', category: 'CARDIO',   top: '48%', left: '18%', icon: 'directions_run' },
+    { id: '5', nameKey: 'raquetmaquina', status: 'RESERVED',  category: 'STRENGTH', top: '48%', left: '48%', icon: 'sports_tennis', timerSeconds: 599 },
+    { id: '6', nameKey: 'remo',          status: 'IN_USE',    category: 'CARDIO',   top: '48%', left: '76%', icon: 'rowing' },
+    { id: '7', nameKey: 'eliptica',      status: 'IN_USE',    category: 'CARDIO',   top: '72%', left: '18%', icon: 'directions_bike' },
+    { id: '8', nameKey: 'bancoPecho',    status: 'IN_USE',    category: 'STRENGTH', top: '72%', left: '48%', icon: 'fitness_center' },
+  ]);
+
+  gyms: Gym[] = [{ id: 'gym1' }, { id: 'gym2' }, { id: 'gym3' }];
 
   private timerInterval: any;
 
   get filteredMachines(): MachineMarker[] {
-    if (this.activeFilter === 'ALL') return this.allMachines;
-    if (this.activeFilter === 'STRENGTH')
-      return this.allMachines.filter((m) => m.category === 'STRENGTH');
-    return this.allMachines.filter((m) => m.category === 'CARDIO');
+    const f = this.activeFilter();
+    const all = this.allMachines();
+    if (f === 'ALL')      return all;
+    if (f === 'STRENGTH') return all.filter(m => m.category === 'STRENGTH');
+    return all.filter(m => m.category === 'CARDIO');
   }
 
-  get availableCount(): number {
-    return this.allMachines.filter((m) => m.status === 'AVAILABLE').length;
-  }
-  get inUseCount(): number {
-    return this.allMachines.filter((m) => m.status === 'IN_USE').length;
-  }
-  get reservedCount(): number {
-    return this.allMachines.filter((m) => m.status === 'RESERVED').length;
-  }
+  get availableCount(): number { return this.allMachines().filter(m => m.status === 'AVAILABLE').length; }
+  get inUseCount():    number { return this.allMachines().filter(m => m.status === 'IN_USE').length; }
+  get reservedCount(): number { return this.allMachines().filter(m => m.status === 'RESERVED').length; }
 
   ngOnInit(): void {
-    // Tick timers every second for IN_USE machines
     this.timerInterval = setInterval(() => {
-      this.allMachines.forEach((m) => {
-        if (m.timerSeconds !== undefined && m.timerSeconds > 0) {
-          m.timerSeconds--;
-        }
-      });
+      this.allMachines.update(machines =>
+        machines.map(m => ({
+          ...m,
+          timerSeconds: m.timerSeconds !== undefined && m.timerSeconds > 0
+            ? m.timerSeconds - 1
+            : m.timerSeconds,
+        }))
+      );
     }, 1000);
   }
 
@@ -170,13 +99,11 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   setFilter(filter: FilterTab): void {
-    this.activeFilter = filter;
+    this.activeFilter.set(filter);
   }
 
   formatTimer(seconds: number): string {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, '0');
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   }

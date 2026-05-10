@@ -75,6 +75,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./map/map.component').then(m => m.MapComponent),
           },
+          {
+            path: 'bookings',
+            loadComponent: () =>
+              import('./booking/presentation/views/booking.component').then(m => m.BookingComponent),
+          },
         ],
       },
     ],
