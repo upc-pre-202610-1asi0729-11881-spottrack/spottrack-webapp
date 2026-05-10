@@ -1,7 +1,8 @@
+import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { MaintenanceSchedule, TaskType, ScheduleStatus } from '../domain/model/maintenance-schedule.entity';
 import { MaintenanceScheduleResource, MaintenanceScheduleResponse } from './maintenance-response';
 
-export class MaintenanceScheduleAssembler {
+export class MaintenanceScheduleAssembler implements BaseAssembler<MaintenanceSchedule, MaintenanceScheduleResource, MaintenanceScheduleResponse> {
   toEntitiesFromResponse(response: MaintenanceScheduleResponse): MaintenanceSchedule[] {
     return response.map(r => this.toEntityFromResource(r));
   }

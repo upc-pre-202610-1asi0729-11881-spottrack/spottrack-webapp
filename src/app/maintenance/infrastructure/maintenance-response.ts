@@ -1,4 +1,6 @@
-export interface MaintenanceTicketResource {
+import { BaseResource } from '../../shared/infrastructure/base-response';
+
+export interface MaintenanceTicketResource extends BaseResource {
   id:           number;
   equipment_id: number;
   status:       string;
@@ -12,7 +14,7 @@ export interface MaintenanceTicketResource {
 
 export type MaintenanceTicketResponse = MaintenanceTicketResource[];
 
-export interface MaintenanceScheduleResource {
+export interface MaintenanceScheduleResource extends BaseResource {
   id:             number;
   equipment_id:   number;
   scheduled_date: string;

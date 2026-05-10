@@ -1,6 +1,8 @@
 export const environment = {
   production: false,
-  equipmentApiProvider: "http://localhost:3000/",
-  equipmentEnpoints: "equipments",
-  iotEndpoint: "iot_devices"
+  apiProvider: "http://localhost:3000/",
+  equipmentEndpoints: "equipments",
+  iotEndpoint: "iot_devices",
+  maintenanceTicketsEndpoint: "maintenance_tickets",
+  maintenanceSchedulesEndpoint: "maintenance_schedules",
 };

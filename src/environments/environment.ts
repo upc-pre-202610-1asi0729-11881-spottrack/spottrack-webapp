@@ -1,6 +1,8 @@
 export const environment = {
   production: true,
-  equipmentApiProvider: 'https://spot-track-apiv1.azurewebsites.net/',
+  apiProvider: 'https://spot-track-apiv1.azurewebsites.net/',
   equipmentEndpoints: 'equipments',
   iotEndpoint: 'iot_devices',
+  maintenanceTicketsEndpoint: 'maintenance_tickets',
+  maintenanceSchedulesEndpoint: 'maintenance_schedules',
 };

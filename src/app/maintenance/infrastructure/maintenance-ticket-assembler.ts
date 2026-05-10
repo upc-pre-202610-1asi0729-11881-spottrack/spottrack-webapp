@@ -1,7 +1,8 @@
+import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { MaintenanceTicket, TicketStatus, TicketPriority, TicketType } from '../domain/model/maintenance-ticket.entity';
 import { MaintenanceTicketResource, MaintenanceTicketResponse } from './maintenance-response';
 
-export class MaintenanceTicketAssembler {
+export class MaintenanceTicketAssembler implements BaseAssembler<MaintenanceTicket, MaintenanceTicketResource, MaintenanceTicketResponse> {
   toEntitiesFromResponse(response: MaintenanceTicketResponse): MaintenanceTicket[] {
     return response.map(r => this.toEntityFromResource(r));
   }

@@ -1,53 +1,32 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { MaintenanceTicketResource, MaintenanceScheduleResource } from './maintenance-response';
-import { MaintenanceTicketAssembler } from './maintenance-ticket-assembler';
-import { MaintenanceScheduleAssembler } from './maintenance-schedule-assembler';
+import { Observable } from 'rxjs';
+import { BaseApi } from '../../shared/infrastructure/base-api';
 import { MaintenanceTicket } from '../domain/model/maintenance-ticket.entity';
 import { MaintenanceSchedule } from '../domain/model/maintenance-schedule.entity';
+import { MaintenanceTicketApiEndpoint } from './maintenance-ticket-api-endpoint';
+import { MaintenanceScheduleApiEndpoint } from './maintenance-schedule-api-endpoint';
 
 @Injectable({ providedIn: 'root' })
-export class MaintenanceApi {
-  private readonly http             = inject(HttpClient);
-  private readonly ticketAssembler  = new MaintenanceTicketAssembler();
-  private readonly scheduleAssembler = new MaintenanceScheduleAssembler();
+export class MaintenanceApi extends BaseApi {
+  private readonly ticketEndpoint:   MaintenanceTicketApiEndpoint;
+  private readonly scheduleEndpoint: MaintenanceScheduleApiEndpoint;
 
-  private get baseUrl(): string {
-    return environment.equipmentApiProvider;
+  constructor(http: HttpClient) {
+    super();
+    this.ticketEndpoint   = new MaintenanceTicketApiEndpoint(http);
+    this.scheduleEndpoint = new MaintenanceScheduleApiEndpoint(http);
   }
 
-  getTickets(): Observable<MaintenanceTicket[]> {
-    return this.http
-      .get<MaintenanceTicketResource[]>(`${this.baseUrl}maintenance_tickets`)
-      .pipe(
-        map(list => list.map(r => this.ticketAssembler.toEntityFromResource(r))),
-        catchError(this.handleError('Failed to load maintenance tickets')),
-      );
-  }
+  getTickets(): Observable<MaintenanceTicket[]>                                    { return this.ticketEndpoint.getAll(); }
+  getTicketById(id: number): Observable<MaintenanceTicket>                         { return this.ticketEndpoint.getById(id); }
+  createTicket(ticket: MaintenanceTicket): Observable<MaintenanceTicket>           { return this.ticketEndpoint.create(ticket); }
+  updateTicket(ticket: MaintenanceTicket): Observable<MaintenanceTicket>           { return this.ticketEndpoint.update(ticket, ticket.id); }
+  deleteTicket(id: number): Observable<void>                                       { return this.ticketEndpoint.delete(id); }
 
-  getSchedules(): Observable<MaintenanceSchedule[]> {
-    return this.http
-      .get<MaintenanceScheduleResource[]>(`${this.baseUrl}maintenance_schedules`)
-      .pipe(
-        map(list => list.map(r => this.scheduleAssembler.toEntityFromResource(r))),
-        catchError(this.handleError('Failed to load maintenance schedules')),
-      );
-  }
-
-  createSchedule(schedule: MaintenanceSchedule): Observable<MaintenanceSchedule> {
-    const { id: _id, ...body } = this.scheduleAssembler.toResourceFromEntity(schedule);
-    return this.http
-      .post<MaintenanceScheduleResource>(`${this.baseUrl}maintenance_schedules`, body)
-      .pipe(
-        map(r => this.scheduleAssembler.toEntityFromResource(r)),
-        catchError(this.handleError('Failed to schedule maintenance')),
-      );
-  }
-
-  private handleError(op: string) {
-    return (err: unknown): Observable<never> =>
-      throwError(() => new Error(err instanceof Error ? err.message : op));
-  }
+  getSchedules(): Observable<MaintenanceSchedule[]>                                { return this.scheduleEndpoint.getAll(); }
+  getScheduleById(id: number): Observable<MaintenanceSchedule>                     { return this.scheduleEndpoint.getById(id); }
+  createSchedule(schedule: MaintenanceSchedule): Observable<MaintenanceSchedule>   { return this.scheduleEndpoint.create(schedule); }
+  updateSchedule(schedule: MaintenanceSchedule): Observable<MaintenanceSchedule>   { return this.scheduleEndpoint.update(schedule, schedule.id); }
+  deleteSchedule(id: number): Observable<void>                                     { return this.scheduleEndpoint.delete(id); }
 }
