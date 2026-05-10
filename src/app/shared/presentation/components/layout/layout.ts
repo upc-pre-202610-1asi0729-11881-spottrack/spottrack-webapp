@@ -24,7 +24,6 @@ import { TranslateModule } from '@ngx-translate/core';
 export class Layout {
   private sessionService = inject(SessionService);
 
-  // Reemplazamos la variable por un Getter
   get currentRole(): 'admin' | 'client' {
     return this.sessionService.currentRole();
   }
