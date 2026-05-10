@@ -39,6 +39,40 @@
       "gym1": "Gimnasio Centro",
       "gym2": "Gimnasio Norte",
       "gym3": "Gimnasio Sur"
+    },
+    "muscleGroups": {
+      "chest": "Pectorales",
+      "legs": "Piernas",
+      "back": "Espalda",
+      "shoulders": "Hombros",
+      "arms": "Brazos",
+      "cardio": "Cardio"
+    },
+    "detail": {
+      "statusLabel": "Estado",
+      "status": {
+        "AVAILABLE": "Libre",
+        "IN_USE": "Ocupado",
+        "RESERVED": "Reservado"
+      },
+      "reservedByUser": "Esta máquina está reservada por otro usuario",
+      "notifyBtn": "Notificarme cuando esté libre",
+      "alternativesBtn": "Ver Alternativas",
+      "reportFreeBtn": "Reportar como Libre",
+      "reserveBtn": "Reservar 15 minutos",
+      "reportOccupiedBtn": "Reportar como Ocupado",
+      "notifications": {
+        "notified": "Te notificaremos cuando la máquina esté libre",
+        "reportedFree": "Máquina reportada como libre. ¡Gracias!",
+        "reserved": "Máquina reservada por 15 minutos",
+        "reportedOccupied": "Máquina reportada como ocupada. ¡Gracias!"
+      }
+    },
+    "alternatives": {
+      "title": "Ejercicios Alternativos",
+      "subtitle": "Estas máquinas están disponibles y trabajan grupos musculares similares:",
+      "free": "Libre",
+      "reserveBtn": "Reservar 15 min"
     }
   },
   "booking": {
@@ -271,6 +305,91 @@
         "required": "Este campo es obligatorio",
         "min": "El valor debe ser 0 o mayor"
       }
+    }
+  },
+  "routines": {
+    "title": "Rutinas y Ejercicios",
+    "subtitle": "Gestiona tus rutinas y encuentra ejercicios alternativos",
+    "newRoutine": "Nueva Rutina",
+    "search": "Buscar ejercicio o máquina...",
+    "filter": {
+      "all": "Todos",
+      "chest": "Pectorales",
+      "legs": "Piernas",
+      "back": "Espalda",
+      "shoulders": "Hombros",
+      "arms": "Brazos"
+    },
+    "exercises": {
+      "pressDePecho": "Press de Pecho",
+      "sentadillaConBarra": "Sentadilla con Barra",
+      "pesoMuertoRumano": "Peso Muerto Rumano",
+      "dominadas": "Dominadas",
+      "pressMilitar": "Press Militar"
+    },
+    "machines": {
+      "bancoPechoPlano": "Banco Pecho Plano",
+      "rackSentadilla2": "Rack Sentadilla #2",
+      "plataformaPesoMuerto": "Plataforma de Peso Muerto",
+      "barraDeDominadas": "Barra de Dominadas",
+      "rackDeFuerza": "Rack de Fuerza"
+    },
+    "tags": {
+      "chest": "Pectorales",
+      "legs": "Piernas",
+      "back": "Espalda",
+      "lowerBack": "Espalda Baja",
+      "shoulders": "Hombros",
+      "arms": "Brazos"
+    },
+    "level": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado"
+    },
+    "status": {
+      "available": "Disponible",
+      "inUse": "Ocupado",
+      "maintenance": "Mantenimiento"
+    },
+    "alternatives": {
+      "title": "Alternativas disponibles:",
+      "free": "Libre",
+      "viewMap": "Ver en el Mapa",
+      "prensaDePiernas": "Prensa de Piernas",
+      "hackSquat": "Hack Squat",
+      "sentadillaGoblet": "Sentadilla Goblet",
+      "poleaAlta": "Polea Alta",
+      "remoConBarra": "Remo con Barra",
+      "maquinaDeRemo": "Máquina de Remo"
+    },
+    "suggestion": {
+      "title": "Motor de Sugerencias Inteligente",
+      "item1": "Las alternativas respetan tu grupo muscular objetivo",
+      "item2": "Excluye automáticamente máquinas en mantenimiento",
+      "item3": "Sugiere ejercicios de peso corporal si no hay máquinas libres",
+      "item4": "Actualización en tiempo real según disponibilidad"
+    },
+    "modal": {
+      "title": "Nueva Rutina",
+      "subtitle": "Crea una rutina personalizada para tus entrenamientos",
+      "name": "Nombre de la Rutina",
+      "namePlaceholder": "Ej: Rutina de Fuerza - Semana 1",
+      "objective": "Objetivo",
+      "selectObjective": "Selecciona un objetivo",
+      "objectives": {
+        "gainStrength": "Ganar Fuerza",
+        "muscleHypertrophy": "Hipertrofia Muscular",
+        "endurance": "Resistencia",
+        "weightLoss": "Pérdida de Peso",
+        "generalFitness": "Condición Física General"
+      },
+      "difficulty": "Nivel de Dificultad",
+      "notes": "Notas (Opcional)",
+      "notesPlaceholder": "Agrega notas sobre tu rutina...",
+      "cancel": "Cancelar",
+      "create": "Crear Rutina",
+      "successMessage": "¡Rutina \"{{name}}\" creada exitosamente!"
     }
   },
   "analytics": {

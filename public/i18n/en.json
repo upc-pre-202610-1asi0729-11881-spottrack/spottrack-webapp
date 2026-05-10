@@ -39,6 +39,40 @@
       "gym1": "Gym Center",
       "gym2": "North Gym",
       "gym3": "South Gym"
+    },
+    "muscleGroups": {
+      "chest": "Chest",
+      "legs": "Legs",
+      "back": "Back",
+      "shoulders": "Shoulders",
+      "arms": "Arms",
+      "cardio": "Cardio"
+    },
+    "detail": {
+      "statusLabel": "Status",
+      "status": {
+        "AVAILABLE": "Free",
+        "IN_USE": "Busy",
+        "RESERVED": "Reserved"
+      },
+      "reservedByUser": "This machine is reserved by another user",
+      "notifyBtn": "Notify me when it's free",
+      "alternativesBtn": "View Alternatives",
+      "reportFreeBtn": "Report as Free",
+      "reserveBtn": "Reserve 15 minutes",
+      "reportOccupiedBtn": "Report as Occupied",
+      "notifications": {
+        "notified": "You'll be notified when the machine is free",
+        "reportedFree": "Machine reported as free. Thank you!",
+        "reserved": "Machine reserved for 15 minutes",
+        "reportedOccupied": "Machine reported as occupied. Thank you!"
+      }
+    },
+    "alternatives": {
+      "title": "Alternative Exercises",
+      "subtitle": "These machines are available and work similar muscle groups:",
+      "free": "Free",
+      "reserveBtn": "Reserve 15 min"
     }
   },
   "booking": {
@@ -271,6 +305,91 @@
         "required": "This field is required",
         "min": "Value must be 0 or greater"
       }
+    }
+  },
+  "routines": {
+    "title": "Routines & Exercises",
+    "subtitle": "Manage your routines and find alternative exercises",
+    "newRoutine": "New Routine",
+    "search": "Search exercise or machine...",
+    "filter": {
+      "all": "All",
+      "chest": "Chest",
+      "legs": "Legs",
+      "back": "Back",
+      "shoulders": "Shoulders",
+      "arms": "Arms"
+    },
+    "exercises": {
+      "pressDePecho": "Bench Press",
+      "sentadillaConBarra": "Barbell Squat",
+      "pesoMuertoRumano": "Romanian Deadlift",
+      "dominadas": "Pull-Ups",
+      "pressMilitar": "Overhead Press"
+    },
+    "machines": {
+      "bancoPechoPlano": "Flat Bench Press",
+      "rackSentadilla2": "Squat Rack #2",
+      "plataformaPesoMuerto": "Deadlift Platform",
+      "barraDeDominadas": "Pull-Up Bar",
+      "rackDeFuerza": "Strength Rack"
+    },
+    "tags": {
+      "chest": "Chest",
+      "legs": "Legs",
+      "back": "Back",
+      "lowerBack": "Lower Back",
+      "shoulders": "Shoulders",
+      "arms": "Arms"
+    },
+    "level": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "status": {
+      "available": "Available",
+      "inUse": "In Use",
+      "maintenance": "Maintenance"
+    },
+    "alternatives": {
+      "title": "Available alternatives:",
+      "free": "Free",
+      "viewMap": "View on Map",
+      "prensaDePiernas": "Leg Press",
+      "hackSquat": "Hack Squat",
+      "sentadillaGoblet": "Goblet Squat",
+      "poleaAlta": "High Cable",
+      "remoConBarra": "Barbell Row",
+      "maquinaDeRemo": "Rowing Machine"
+    },
+    "suggestion": {
+      "title": "Smart Suggestion Engine",
+      "item1": "Alternatives respect your target muscle group",
+      "item2": "Automatically excludes machines under maintenance",
+      "item3": "Suggests bodyweight exercises if no free machines",
+      "item4": "Real-time update based on availability"
+    },
+    "modal": {
+      "title": "New Routine",
+      "subtitle": "Create a personalized routine for your workouts",
+      "name": "Routine Name",
+      "namePlaceholder": "E.g.: Strength Routine - Week 1",
+      "objective": "Objective",
+      "selectObjective": "Select an objective",
+      "objectives": {
+        "gainStrength": "Gain Strength",
+        "muscleHypertrophy": "Muscle Hypertrophy",
+        "endurance": "Endurance",
+        "weightLoss": "Weight Loss",
+        "generalFitness": "General Fitness"
+      },
+      "difficulty": "Difficulty Level",
+      "notes": "Notes (Optional)",
+      "notesPlaceholder": "Add notes about your routine...",
+      "cancel": "Cancel",
+      "create": "Create Routine",
+      "successMessage": "Routine \"{{name}}\" created successfully!"
     }
   },
   "analytics": {
