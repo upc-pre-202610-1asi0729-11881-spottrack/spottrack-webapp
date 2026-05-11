@@ -1,90 +1,451 @@
+// Variables
+$bg-main: #141414;
+$bg-card: #1f1f1f;
+$bg-item: #2a2a2a;
+$text-primary: #ffffff;
+$text-secondary: #a3a3a3;
+$accent-gold: #f5b041;
+$success-green: #2ecc71;
+$border-color: #333333;
+$border-radius: 12px;
+$font-family: 'Inter', 'Segoe UI', sans-serif;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: $bg-main;
+  color: $text-primary;
+  font-family: $font-family;
+}
+
 .profile-container {
-  padding: 32px;
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
+  padding: 2rem;
 }
 
-.page-title {
-  color: #fff;
-  font-size: 28px;
-  margin-bottom: 24px;
-}
-
-.profile-grid {
+// Header
+.profile-header {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .back-btn {
+    background: transparent;
+    border: none;
+    color: $text-primary;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
 }
 
-.profile-card {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 24px;
+// Cards
+.card {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.profile-card h2 {
-  color: #fff;
-  font-size: 18px;
-  margin-bottom: 20px;
-  font-weight: 500;
+.text-muted {
+  color: $text-secondary;
+  font-size: 0.875rem;
 }
 
-.profile-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas como en la foto */
-  gap: 20px;
+// User Card Specific
+.user-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .avatar {
+      background-color: $accent-gold;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      align-items: flex-start;
+
+      h2 {
+        font-size: 1rem;
+      }
+
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        margin-top: 0.25rem;
+
+        &.badge-outline {
+          border: 1px solid $accent-gold;
+          color: $accent-gold;
+        }
+      }
+    }
+  }
+
+  .points-info {
+    text-align: right;
+
+    .points-total {
+      font-size: 2rem;
+      font-weight: bold;
+      color: $accent-gold;
+    }
+  }
+}
+
+// Plan Card Specific
+.plan-card {
+  .plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .plan-title-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .plan-icon {
+        background-color: #2a2a2a;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h3 {
+        font-size: 1rem;
+      }
+    }
+
+    .btn-upgrade {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid $accent-gold;
+      color: $accent-gold;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s;
+
+      &:hover {
+        background: rgba(245, 176, 65, 0.1);
+      }
+    }
+  }
+
+  .plan-features {
+    margin-bottom: 1.5rem;
+
+    .features-title {
+      font-size: 0.875rem;
+      color: $text-secondary;
+      margin-bottom: 0.75rem;
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #d1d5db;
+
+        .check-icon {
+          width: 16px;
+          height: 16px;
+          color: $success-green;
+        }
+      }
+    }
+  }
+
+  .plan-renewal {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: $bg-item;
+    padding: 1rem;
+    border-radius: 8px;
+
+    .renewal-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// History Card Specific
+.history-card {
+  .history-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-item;
+    padding: 1rem;
+    border-radius: 8px;
+
+    .history-desc {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      p {
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+
+    .history-points {
+      color: $success-green;
+      font-weight: bold;
+      font-size: 0.875rem;
+    }
+  }
+}
+// Nuevas variables sugeridas al principio del archivo
+$accent-cyan: #0ab5c3;
+$danger-color: #ef4444;
+
+// Estilos para Formularios y Tarjetas de Configuración
+.form-card, .settings-card {
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+  }
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
 
-/* El botón ocupa ambas columnas en el formulario de la imagen */
-.btn-primary {
-  grid-column: span 2;
-  background-color: #3f51b5; /* Azul primario similar a las capturas */
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  margin-top: 10px;
-  transition: background 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #303f9f;
-}
-
-label {
-  color: #aaa;
-  font-size: 14px;
-}
-
-input {
-  background-color: #121212;
-  border: 1px solid #444;
-  color: #fff;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-input:focus {
-  outline: none;
-  border-color: #3f51b5;
-}
-
-/* Responsivo para móviles */
-@media (max-width: 600px) {
-  .profile-form {
-    grid-template-columns: 1fr;
+  &:last-child {
+    margin-bottom: 0;
   }
-  .btn-primary {
-    grid-column: span 1;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .help-text {
+    font-size: 0.75rem;
+    color: $text-secondary;
+    margin-top: 0.25rem;
+  }
+}
+
+.form-control {
+  background-color: $bg-main;
+  border: 1px solid $border-color;
+  color: $text-primary;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: $text-secondary;
+  }
+}
+
+// Contenedor del Select para el icono personalizado
+.select-wrapper {
+  position: relative;
+
+  select {
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .select-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: $text-secondary;
+  }
+}
+
+// Lista de Notificaciones (Checkboxes Personalizados)
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .notification-text {
+      h4 {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+      p {
+        font-size: 0.75rem;
+        color: $text-secondary;
+      }
+    }
+  }
+}
+
+.custom-checkbox {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked ~ .checkmark {
+      background-color: $accent-cyan;
+      border-color: $accent-cyan;
+
+      svg {
+        display: block;
+      }
+    }
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: transparent;
+    border: 2px solid $text-secondary;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    svg {
+      display: none;
+      width: 14px;
+      height: 14px;
+      color: $bg-main;
+    }
+  }
+}
+
+// Acciones de Seguridad
+.security-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+// Botones Generales
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid $border-color;
+  color: $text-primary;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background-color: $bg-item;
+  }
+
+  &.btn-danger {
+    color: $danger-color;
+    &:hover {
+      background-color: rgba($danger-color, 0.1);
+      border-color: rgba($danger-color, 0.5);
+    }
+  }
+}
+
+.btn-primary {
+  width: 100%;
+  background-color: $accent-gold;
+  color: $bg-main;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-top: 1rem;
+
+  &:hover {
+    opacity: 0.9;
   }
 }
