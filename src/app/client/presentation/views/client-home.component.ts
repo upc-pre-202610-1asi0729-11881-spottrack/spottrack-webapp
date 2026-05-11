@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+  import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthStore } from '../../../auth/application/auth.store';
