@@ -10,7 +10,7 @@ const MOCK_USERS: User[] = [
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
-  private readonly userSignal  = signal<User | null>(this.loadFromStorage());
+  private readonly userSignal  = signal<User | null>(null);
   private readonly errorSignal = signal<string | null>(null);
 
   readonly currentUser      = this.userSignal.asReadonly();

@@ -1,44 +1,100 @@
 {
+  "client": {
+    "welcome": "Welcome",
+    "subtitle": "Track machines, book equipment, and manage your routines",
+    "role": "Client"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Welcome back! Enter your credentials to continue",
+      "emailLabel": "Email",
+      "emailPlaceholder": "your@email.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submitBtn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "register": "Sign up",
+      "demoTitle": "Demo credentials",
+      "demoPassword": "Password: demo1234"
+    },
+    "error": {
+      "emptyFields": "Please enter your email and password",
+      "invalidCredentials": "Invalid email or password"
+    }
+  },
   "machines": {
     "zones": {
       "fuerza": "Strength Zone",
       "cardio": "Cardio Zone"
     },
     "names": {
-      "cinta1":             "Treadmill 1",
-      "cinta2":             "Treadmill 2",
-      "prensa":             "Leg Press",
-      "prensaPiernas":      "Leg Press",
-      "poleaAlta":          "High Cable",
-      "rackSentadilla1":    "Squat Rack #1",
-      "rackSentadilla2":    "Squat Rack #2",
-      "bancoPecho":         "Bench Press",
-      "bancoPechoPlano":    "Flat Bench Press",
-      "bancoPechoInclinado":"Incline Bench Press",
-      "maquinaRemo":        "Rowing Machine",
-      "remo":               "Rowing",
-      "eliptica":           "Elliptical",
-      "raquetmaquina":      "Multi-Function Machine"
+      "cinta1": "Treadmill 1",
+      "cinta2": "Treadmill 2",
+      "prensa": "Leg Press",
+      "prensaPiernas": "Leg Press",
+      "poleaAlta": "High Cable",
+      "rackSentadilla1": "Squat Rack #1",
+      "rackSentadilla2": "Squat Rack #2",
+      "bancoPecho": "Bench Press",
+      "bancoPechoPlano": "Flat Bench Press",
+      "bancoPechoInclinado": "Incline Bench Press",
+      "maquinaRemo": "Rowing Machine",
+      "remo": "Rowing",
+      "eliptica": "Elliptical",
+      "raquetmaquina": "Multi-Function Machine"
     }
   },
   "map": {
-    "title":    "Real-Time Availability Map",
+    "title": "Real-Time Availability Map",
     "subtitle": "View the status of all gym machines",
-    "cardTitle":"Availability Map",
+    "cardTitle": "Availability Map",
     "filter": {
-      "all":      "All",
+      "all": "All",
       "strength": "Strength",
-      "cardio":   "Cardio"
+      "cardio": "Cardio"
     },
     "legend": {
       "available": "Free ({{count}})",
-      "inUse":     "In Use ({{count}})",
-      "reserved":  "Reserved ({{count}})"
+      "inUse": "In Use ({{count}})",
+      "reserved": "Reserved ({{count}})"
     },
     "gyms": {
       "gym1": "Gym Center",
       "gym2": "North Gym",
       "gym3": "South Gym"
+    },
+    "detail": {
+      "statusLabel": "Status",
+      "status": {
+        "AVAILABLE": "Available",
+        "IN_USE": "In Use",
+        "RESERVED": "Reserved"
+      },
+      "reservedByUser": "You have reserved this machine",
+      "notifyBtn": "Notify me when free",
+      "alternativesBtn": "See alternatives",
+      "reportFreeBtn": "Report as free",
+      "reserveBtn": "Reserve",
+      "reportOccupiedBtn": "Report as occupied",
+      "notifications": {
+        "notified": "You'll be notified when this machine is free",
+        "reportedFree": "Machine reported as free. Thank you!",
+        "reserved": "Machine reserved successfully",
+        "reportedOccupied": "Machine reported as occupied. Thank you!"
+      }
+    },
+    "alternatives": {
+      "title": "Alternative Machines",
+      "subtitle": "Available machines in the same category",
+      "free": "Free",
+      "reserveBtn": "Reserve"
+    },
+    "muscleGroups": {
+      "cardio": "Cardio",
+      "legs": "Legs",
+      "back": "Back",
+      "chest": "Chest"
     }
   },
   "booking": {
@@ -281,226 +337,347 @@
     "generatePdf": "Generate PDF",
     "filters": {
       "period": {
-        "label":   "Period",
-        "month":   "Last month",
+        "label": "Period",
+        "month": "Last month",
         "quarter": "Last 3 months",
-        "year":    "Last year"
+        "year": "Last year"
       },
       "branch": {
         "label": "Branch",
-        "all":   "All branches",
-        "main":  "Main Branch"
+        "all": "All branches",
+        "main": "Main Branch"
       },
       "customRange": "Custom Range",
-      "dateStart":   "Start",
-      "dateEnd":     "End"
+      "dateStart": "Start",
+      "dateEnd": "End"
     },
     "stats": {
-      "totalHours":    "Total Usage Hours",
+      "totalHours": "Total Usage Hours",
       "occupancyRate": "Occupancy Rate",
-      "peakUsage":     "Peak Usage",
-      "inactiveTime":  "Inactive Time",
-      "vsLastMonth":   "vs last month"
+      "peakUsage": "Peak Usage",
+      "inactiveTime": "Inactive Time",
+      "vsLastMonth": "vs last month"
     },
     "charts": {
-      "weeklyUsage":    "Weekly Usage vs Capacity",
+      "weeklyUsage": "Weekly Usage vs Capacity",
       "showComparison": "Show Comparison",
       "hideComparison": "Hide Comparison",
-      "prevMonth":      "Previous month",
-      "usage":          "Usage",
-      "capacity":       "Capacity",
-      "machineTypes":   "Distribution by Machine Type",
-      "stressPeaks":    "Stress Peaks by Hour (Occupancy > 90%)"
+      "prevMonth": "Previous month",
+      "usage": "Usage",
+      "capacity": "Capacity",
+      "machineTypes": "Distribution by Machine Type",
+      "stressPeaks": "Stress Peaks by Hour (Occupancy > 90%)"
     },
     "relocation": {
-      "title":         "Relocation Recommendations",
-      "subtitle":      "Underutilized machines identified across branches — relocate to maximize asset ROI",
+      "title": "Relocation Recommendations",
+      "subtitle": "Underutilized machines identified across branches — relocate to maximize asset ROI",
       "opportunities": "opportunities",
-      "action":        "Relocate"
+      "action": "Relocate"
     },
     "executive": {
       "title": "Executive Summary",
       "positive": {
-        "title":       "Positive Performance",
+        "title": "Positive Performance",
         "description": "Machine usage has increased 12% this month, indicating better client retention and improved asset utilization."
       },
       "bottleneck": {
-        "title":       "Bottleneck Detected",
+        "title": "Bottleneck Detected",
         "description": "Hours from 18:00 to 20:00 consistently exceed 90% capacity. Recommendation: Consider acquiring 2 additional high-use machines or implementing a reservation system."
       },
       "optimization": {
-        "title":       "Optimization Required",
+        "title": "Optimization Required",
         "description": "124 hours of scheduled downtime recorded for maintenance. Applying the smart scheduler could reduce this figure by 30%."
       }
     },
     "financial": {
-      "title":              "Financial Impact & ROI",
-      "subtitle":           "Analysis of hidden costs, inactivity losses and investment projections",
-      "lossInactivity":     "Inactivity Loss",
-      "maintenanceCost":    "Maintenance Cost",
-      "potentialSavings":   "Potential Savings",
-      "withPredictive":     "With predictive maintenance",
-      "avgRoi":             "Average ROI",
-      "months":             "months",
+      "title": "Financial Impact & ROI",
+      "subtitle": "Analysis of hidden costs, inactivity losses and investment projections",
+      "lossInactivity": "Inactivity Loss",
+      "maintenanceCost": "Maintenance Cost",
+      "potentialSavings": "Potential Savings",
+      "withPredictive": "With predictive maintenance",
+      "avgRoi": "Average ROI",
+      "months": "months",
       "investmentRecovery": "Investment recovery",
-      "costBreakdown":      "Maintenance Cost Breakdown",
+      "costBreakdown": "Maintenance Cost Breakdown",
       "lossTable": {
-        "title":        "Equipment Inactivity Loss",
-        "machine":      "Machine",
-        "hours":        "Hours",
-        "ratePerHour":  "$/Hour",
-        "total":        "Total",
+        "title": "Equipment Inactivity Loss",
+        "machine": "Machine",
+        "hours": "Hours",
+        "ratePerHour": "$/Hour",
+        "total": "Total",
         "monthlyTotal": "TOTAL MONTHLY LOSS"
       },
       "costLabels": {
-        "corrective": "Mantenimiento Correctivo (3-5x más caro)",
-        "preventive": "Mantenimiento Preventivo",
-        "inventory": "Inventario de Repuestos"
+        "corrective": "Corrective Maintenance (3-5x more expensive)",
+        "preventive": "Preventive Maintenance",
+        "inventory": "Spare Parts Inventory"
       },
       "roiProjection": {
         "title": "ROI Projection – New Machine"
       },
       "simulator": {
-        "title":          "Return on Investment (ROI) Simulator",
-        "machineCost":    "Machine Cost ($)",
-        "unmetDemand":    "Unmet Demand (users/month)",
+        "title": "Return on Investment (ROI) Simulator",
+        "machineCost": "Machine Cost ($)",
+        "unmetDemand": "Unmet Demand (users/month)",
         "revenuePerUser": "Revenue per User ($)",
-        "calculate":      "Calculate ROI"
+        "calculate": "Calculate ROI"
       },
       "recommendations": {
         "title": "Financial Recommendations",
         "preventive": {
-          "title":       "Migrate to Preventive Maintenance",
+          "title": "Migrate to Preventive Maintenance",
           "description": "Implementing automatic alerts can reduce corrective costs by 60%, saving approximately $1,920/month."
         },
         "investment": {
-          "title":       "Recommended Investment: 2 Squat Racks",
+          "title": "Recommended Investment: 2 Squat Racks",
           "description": "Analysis shows 98% occupancy during peak hours. A $10,000 investment would be recovered in ~7 months based on current demand."
         },
         "relocation": {
-          "title":       "Relocate Underutilized Equipment",
+          "title": "Relocate Underutilized Equipment",
           "description": "3 machines with <30% usage in Surco could generate $1,200/month additional revenue if relocated to Miraflores."
         }
       }
     }
   },
   "financialImpact": {
-    "title":      "Financial Impact & ROI",
-    "subtitle":   "Analysis of hidden costs, inactivity losses and investment projections",
-    "exportCsv":  "Export CSV",
-    "generatePdf":"Generate PDF",
+    "title": "Financial Impact & ROI",
+    "subtitle": "Analysis of hidden costs, inactivity losses and investment projections",
+    "exportCsv": "Export CSV",
+    "generatePdf": "Generate PDF",
     "stats": {
-      "lossInactivity":     "Inactivity Loss",
-      "maintenanceCost":    "Maintenance Cost",
-      "potentialSavings":   "Potential Savings",
-      "withPredictive":     "With predictive maintenance",
-      "avgRoi":             "Average ROI",
-      "months":             "months",
+      "lossInactivity": "Inactivity Loss",
+      "maintenanceCost": "Maintenance Cost",
+      "potentialSavings": "Potential Savings",
+      "withPredictive": "With predictive maintenance",
+      "avgRoi": "Average ROI",
+      "months": "months",
       "investmentRecovery": "Investment recovery",
-      "lastMonth":          "Last month"
+      "lastMonth": "Last month"
     },
     "lossTable": {
-      "title":        "Equipment Inactivity Loss",
-      "machine":      "Machine",
-      "hours":        "Hours",
-      "ratePerHour":  "$/Hour",
-      "total":        "Total",
+      "title": "Equipment Inactivity Loss",
+      "machine": "Machine",
+      "hours": "Hours",
+      "ratePerHour": "$/Hour",
+      "total": "Total",
       "monthlyTotal": "TOTAL MONTHLY LOSS"
     },
     "costBreakdown": {
       "title": "Maintenance Cost Breakdown"
     },
+    "costLabels": {
+      "corrective": "Corrective Maintenance (3-5x more expensive)",
+      "preventive": "Preventive Maintenance",
+      "inventory": "Spare Parts Inventory"
+    },
     "roiProjection": {
-      "title": "ROI Projection \u2013 New Machine"
+      "title": "ROI Projection – New Machine"
     },
     "simulator": {
-      "title":          "Return on Investment (ROI) Simulator",
-      "machineCost":    "Machine Cost ($)",
-      "unmetDemand":    "Unmet Demand (users/month)",
+      "title": "Return on Investment (ROI) Simulator",
+      "machineCost": "Machine Cost ($)",
+      "unmetDemand": "Unmet Demand (users/month)",
       "revenuePerUser": "Revenue per User ($)",
-      "calculate":      "Calculate ROI"
+      "calculate": "Calculate ROI"
     },
     "recommendations": {
       "title": "Financial Recommendations",
       "preventive": {
-        "title":       "Migrate to Preventive Maintenance",
+        "title": "Migrate to Preventive Maintenance",
         "description": "Implementing automatic alerts can reduce corrective costs by 60%, saving approximately $1,920/month."
       },
       "investment": {
-        "title":       "Recommended Investment: 2 Squat Racks",
+        "title": "Recommended Investment: 2 Squat Racks",
         "description": "Analysis shows 98% occupancy during peak hours. A $10,000 investment would be recovered in ~7 months based on current demand."
       },
       "relocation": {
-        "title":       "Relocate Underutilized Equipment",
+        "title": "Relocate Underutilized Equipment",
         "description": "3 machines with <30% usage in Surco could generate $1,200/month additional revenue if relocated to Miraflores."
       }
     }
   },
   "maintenance": {
-    "title":       "Maintenance Center",
-    "subtitle":    "Manage preventive and corrective maintenance tickets",
-    "newTicket":   "New Ticket",
-    "search":      "Search by ID, machine or description...",
-    "assignedTo":  "Assigned to",
+    "title": "Maintenance Center",
+    "subtitle": "Manage preventive and corrective maintenance tickets",
+    "newTicket": "New Ticket",
+    "search": "Search by ID, machine or description...",
+    "assignedTo": "Assigned to",
     "completedBy": "Completed by",
     "stats": {
       "totalTickets": "Total Tickets",
-      "pending":      "Pending",
-      "inProgress":   "In Progress",
-      "completed":    "Completed"
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "completed": "Completed"
     },
     "filter": {
-      "allStatuses":   "All Statuses",
+      "allStatuses": "All Statuses",
       "allPriorities": "All Priorities"
     },
     "col": {
-      "pending":    "Pending",
+      "pending": "Pending",
       "inProgress": "In Progress",
-      "completed":  "Completed",
-      "empty":      "No tickets"
+      "completed": "Completed",
+      "empty": "No tickets"
     },
     "action": {
-      "start":    "Start",
+      "start": "Start",
       "complete": "Complete"
     },
     "form": {
-      "title":       "New Maintenance Ticket",
-      "equipment":   "Equipment",
-      "priority":    "Priority",
-      "type":        "Type",
-      "date":        "Scheduled Date",
-      "time":        "Scheduled Time",
+      "title": "New Maintenance Ticket",
+      "equipment": "Equipment",
+      "priority": "Priority",
+      "type": "Type",
+      "date": "Scheduled Date",
+      "time": "Scheduled Time",
       "description": "Description",
-      "cancel":      "Cancel",
-      "submit":      "Create Ticket"
+      "cancel": "Cancel",
+      "submit": "Create Ticket"
     },
     "scheduler": {
-      "peakWarning":    "Peak demand hour",
+      "peakWarning": "Peak demand hour",
       "peakWarningMsg": "This time slot has high gym traffic. Scheduling maintenance may disrupt members.",
-      "peakHint":       "High demand — consider an off-peak slot",
-      "suggestions":    "Suggested off-peak times:",
-      "confirmedMsg":   "Off-peak slot — will not disrupt members"
+      "peakHint": "High demand — consider an off-peak slot",
+      "suggestions": "Suggested off-peak times:",
+      "confirmedMsg": "Off-peak slot — will not disrupt members"
     },
     "status": {
-      "OPEN":        "Open",
+      "OPEN": "Open",
       "IN_PROGRESS": "In Progress",
-      "RESOLVED":    "Resolved",
-      "PENDING":     "Pending",
-      "CONFIRMED":   "Confirmed",
-      "CANCELLED":   "Cancelled"
+      "RESOLVED": "Resolved",
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled"
     },
     "priority": {
-      "LOW":    "Low",
+      "LOW": "Low",
       "MEDIUM": "Medium",
-      "HIGH":   "High",
+      "HIGH": "High",
       "URGENT": "Urgent"
     },
     "type": {
-      "CORRECTIVE":  "Corrective",
-      "PREVENTIVE":  "Preventive",
+      "CORRECTIVE": "Corrective",
+      "PREVENTIVE": "Preventive",
       "LUBRICATION": "Lubrication",
-      "INSPECTION":  "Inspection",
-      "OVERHAUL":    "Overhaul"
+      "INSPECTION": "Inspection",
+      "OVERHAUL": "Overhaul"
+    }
+  },
+  "routines": {
+    "title": "My Routines",
+    "subtitle": "Manage your workout routines and track machine availability",
+    "newRoutine": "New Routine",
+    "search": "Search routines...",
+    "filter": {
+      "all": "All",
+      "chest": "Chest",
+      "legs": "Legs",
+      "back": "Back",
+      "shoulders": "Shoulders",
+      "arms": "Arms"
+    },
+    "exercises": {
+      "pressDePecho": "Bench Press",
+      "sentadillaConBarra": "Barbell Squat",
+      "pesoMuertoRumano": "Romanian Deadlift",
+      "dominadas": "Pull-ups",
+      "pressMilitar": "Military Press"
+    },
+    "machines": {
+      "bancoPechoPlano": "Flat Bench Press",
+      "rackSentadilla2": "Squat Rack #2",
+      "plataformaPesoMuerto": "Deadlift Platform",
+      "barraDeDominadas": "Pull-up Bar",
+      "rackDeFuerza": "Power Rack"
+    },
+    "tags": {
+      "chest": "Chest",
+      "legs": "Legs",
+      "lowerBack": "Lower Back",
+      "back": "Back",
+      "shoulders": "Shoulders"
+    },
+    "level": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "status": {
+      "available": "Available",
+      "inUse": "In Use",
+      "maintenance": "Maintenance"
+    },
+    "alternatives": {
+      "title": "Smart Suggestions",
+      "prensaDePiernas": "Leg Press",
+      "hackSquat": "Hack Squat",
+      "sentadillaGoblet": "Goblet Squat",
+      "poleaAlta": "High Cable",
+      "remoConBarra": "Barbell Row",
+      "maquinaDeRemo": "Rowing Machine",
+      "free": "Free",
+      "viewMap": "View Map"
+    },
+    "suggestion": {
+      "title": "Smart Suggestion Engine",
+      "item1": "Routines adapt to real-time machine availability",
+      "item2": "Alternatives suggested when your machine is busy",
+      "item3": "Optimized for peak and off-peak hours",
+      "item4": "Personalized to your fitness goals"
+    },
+    "modal": {
+      "title": "New Routine",
+      "subtitle": "Create a personalized workout routine",
+      "name": "Routine Name",
+      "namePlaceholder": "e.g. Upper Body Day A",
+      "objective": "Objective",
+      "selectObjective": "Select an objective",
+      "difficulty": "Difficulty Level",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Add notes or specific instructions...",
+      "cancel": "Cancel",
+      "create": "Create Routine",
+      "successMessage": "Routine \"{{name}}\" created successfully",
+      "objectives": {
+        "gainStrength": "Gain Strength",
+        "muscleHypertrophy": "Muscle Hypertrophy",
+        "endurance": "Endurance",
+        "weightLoss": "Weight Loss",
+        "generalFitness": "General Fitness"
+      }
+    }
+  },
+  "dashboardAdmin": {
+    "kpis": {
+      "operationalEquipment": "Operational Equipment",
+      "maintenance": "In Maintenance",
+      "outOfService": "Out of Service",
+      "totalTickets": "Total Tickets"
+    },
+    "charts": {
+      "peakCapacityHours": "Peak Capacity Hours",
+      "machineUsage": "Machine Usage",
+      "noUsageData": "No usage data available"
+    },
+    "table": {
+      "title": "Underutilized Equipment",
+      "headers": {
+        "machineId": "Machine ID",
+        "location": "Location",
+        "hours": "Hours",
+        "roi": "ROI"
+      },
+      "empty": "No underutilized equipment found"
+    },
+    "maintenanceCenter": {
+      "title": "Maintenance Center",
+      "columns": {
+        "todo": "Pending",
+        "inProgress": "In Progress",
+        "completed": "Completed"
+      },
+      "empty": "No tickets"
     }
   }
 }
