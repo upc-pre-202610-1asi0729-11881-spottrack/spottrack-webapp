@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
@@ -19,7 +18,6 @@ import { UserProfile } from '../user-profile/user-profile';
     LanguageSwitcher,
     Sidebar,
     BottomBar,
-    MatButtonModule,
     MatIconModule,
     TranslateModule,
     UserProfile
@@ -33,17 +31,6 @@ export class Layout {
 
   get currentRole(): 'admin' | 'client' {
     return this.authStore.isClient() ? 'client' : 'admin';
-  }
-
-  // --- NUEVA FUNCIÓN PARA PRUEBAS RÁPIDAS ---
-  toggleMockRole() {
-    if (this.currentRole === 'admin') {
-      // Inicia sesión como cliente con cualquier contraseña (el mock solo valida que no esté vacía)
-      this.authStore.login('cliente@email.com', '1234');
-    } else {
-      // Inicia sesión como admin
-      this.authStore.login('admin@spottrack.com', '1234');
-    }
   }
 
   logout() {

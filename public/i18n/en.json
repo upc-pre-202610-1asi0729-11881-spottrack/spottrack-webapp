@@ -144,10 +144,6 @@
     "client_intro": "Here is a summary of your activity.",
     "admin_panel": "Administration Panel"
   },
-  "role": {
-    "switch_to_client": "View as Client",
-    "switch_to_admin": "View as Admin"
-  },
   "iot": {
     "title": "IoT Monitoring",
     "subtitle": "Real-time status of Edge IoT sensors installed on equipment",
