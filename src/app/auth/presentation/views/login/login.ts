@@ -10,8 +10,8 @@ import { LanguageSwitcher } from '../../../../shared/presentation/components/lan
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule, TranslateModule, MatIconModule, LanguageSwitcher],
-  templateUrl: './login.component.html',
-  styleUrl:    './login.component.scss',
+  templateUrl: './login.html',
+  styleUrl:    './login.scss',
 })
 export class LoginComponent {
   private auth   = inject(AuthStore);

@@ -9,7 +9,7 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./auth/presentation/views/login/login.component').then((m) => m.LoginComponent),
+      import('./auth/presentation/views/login/login').then((m) => m.LoginComponent),
   },
   {
     path: '',
@@ -27,7 +27,7 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             loadComponent: () =>
-              import('./dashboard/presentation/views/dashboard.component').then(
+              import('./dashboard/presentation/views/dashboard').then(
                 (m) => m.DashboardComponent,
               ),
           },
@@ -35,47 +35,47 @@ export const routes: Routes = [
           {
             path: 'iot',
             loadComponent: () =>
-              import('./iot/presentation/views/iot-monitoring.component').then(
+              import('./iot/presentation/views/iot-monitoring').then(
                 (m) => m.IotMonitoringComponent,
               ),
           },
           {
             path: 'maintenance',
             loadComponent: () =>
-              import('./maintenance/presentation/views/maintenance.component').then(
+              import('./maintenance/presentation/views/maintenance').then(
                 (m) => m.MaintenanceComponent,
               ),
           },
           {
             path: 'maintenance/new-ticket',
             loadComponent: () =>
-              import('./maintenance/presentation/views/new-ticket/new-ticket.component').then(
+              import('./maintenance/presentation/views/new-ticket/new-ticket').then(
                 (m) => m.NewTicketComponent,
               ),
           },
           {
             path: 'analytics',
             loadComponent: () =>
-              import('./analytics/presentation/views/analytics.component').then(
+              import('./analytics/presentation/views/analytics').then(
                 (m) => m.AnalyticsComponent,
               ),
           },
           {
             path: 'financial-impact',
             loadComponent: () =>
-              import('./financial-impact/presentation/views/financial-impact.component').then(
+              import('./financial-impact/presentation/views/financial-impact').then(
                 (m) => m.FinancialImpactComponent,
               ),
           },
           {
             path: 'alerts',
             loadComponent: () =>
-              import('./alerts/presentation/views/alerts.component').then((m) => m.AlertsComponent),
+              import('./alerts/presentation/views/alerts').then((m) => m.AlertsComponent),
           },
           {
             path: 'configuration',
             loadComponent: () =>
-              import('./configuration/presentation/views/configuration.component').then(
+              import('./configuration/presentation/views/configuration').then(
                 (m) => m.ConfigurationComponent,
               ),
           },
@@ -90,25 +90,25 @@ export const routes: Routes = [
           {
             path: 'client',
             loadComponent: () =>
-              import('./client/presentation/views/client-home.component').then(
+              import('./client/presentation/views/client-home').then(
                 (m) => m.ClientHomeComponent,
               ),
           },
           {
             path: 'map',
-            loadComponent: () => import('./map/map.component').then((m) => m.MapComponent),
+            loadComponent: () => import('./map/presentation/views/map').then((m) => m.MapComponent),
           },
           {
             path: 'bookings',
             loadComponent: () =>
-              import('./booking/presentation/views/booking.component').then(
+              import('./booking/presentation/views/booking').then(
                 (m) => m.BookingComponent,
               ),
           },
           {
             path: 'routines',
             loadComponent: () =>
-              import('./routines/presentation/views/routines.component').then(
+              import('./routines/presentation/views/routines').then(
                 (m) => m.RoutinesComponent,
               ),
           },

@@ -23,8 +23,8 @@ import { Iot, IotStatus } from '../../domain/model/iot.entity';
     MatFormFieldModule,
     MatSelectModule,
   ],
-  templateUrl: './iot-monitoring.component.html',
-  styleUrl: './iot-monitoring.component.scss',
+  templateUrl: './iot-monitoring.html',
+  styleUrl: './iot-monitoring.scss',
 })
 export class IotMonitoringComponent {
   private store = inject(IotStore);

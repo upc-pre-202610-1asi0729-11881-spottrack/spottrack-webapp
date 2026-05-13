@@ -42,8 +42,8 @@ export interface Routine {
     MatSelectModule,
     TranslateModule,
   ],
-  templateUrl: './routines.component.html',
-  styleUrl: './routines.component.css',
+  templateUrl: './routines.html',
+  styleUrl: './routines.css',
 })
 export class RoutinesComponent {
   private snackBar = inject(MatSnackBar);

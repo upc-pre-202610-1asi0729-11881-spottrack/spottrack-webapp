@@ -42,8 +42,8 @@ export interface EquipmentRow {
     MatTooltipModule,
     MatProgressSpinnerModule,
   ],
-  templateUrl: './equipment-management.component.html',
-  styleUrl: './equipment-management.component.scss',
+  templateUrl: './equipment-management.html',
+  styleUrl: './equipment-management.scss',
 })
 export class EquipmentManagementComponent {
   private router = inject(Router);

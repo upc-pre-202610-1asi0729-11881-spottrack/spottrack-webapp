@@ -1,7 +1,7 @@
 // src/app/configuration/presentation/views/configuration.routes.ts
 
 import { Routes } from '@angular/router';
-import { ConfigurationComponent } from './configuration.component';
+import { ConfigurationComponent } from './configuration';
 
 export const configurationRoutes: Routes = [
   {

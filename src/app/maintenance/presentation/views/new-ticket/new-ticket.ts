@@ -23,8 +23,8 @@ interface NewTicketForm {
   selector: 'app-new-ticket',
   standalone: true,
   imports: [FormsModule, TranslateModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule],
-  templateUrl: './new-ticket.component.html',
-  styleUrl:    './new-ticket.component.scss',
+  templateUrl: './new-ticket.html',
+  styleUrl:    './new-ticket.scss',
 })
 export class NewTicketComponent {
   private readonly router         = inject(Router);

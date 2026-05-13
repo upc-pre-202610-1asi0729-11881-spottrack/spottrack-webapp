@@ -71,8 +71,8 @@ const RELOCATION_DATA: RelocationRec[] = [
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  templateUrl: './analytics.component.html',
-  styleUrl:    './analytics.component.scss',
+  templateUrl: './analytics.html',
+  styleUrl:    './analytics.scss',
 })
 export class AnalyticsComponent {
   // ── Filters ──────────────────────────────────────────────────────────────

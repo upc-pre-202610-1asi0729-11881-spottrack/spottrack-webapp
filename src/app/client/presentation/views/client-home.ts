@@ -7,8 +7,8 @@ import { AuthStore } from '../../../auth/application/auth.store';
   selector: 'app-client-home',
   standalone: true,
   imports: [TranslateModule, MatIconModule],
-  templateUrl: './client-home.component.html',
-  styleUrl:    './client-home.component.scss',
+  templateUrl: './client-home.html',
+  styleUrl:    './client-home.scss',
 })
 export class ClientHomeComponent {
   readonly auth = inject(AuthStore);

@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Equipment, EquipmentStatus } from '../../../domain/model/equipment.entity';
 import { EquipmentStore } from '../../../application/equipment.store';
-import { EquipmentRow } from '../equipment-management/equipment-management.component';
+import { EquipmentRow } from '../equipment-management/equipment-management';
 import { environment } from '../../../../../environments/environment';
 
 export interface EquipmentFormData {
@@ -36,8 +36,8 @@ export interface EquipmentFormData {
     MatButtonModule,
     MatIconModule,
   ],
-  templateUrl: './add-equipment-dialog.component.html',
-  styleUrl: './add-equipment-dialog.component.scss',
+  templateUrl: './add-equipment-dialog.html',
+  styleUrl: './add-equipment-dialog.scss',
 })
 export class AddEquipmentDialogComponent {
   private fb     = inject(FormBuilder);

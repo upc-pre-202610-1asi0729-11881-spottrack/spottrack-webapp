@@ -45,8 +45,8 @@ export type FilterTab = 'ALL' | 'STRENGTH' | 'CARDIO';
     TranslateModule,
     FormsModule,
   ],
-  templateUrl: './map.component.html',
-  styleUrl: './map.component.css',
+  templateUrl: './map.html',
+  styleUrl: './map.css',
 })
 export class MapComponent implements OnInit, OnDestroy {
   @Input() userName: string = 'Usuario';

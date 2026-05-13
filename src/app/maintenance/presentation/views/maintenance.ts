@@ -13,8 +13,8 @@ import { MaintenanceTicket, TicketPriority, TicketStatus } from '../../domain/mo
   selector: 'app-maintenance',
   standalone: true,
   imports: [FormsModule, RouterLink, TranslateModule, MatIconModule, MatFormFieldModule, MatSelectModule],
-  templateUrl: './maintenance.component.html',
-  styleUrl:    './maintenance.component.scss',
+  templateUrl: './maintenance.html',
+  styleUrl:    './maintenance.scss',
 })
 export class MaintenanceComponent {
   readonly store          = inject(MaintenanceStore);

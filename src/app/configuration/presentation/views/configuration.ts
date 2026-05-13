@@ -25,8 +25,8 @@ export interface AlertType {
     MatSliderModule,
     TranslatePipe,
   ],
-  templateUrl: './configuration.component.html',
-  styleUrl: './configuration.component.scss',
+  templateUrl: './configuration.html',
+  styleUrl: './configuration.scss',
 })
 export class ConfigurationComponent {
   // ── Maintenance Thresholds ──────────────────────────────────────────────

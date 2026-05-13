@@ -18,8 +18,8 @@ interface Alert {
   selector: 'app-alerts',
   standalone: true,
   imports: [CommonModule, MatIconModule, TranslateModule],
-  templateUrl: './alerts.component.html',
-  styleUrl: './alerts.component.scss',
+  templateUrl: './alerts.html',
+  styleUrl: './alerts.scss',
 })
 export class AlertsComponent {
   private router = inject(Router);

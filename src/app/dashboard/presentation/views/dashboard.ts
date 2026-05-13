@@ -8,8 +8,8 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-dashboard',
   standalone: true,
   imports: [MatIconModule, TranslatePipe],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  templateUrl: './dashboard.html',
+  styleUrls: ['./dashboard.css'],
 })
 export class DashboardComponent {
   readonly store = inject(DashboardStore);

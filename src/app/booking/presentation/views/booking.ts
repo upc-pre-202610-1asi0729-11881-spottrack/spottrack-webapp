@@ -35,8 +35,8 @@ interface AvailableMachine {
     MatSelectModule,
     TranslateModule,
   ],
-  templateUrl: './booking.component.html',
-  styleUrl: './booking.component.css',
+  templateUrl: './booking.html',
+  styleUrl: './booking.css',
 })
 export class BookingComponent implements OnInit, OnDestroy {
   // Signal — every .update() notifies Angular's scheduler without zone.js

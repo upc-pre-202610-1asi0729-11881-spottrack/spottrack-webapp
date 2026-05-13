@@ -38,8 +38,8 @@ const ROI_MONTHS_LABELS = ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6',
     TranslateModule,
     MatIconModule,
   ],
-  templateUrl: './financial-impact.component.html',
-  styleUrl:    './financial-impact.component.scss',
+  templateUrl: './financial-impact.html',
+  styleUrl:    './financial-impact.scss',
 })
 export class FinancialImpactComponent {
 
@@ -132,7 +132,7 @@ export class FinancialImpactComponent {
     ];
 
     const csv  = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href     = url;
