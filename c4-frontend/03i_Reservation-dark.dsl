@@ -1,16 +1,22 @@
 workspace "SpotTrack – Reservation" "C4 Component Diagram for the Reservation Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             reservationBC = container "Reservation Bounded Context" "Allows clients to reserve gym machines for timed sessions" "Angular 18" {
 
-                group "Presentation Layer" {
-                    bookingComp = component "BookingComponent" "Shows active bookings as countdown cards with Cancel action; floating button opens a machine-selection modal with zone, icon and duration (10/15/20 min) to create a new reservation." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Views" {
+                        bookingComp = component "Booking" "Shows active bookings as countdown cards with Cancel action; floating button opens a machine-selection modal with zone, icon and duration (10/15/20 min) to create a new reservation." "Angular Component" "Presentation"
+                    }
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "Booking Interface: id, machineKey, zoneKey, icon, timerSeconds. AvailableMachine Interface: key, zoneKey, icon." "TypeScript Interfaces" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "Booking Interface: id, machineKey, zoneKey, icon, timerSeconds. AvailableMachine Interface: key, zoneKey, icon." "TypeScript Interfaces" "Domain"
                 }
             }
         }

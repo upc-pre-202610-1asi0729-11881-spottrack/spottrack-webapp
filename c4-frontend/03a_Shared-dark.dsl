@@ -1,32 +1,38 @@
 workspace "SpotTrack – Shared" "C4 Component Diagram for the Shared Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         restApi = softwareSystem "SpotTrack REST API" "Backend JSON API over HTTPS" "External System"
 
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             sharedBC = container "Shared Bounded Context" "Cross-cutting shell, base infrastructure and authentication" "Angular 18" {
 
-                group "Presentation Layer" {
-                    layoutComp = component "Layout" "Main app shell; composes Sidebar, BottomBar, LanguageSwitcher and UserProfile; toggles admin/client nav via AuthStore." "Angular Component" "Presentation"
-                    sidebarComp = component "Sidebar" "Role-aware vertical nav; renders ADMIN_NAV or CLIENT_NAV based on role @Input." "Angular Component" "Presentation"
-                    bottomBarComp = component "BottomBar" "Mobile horizontal nav bar; mirrors sidebar links." "Angular Component" "Presentation"
-                    languageSwitcherComp = component "LanguageSwitcher" "Dropdown to switch between Español and English via ngx-translate." "Angular Component" "Presentation"
-                    userProfileComp = component "UserProfile" "Header link that navigates to the profile page." "Angular Component" "Presentation"
-                    loginComp = component "LoginComponent" "Email/password form; delegates auth to AuthStore and redirects to /dashboard." "Angular Component" "Presentation"
-                    profileViewComp = component "ProfileView" "Read-only profile page with embedded LanguageSwitcher." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Components" {
+                        layoutComp = component "Layout" "Main app shell; composes Sidebar, BottomBar, LanguageSwitcher and UserProfile; toggles admin/client nav via AuthStore." "Angular Component" "Presentation"
+                        sidebarComp = component "Sidebar" "Role-aware vertical nav; renders ADMIN_NAV or CLIENT_NAV based on role @Input." "Angular Component" "Presentation"
+                        bottomBarComp = component "BottomBar" "Mobile horizontal nav bar; mirrors sidebar links." "Angular Component" "Presentation"
+                        languageSwitcherComp = component "LanguageSwitcher" "Dropdown to switch between Español and English via ngx-translate." "Angular Component" "Presentation"
+                        userProfileComp = component "UserProfile" "Header link that navigates to the profile page." "Angular Component" "Presentation"
+                        loginComp = component "Login" "Email/password form; delegates auth to AuthStore and redirects to /dashboard." "Angular Component" "Presentation"
+                        profileViewComp = component "ProfileView" "Read-only profile page with embedded LanguageSwitcher." "Angular Component" "Presentation"
+                    }
                 }
 
-                group "Application Layer" {
-                    appLayer = component "Application Layer" "AuthStore, SessionService, BaseStore" "Angular Injectables" "Application"
+                group "Application" {
+                    appLayer = component "Application" "AuthStore, SessionService, BaseStore" "Angular Injectables" "Application"
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "User Model, BaseEntity" "TypeScript Interfaces / Classes" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "User Model, BaseEntity" "TypeScript Interfaces / Classes" "Domain"
                 }
 
-                group "Infrastructure Layer" {
-                    infraLayer = component "Infrastructure Layer" "AuthGuard, BaseApi, BaseApiEndpoint, BaseAssembler, BaseResponse" "TypeScript Classes" "Infrastructure"
+                group "Infrastructure" {
+                    infraLayer = component "Infrastructure" "AuthGuard, BaseApi, BaseApiEndpoint, BaseAssembler, BaseResponse" "TypeScript Classes" "Infrastructure"
                 }
             }
         }

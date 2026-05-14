@@ -2,102 +2,148 @@
 
 package "equipment.domain.model" {
   class Equipment {
-    - id: string
-    - name: string
-    - type: EquipmentType
-    - locationId: string
-    - sensorId: string
-    - status: EquipmentStatus
-    - usageHours: number
-    - utilizationRate: number
-    - branchId: string
-    + constructor()
-    + id(): string
-    + name(): string
-    + type(): EquipmentType
-    + locationId(): string
-    + sensorId(): string
-    + status(): EquipmentStatus
-    + usageHours(): number
-    + utilizationRate(): number
-    + branchId(): string
+    - _id: number
+    - _zoneId: number
+    - _name: string
+    - _brand: string
+    - _model: string
+    - _purchasePrice: number
+    - _status: EquipmentStatus
+    + id: number
+    + zoneId: number
+    + name: string
+    + brand: string
+    + model: string
+    + purchasePrice: number
+    + status: EquipmentStatus
   }
-  enum EquipmentType {
-    CARDIO
-    STRENGTH
-    FUNCTIONAL
-  }
+
   enum EquipmentStatus {
-    ACTIVE
+    OPERATIONAL
     MAINTENANCE
-    INACTIVE
+    OUT_OF_ORDER
   }
 }
 
 package "equipment.application" {
-class EquipmentStore {
-  - equipmentSignal: Signal<Equipment[]>
-  - equipmentApi: EquipmentApi
-  - equipmentAssembler: EquipmentAssembler
-  + equipment: Signal<Equipment[]>
-  + filteredEquipment: Signal<Equipment[]>
-  + loadEquipment(): void
-  + filterByBranch(branchId: string): void
-  + filterByType(type: EquipmentType): void
-  + filterByDateRange(from: string, to: string): void
-  + registerEquipment(equipment: Equipment): void
-  + updateEquipment(equipment: Equipment): void
-  + deleteEquipment(equipmentId: string): void
-}
+  class EquipmentStore {
+    - equipmentSignal: Signal<Equipment[]>
+    - loadingSignal: Signal<boolean>
+    - errorSignal: Signal<string | null>
+    + equipment: Signal<Equipment[]>
+    + loading: Signal<boolean>
+    + error: Signal<string | null>
+    + equipmentCount: Signal<number>
+    + operationalCount: Signal<number>
+    + maintenanceCount: Signal<number>
+    + outOfOrderCount: Signal<number>
+    + getEquipmentById(id: number): Signal<Equipment | undefined>
+    + addEquipment(entity: Equipment): void
+    + updateEquipment(entity: Equipment): void
+    + deleteEquipment(id: number): void
+    - loadEquipment(): void
+  }
 }
 
 package "equipment.infrastructure" {
-  class EquipmentApi {
-    - http: HttpClient
-    + getEquipment(): Observable<EquipmentResource[]>
-    + registerEquipment(resource: EquipmentResource): Observable<EquipmentResource>
-    + updateEquipment(resource: EquipmentResource): Observable<EquipmentResource>
-    + deleteEquipment(equipmentId: string): Observable<void>
-  }
   interface EquipmentResource {
-    + id: string
+    + id: number
+    + zone_id: number
     + name: string
-    + type: string
-    + locationId: string
-    + sensorId: string
+    + brand: string
+    + model: string
+    + purchase_price: number
     + status: string
-    + usageHours: number
-    + branchId: string
   }
+
   class EquipmentAssembler {
+    + toEntitiesFromResponse(response: EquipmentResponse): Equipment[]
     + toEntityFromResource(resource: EquipmentResource): Equipment
-    + toResourceFromEntity(equipment: Equipment): EquipmentResource
+    + toResourceFromEntity(entity: Equipment): EquipmentResource
   }
-  class BaseApi {
-    # http: HttpClient
-    # getAuthHeaders(): HttpHeaders
+
+  class EquipmentApiEndpoint {
+    + constructor(http: HttpClient)
+  }
+
+  class EquipmentApi {
+    - endpoint: EquipmentApiEndpoint
+    + getEquipment(): Observable<Equipment[]>
+    + getEquipmentById(id: number): Observable<Equipment>
+    + registerEquipment(entity: Equipment): Observable<Equipment>
+    + updateEquipment(entity: Equipment): Observable<Equipment>
+    + deleteEquipment(id: number): Observable<void>
+  }
+
+  abstract class BaseApi {
+  }
+
+  abstract class BaseApiEndpoint {
+    + getAll(): Observable<TEntity[]>
+    + getById(id: number): Observable<TEntity>
+    + create(entity: TEntity): Observable<TEntity>
+    + update(entity: TEntity, id: number): Observable<TEntity>
+    + delete(id: number): Observable<void>
   }
 }
 
-package "equipment.presentation.components" {
-  class EquipmentManagementPage <<component>> {
-    - equipmentStore: EquipmentStore
-    + equipment: Signal<Equipment[]>
-    + onRegisterEquipment(): void
-    + onUpdateEquipment(equipment: Equipment): void
-    + onDeleteEquipment(equipmentId: string): void
-    + onFilterByBranch(branchId: string): void
-    + onFilterByType(type: EquipmentType): void
+package "equipment.presentation.views" {
+  interface EquipmentRow {
+    + id: number
+    + zoneId: number
+    + name: string
+    + brand: string
+    + model: string
+    + purchasePrice: number
+    + status: EquipmentStatus
+  }
+
+  interface EquipmentFormData {
+    + id?: number
+    + name: string
+    + brand: string
+    + model: string
+    + zoneId: number
+    + purchasePrice: number
+    + status: EquipmentStatus
+  }
+
+  class EquipmentManagementComponent <<component>> {
+    - store: EquipmentStore
+    + searchQuery: Signal<string>
+    + selectedStatus: Signal<EquipmentStatus | "">
+    + isLoading: Signal<boolean>
+    + totalEquipment: Signal<number>
+    + operationalCount: Signal<number>
+    + maintenanceCount: Signal<number>
+    + outOfOrderCount: Signal<number>
+    + filteredEquipment: Signal<EquipmentRow[]>
+    + navigateToNew(): void
+    + navigateToEdit(row: EquipmentRow): void
+    + deleteEquipment(id: number): void
+    + onSearchChange(value: string): void
+    + onStatusChange(value: EquipmentStatus | ""): void
+  }
+
+  class AddEquipmentDialogComponent <<component>> {
+    - store: EquipmentStore
+    + isEditMode: boolean
+    + equipmentStatuses: EquipmentStatus[]
+    + form: FormGroup
+    + submit(): void
+    + cancel(): void
   }
 }
 
-EquipmentApi --|> BaseApi
+EquipmentApi --|> BaseApi : extends
+EquipmentApiEndpoint --|> BaseApiEndpoint : extends
+EquipmentApi --> EquipmentApiEndpoint : uses
+EquipmentApiEndpoint --> EquipmentAssembler : uses
 EquipmentStore --> EquipmentApi : uses
-EquipmentStore --> EquipmentAssembler : uses
 EquipmentAssembler ..> EquipmentResource : transforms
 EquipmentAssembler --> Equipment : creates
-EquipmentManagementPage --> EquipmentStore : uses
-Equipment --> EquipmentType
-Equipment --> EquipmentStatus
+EquipmentManagementComponent --> EquipmentStore : uses
+AddEquipmentDialogComponent --> EquipmentStore : uses
+Equipment --> EquipmentStatus : has
 
 @enduml

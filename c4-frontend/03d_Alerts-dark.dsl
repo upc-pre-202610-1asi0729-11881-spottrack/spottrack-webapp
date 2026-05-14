@@ -1,16 +1,22 @@
 workspace "SpotTrack – Alerts" "C4 Component Diagram for the Alerts Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             alertsBC = container "Alerts Bounded Context" "Displays system, admin and client notifications and routes users to the relevant section" "Angular 18" {
 
-                group "Presentation Layer" {
-                    alertsComp = component "AlertsComponent" "Notification feed with type-coded cards (admin | client | system), relative timestamps, click-to-navigate and per-alert dismiss action." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Views" {
+                        alertsComp = component "Alerts" "Notification feed with type-coded cards (admin | client | system), relative timestamps, click-to-navigate and per-alert dismiss action." "Angular Component" "Presentation"
+                    }
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "Alert Interface: id, title, description, type, icon, date, targetRoute." "TypeScript Interface" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "Alert Interface: id, title, description, type, icon, date, targetRoute." "TypeScript Interface" "Domain"
                 }
             }
         }

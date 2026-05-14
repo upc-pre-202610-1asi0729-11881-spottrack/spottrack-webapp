@@ -1,27 +1,33 @@
 workspace "SpotTrack – Equipment" "C4 Component Diagram for the Equipment Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         restApi = softwareSystem "SpotTrack REST API" "Backend JSON API over HTTPS" "External System"
 
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             equipmentBC = container "Equipment Bounded Context" "Manages the gym equipment catalog" "Angular 18" {
 
-                group "Presentation Layer" {
-                    equipmentMgmtComp = component "EquipmentManagementComponent" "Data-table of all equipment with text search, status filter and KPI counters; supports edit and delete per row." "Angular Component" "Presentation"
-                    addEquipmentComp = component "AddEquipmentDialogComponent" "Reactive form for creating or editing equipment; auto-detects create/edit mode via ActivatedRoute." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Views" {
+                        equipmentMgmtComp = component "EquipmentManagement" "Data-table of all equipment with text search, status filter and KPI counters; supports edit and delete per row." "Angular Component" "Presentation"
+                        addEquipmentComp = component "AddEquipmentDialog" "Reactive form for creating or editing equipment; auto-detects create/edit mode via ActivatedRoute." "Angular Component" "Presentation"
+                    }
                 }
 
-                group "Application Layer" {
-                    appLayer = component "Application Layer" "EquipmentStore: signal state with equipment list, loading flag and computed status counts." "Angular Injectable" "Application"
+                group "Application" {
+                    appLayer = component "Application" "EquipmentStore: signal state with equipment list, loading flag and computed status counts." "Angular Injectable" "Application"
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "Equipment Entity: id, name, brand, model, zoneId, purchasePrice, status." "TypeScript Class" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "Equipment Entity: id, name, brand, model, zoneId, purchasePrice, status." "TypeScript Class" "Domain"
                 }
 
-                group "Infrastructure Layer" {
-                    infraLayer = component "Infrastructure Layer" "EquipmentApi, EquipmentApiEndpoint (/equipments), EquipmentAssembler, EquipmentResponse" "TypeScript Classes" "Infrastructure"
+                group "Infrastructure" {
+                    infraLayer = component "Infrastructure" "EquipmentApi, EquipmentApiEndpoint (/equipments), EquipmentAssembler, EquipmentResponse" "TypeScript Classes" "Infrastructure"
                 }
             }
         }

@@ -1,26 +1,32 @@
 workspace "SpotTrack – Dashboard" "C4 Component Diagram for the Dashboard Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         restApi = softwareSystem "SpotTrack REST API" "Backend JSON API over HTTPS" "External System"
 
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             dashboardBC = container "Dashboard Bounded Context" "Home overview: KPIs, usage charts and maintenance ticket snapshot" "Angular 18" {
 
-                group "Presentation Layer" {
-                    dashboardComp = component "DashboardComponent" "Admin home with KPI cards, SVG occupancy line chart, SVG per-equipment usage bar chart and a recent maintenance tickets panel with ROI badges." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Views" {
+                        dashboardComp = component "Dashboard" "Admin home with KPI cards, SVG occupancy line chart, SVG per-equipment usage bar chart and a recent maintenance tickets panel with ROI badges." "Angular Component" "Presentation"
+                    }
                 }
 
-                group "Application Layer" {
-                    appLayer = component "Application Layer" "DashboardStore: signal state with computed KPIs, SVG chart points, bar-chart dataset and latest ticket list." "Angular Injectable" "Application"
+                group "Application" {
+                    appLayer = component "Application" "DashboardStore: signal state with computed KPIs, SVG chart points, bar-chart dataset and latest ticket list." "Angular Injectable" "Application"
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "EquipmentUsageStat Entity: id, equipmentId, equipmentName, usageHours, occupancyRate, period." "TypeScript Class" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "EquipmentUsageStat Entity: id, equipmentId, equipmentName, usageHours, occupancyRate, period." "TypeScript Class" "Domain"
                 }
 
-                group "Infrastructure Layer" {
-                    infraLayer = component "Infrastructure Layer" "DashboardApi, EquipmentUsageStatApiEndpoint (/equipment-usage-stats), EquipmentUsageStatAssembler, DashboardResponse" "TypeScript Classes" "Infrastructure"
+                group "Infrastructure" {
+                    infraLayer = component "Infrastructure" "DashboardApi, EquipmentUsageStatApiEndpoint (/equipment-usage-stats), EquipmentUsageStatAssembler, DashboardResponse" "TypeScript Classes" "Infrastructure"
                 }
             }
         }
