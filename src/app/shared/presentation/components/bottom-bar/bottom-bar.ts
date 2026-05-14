@@ -14,7 +14,7 @@ export class BottomBar {
   navItems = [
     { path: '/map', icon: 'map', labelKey: 'nav.map' },
     { path: '/routines', icon: 'fitness_center', labelKey: 'nav.routines' },
-    { path: '/bookings', icon: 'event_available', labelKey: 'nav.bookings' },
+    { path: '/bookings', icon: 'event_available', labelKey: 'nav.reservations' },
     { path: '/profile', icon: 'person', labelKey: 'nav.profile' },
   ];
 }

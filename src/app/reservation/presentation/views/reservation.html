@@ -12,28 +12,25 @@
     </button>
   </header>
 
-  <!-- ===== BOOKING CARDS ===== -->
+  <!-- ===== ACTIVE RESERVATION CARDS ===== -->
   <div class="booking-list">
-    @for (booking of bookings(); track booking.id) {
-
-      <mat-card class="booking-card" [class.expired]="isExpired(booking)">
+    @for (machine of reservations(); track machine.id) {
+      <mat-card class="booking-card">
         <mat-card-content class="card-content">
 
           <div class="card-top">
             <div class="machine-info">
               <div class="machine-icon-wrap">
-                <mat-icon class="machine-icon">{{ booking.icon }}</mat-icon>
+                <mat-icon class="machine-icon">{{ machine.icon }}</mat-icon>
               </div>
               <div class="machine-details">
-                <span class="machine-name">{{ 'machines.names.' + booking.machineKey | translate }}</span>
-                <span class="machine-zone">{{ 'machines.zones.' + booking.zoneKey | translate }}</span>
+                <span class="machine-name">{{ 'machines.names.' + machine.nameKey | translate }}</span>
+                <span class="machine-zone">{{ 'machines.zones.' + getZoneKey(machine.category) | translate }}</span>
               </div>
             </div>
-            @if (!isExpired(booking)) {
-              <button mat-icon-button class="cancel-btn" (click)="cancelBooking(booking.id)">
-                <mat-icon>close</mat-icon>
-              </button>
-            }
+            <button mat-icon-button class="cancel-btn" (click)="cancelReservation(machine.id)">
+              <mat-icon>close</mat-icon>
+            </button>
           </div>
 
           <mat-divider class="card-divider"></mat-divider>
@@ -43,19 +40,50 @@
               <mat-icon class="clock-icon">schedule</mat-icon>
               <span>{{ 'booking.timeRemaining' | translate }}</span>
             </div>
-            <span class="timer-value">{{ formatTimer(booking.timerSeconds) }}</span>
+            <span class="timer-value">{{ formatTimer(machine.timerSeconds ?? 0) }}</span>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- ===== EXPIRED RESERVATION CARDS ===== -->
+    @for (expired of expiredReservations(); track expired.machineId) {
+      <mat-card class="booking-card expired">
+        <mat-card-content class="card-content">
+
+          <div class="card-top">
+            <div class="machine-info">
+              <div class="machine-icon-wrap">
+                <mat-icon class="machine-icon">{{ expired.icon }}</mat-icon>
+              </div>
+              <div class="machine-details">
+                <span class="machine-name">{{ 'machines.names.' + expired.nameKey | translate }}</span>
+                <span class="machine-zone">{{ 'machines.zones.' + getZoneKey(expired.category) | translate }}</span>
+              </div>
+            </div>
+            <button mat-icon-button class="cancel-btn" (click)="dismissExpired(expired.machineId)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+
+          <mat-divider class="card-divider"></mat-divider>
+
+          <div class="card-bottom">
+            <div class="timer-label">
+              <mat-icon class="clock-icon">schedule</mat-icon>
+              <span>{{ 'booking.timeRemaining' | translate }}</span>
+            </div>
+            <span class="timer-value">00:00</span>
           </div>
 
         </mat-card-content>
 
-        @if (isExpired(booking)) {
-          <div class="expired-banner">
-            <span class="expired-title">{{ 'booking.expired.title' | translate }}</span>
-            <span class="expired-subtitle">{{ 'booking.expired.subtitle' | translate }}</span>
-          </div>
-        }
+        <div class="expired-banner">
+          <span class="expired-title">{{ 'booking.expired.title' | translate }}</span>
+          <span class="expired-subtitle">{{ 'booking.expired.subtitle' | translate }}</span>
+        </div>
       </mat-card>
-
     }
   </div>
 
@@ -77,7 +105,7 @@
 
 </div>
 
-<!-- ===== NUEVA RESERVA MODAL ===== -->
+<!-- ===== NEW RESERVATION MODAL ===== -->
 @if (showModal) {
   <div class="modal-backdrop" (click)="closeModal()">
     <mat-card class="modal-card" (click)="$event.stopPropagation()">
@@ -98,15 +126,15 @@
           <label class="field-label">{{ 'booking.modal.machine' | translate }}</label>
           <div class="select-box">
             <mat-select
-              [(ngModel)]="selectedMachine"
+              [(ngModel)]="selectedMachineId"
               class="booking-select"
               [placeholder]="'booking.modal.selectMachine' | translate"
               panelClass="booking-select-panel"
               disableRipple
             >
-              @for (machine of availableMachines; track machine.key) {
-                <mat-option [value]="machine.key">
-                  {{ 'machines.names.' + machine.key | translate }}
+              @for (machine of availableMachines(); track machine.id) {
+                <mat-option [value]="machine.id">
+                  {{ 'machines.names.' + machine.nameKey | translate }}
                 </mat-option>
               }
             </mat-select>
@@ -118,13 +146,13 @@
           <label class="field-label">{{ 'booking.modal.duration' | translate }}</label>
           <div class="select-box">
             <mat-select
-              [(ngModel)]="selectedDuration"
+              [(ngModel)]="selectedDurationSeconds"
               class="booking-select"
               panelClass="booking-select-panel"
               disableRipple
             >
-              @for (d of durations; track d) {
-                <mat-option [value]="d">{{ d }} {{ 'booking.modal.minutesSuffix' | translate }}</mat-option>
+              @for (d of durations; track d.seconds) {
+                <mat-option [value]="d.seconds">{{ d.labelKey | translate }}</mat-option>
               }
             </mat-select>
           </div>
@@ -143,8 +171,8 @@
           </button>
           <button
             class="btn-create"
-            [disabled]="!selectedMachine"
-            (click)="createBooking()"
+            [disabled]="!selectedMachineId"
+            (click)="createReservation()"
           >
             {{ 'booking.modal.create' | translate }}
           </button>

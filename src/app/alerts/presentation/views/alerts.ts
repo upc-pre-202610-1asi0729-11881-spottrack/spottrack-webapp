@@ -1,18 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
-
-interface Alert {
-  id: string;
-  title: string;
-  description: string;
-  type: 'admin' | 'client' | 'system';
-  icon: string;
-  date: Date;
-  targetRoute: string;
-}
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AlertsService, AppAlert } from '../../application/alerts.service';
+import { AuthStore } from '../../../auth/application/auth.store';
 
 @Component({
   selector: 'app-alerts',
@@ -21,62 +13,53 @@ interface Alert {
   templateUrl: './alerts.html',
   styleUrl: './alerts.scss',
 })
-export class AlertsComponent {
-  private router = inject(Router);
+export class AlertsComponent implements OnInit {
+  private router      = inject(Router);
+  private translate   = inject(TranslateService);
+  private authStore   = inject(AuthStore);
+  alertsService       = inject(AlertsService);
 
-  alertsList: Alert[] = [
-    {
-      id: 'ALR-001',
-      title: 'Alerta de reabastecimiento: Nivel crítico',
-      description:
-        'El inventario de "Correa de transmisión XT-500" ha llegado al nivel mínimo de seguridad tras la última reparación.',
-      type: 'admin',
-      icon: 'warning',
-      date: new Date(Date.now() - 5 * 60000), // Hace 5 minutos
-      targetRoute: '/maintenance',
-    },
-    {
-      id: 'ALR-002',
-      title: 'Desconexión de sensor IoT',
-      description: 'La Cinta de Correr #4 (Sede Central) ha perdido conexión con la red principal.',
-      type: 'system',
-      icon: 'wifi_off',
-      date: new Date(Date.now() - 120 * 60000), // Hace 2 horas
-      targetRoute: '/iot',
-    },
-    {
-      id: 'ALR-003',
-      title: 'Actualización de rutina de cliente',
-      description:
-        'El cliente Juan Pérez ha solicitado una revisión de su plan de entrenamiento actual.',
-      type: 'client',
-      icon: 'person',
-      date: new Date(Date.now() - 1440 * 60000), // Hace 1 día
-      targetRoute: '/dashboard',
-    },
-  ];
+  get currentRole(): 'admin' | 'client' {
+    return this.authStore.isClient() ? 'client' : 'admin';
+  }
+
+  // Admin sees every alert; clients only see their own
+  get alertsList(): AppAlert[] {
+    const all = this.alertsService.alerts();
+    return this.currentRole === 'client'
+      ? all.filter(a => a.type === 'client')
+      : all;
+  }
+
+  ngOnInit(): void {
+    this.alertsService.markReadForRole(this.currentRole);
+  }
 
   navigateTo(route: string): void {
-    if (route) {
-      this.router.navigate([route]);
-    }
+    if (route) this.router.navigate([route]);
   }
 
   deleteAlert(event: Event, id: string): void {
-    event.stopPropagation(); // Evita que al dar clic a la X se navegue a otra ruta
-    this.alertsList = this.alertsList.filter((alert) => alert.id !== id);
+    event.stopPropagation();
+    this.alertsService.deleteAlert(id);
+  }
+
+  resolveTitle(alert: AppAlert): string {
+    return alert.titleKey ? this.translate.instant(alert.titleKey) : (alert.title ?? '');
+  }
+
+  resolveDescription(alert: AppAlert): string {
+    return alert.descriptionKey ? this.translate.instant(alert.descriptionKey) : (alert.description ?? '');
   }
 
   getRelativeTime(date: Date): string {
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return 'Hace un momento';
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) return `Hace ${diffInMinutes} minuto${diffInMinutes > 1 ? 's' : ''}`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `Hace ${diffInHours} hora${diffInHours > 1 ? 's' : ''}`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `Hace ${diffInDays} día${diffInDays > 1 ? 's' : ''}`;
+    const diff = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (diff < 60) return this.translate.instant('alerts.time.moment');
+    const m = Math.floor(diff / 60);
+    if (m < 60) return this.translate.instant(m === 1 ? 'alerts.time.minute' : 'alerts.time.minutes', { count: m });
+    const h = Math.floor(m / 60);
+    if (h < 24) return this.translate.instant(h === 1 ? 'alerts.time.hour' : 'alerts.time.hours', { count: h });
+    const d = Math.floor(h / 24);
+    return this.translate.instant(d === 1 ? 'alerts.time.day' : 'alerts.time.days', { count: d });
   }
 }

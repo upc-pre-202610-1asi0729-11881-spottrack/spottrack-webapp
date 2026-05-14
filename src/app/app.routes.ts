@@ -17,6 +17,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'profile', component: ProfileView },
+      {
+        path: 'alerts',
+        loadComponent: () =>
+          import('./alerts/presentation/views/alerts').then((m) => m.AlertsComponent),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
       // ── Admin routes ────────────────────────────────────────────────────────
@@ -68,11 +73,6 @@ export const routes: Routes = [
               ),
           },
           {
-            path: 'alerts',
-            loadComponent: () =>
-              import('./alerts/presentation/views/alerts').then((m) => m.AlertsComponent),
-          },
-          {
             path: 'configuration',
             loadComponent: () =>
               import('./configuration/presentation/views/configuration').then(
@@ -101,8 +101,8 @@ export const routes: Routes = [
           {
             path: 'bookings',
             loadComponent: () =>
-              import('./booking/presentation/views/booking').then(
-                (m) => m.BookingComponent,
+              import('./reservation/presentation/views/reservation').then(
+                (m) => m.ReservationComponent,
               ),
           },
           {
