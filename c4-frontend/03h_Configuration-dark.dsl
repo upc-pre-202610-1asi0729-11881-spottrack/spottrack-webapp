@@ -1,26 +1,32 @@
 workspace "SpotTrack – Configuration" "C4 Component Diagram for the Configuration Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         restApi = softwareSystem "SpotTrack REST API" "Backend JSON API over HTTPS" "External System"
 
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             configBC = container "Configuration Bounded Context" "System-wide settings: maintenance thresholds, IoT parameters, notifications and financial config" "Angular 18" {
 
-                group "Presentation Layer" {
-                    configComp = component "ConfigurationComponent" "Settings form with four sections: maintenance thresholds (sliders), IoT config, notification toggles per alert type, and financial parameters; Save/Cancel via MatSnackBar." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Views" {
+                        configComp = component "Configuration" "Settings form with four sections: maintenance thresholds (sliders), IoT config, notification toggles per alert type, and financial parameters; Save/Cancel via MatSnackBar." "Angular Component" "Presentation"
+                    }
                 }
 
-                group "Application Layer" {
-                    appLayer = component "Application Layer" "ConfigurationStore: loads settings on init, exposes save(config) to persist changes." "Angular Injectable" "Application"
+                group "Application" {
+                    appLayer = component "Application" "ConfigurationStore: loads settings on init, exposes save(config) to persist changes." "Angular Injectable" "Application"
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "Configuration Entity: maintenanceThresholds, iotConfig, notifications, financialConfig. AlertType Interface: key, name, description, enabled." "TypeScript Classes" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "Configuration Entity: maintenanceThresholds, iotConfig, notifications, financialConfig. AlertType Interface: key, name, description, enabled." "TypeScript Classes" "Domain"
                 }
 
-                group "Infrastructure Layer" {
-                    infraLayer = component "Infrastructure Layer" "ConfigurationApiEndpoint (/configurations), ConfigurationAssembler" "TypeScript Classes" "Infrastructure"
+                group "Infrastructure" {
+                    infraLayer = component "Infrastructure" "ConfigurationApiEndpoint (/configurations), ConfigurationAssembler" "TypeScript Classes" "Infrastructure"
                 }
             }
         }

@@ -1,34 +1,39 @@
 workspace "SpotTrack – Maintenance" "C4 Component Diagram for the Maintenance Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         restApi = softwareSystem "SpotTrack REST API" "Backend JSON API over HTTPS" "External System"
 
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             maintenanceBC = container "Maintenance Bounded Context" "Tracks maintenance tickets and preventive schedules via a Kanban workflow" "Angular 18" {
 
-                group "Presentation Layer" {
-                    maintenanceComp = component "MaintenanceComponent" "Kanban board with Open / In Progress / Resolved swimlanes; supports text search, status and priority filters, and Start / Complete ticket actions." "Angular Component" "Presentation"
-
-                    newTicketComp = component "NewTicketComponent" "Ticket creation form with equipment selector, priority, type, date and time; highlights peak-hour scheduling and suggests off-peak slots." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Views" {
+                        group "NewTicket" {
+                            maintenanceComp = component "Maintenance" "Kanban board with Open / In Progress / Resolved swimlanes; supports text search, status and priority filters, and Start / Complete ticket actions." "Angular Component" "Presentation"
+                        }
+                    }
                 }
 
-                group "Application Layer" {
-                    appLayer = component "Application Layer" "MaintenanceStore: signal state with ticket and schedule lists; actions: createTicket(), startTicket(), completeTicket(); utility: isPeakHour()." "Angular Injectable" "Application"
+                group "Application" {
+                    appLayer = component "Application" "MaintenanceStore: signal state with ticket and schedule lists; actions: createTicket(), startTicket(), completeTicket(); utility: isPeakHour()." "Angular Injectable" "Application"
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "MaintenanceTicket Entity: id, equipmentId, description, priority, type, status, createdAt. MaintenanceSchedule Entity: id, equipmentId, scheduledDate, intervalDays." "TypeScript Classes" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "MaintenanceTicket Entity: id, equipmentId, description, priority, type, status, createdAt. MaintenanceSchedule Entity: id, equipmentId, scheduledDate, intervalDays." "TypeScript Classes" "Domain"
                 }
 
-                group "Infrastructure Layer" {
-                    infraLayer = component "Infrastructure Layer" "MaintenanceApi, MaintenanceTicketApiEndpoint (/maintenance-tickets), MaintenanceScheduleApiEndpoint (/maintenance-schedules), Assemblers, Response interfaces" "TypeScript Classes" "Infrastructure"
+                group "Infrastructure" {
+                    infraLayer = component "Infrastructure" "MaintenanceApi, MaintenanceTicketApiEndpoint (/maintenance-tickets), MaintenanceScheduleApiEndpoint (/maintenance-schedules), Assemblers, Response interfaces" "TypeScript Classes" "Infrastructure"
                 }
             }
         }
 
-        maintenanceComp -> appLayer "reads ticket signals; calls startTicket(), completeTicket()"
-        newTicketComp -> appLayer "calls createTicket(), isPeakHour()"
+        maintenanceComp -> appLayer "reads ticket signals; calls startTicket(), completeTicket(), createTicket(), isPeakHour()"
         appLayer -> domainLayer "manages Ticket and Schedule entities"
         appLayer -> infraLayer "calls getTickets(), createTicket(), updateTicket(), getSchedules()"
         infraLayer -> restApi "GET / POST / PUT / DELETE /maintenance-tickets, /maintenance-schedules" "JSON / HTTPS"

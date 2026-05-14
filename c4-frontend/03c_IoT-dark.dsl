@@ -1,26 +1,32 @@
 workspace "SpotTrack – IoT" "C4 Component Diagram for the IoT Bounded Context" {
 
     model {
+        properties {
+            structurizr.groupSeparator "/"
+        }
+
         restApi = softwareSystem "SpotTrack REST API" "Backend JSON API over HTTPS" "External System"
 
         spottrack = softwareSystem "SpotTrack Frontend" {
 
             iotBC = container "IoT Bounded Context" "Real-time monitoring of IoT sensor devices attached to gym equipment" "Angular 18" {
 
-                group "Presentation Layer" {
-                    iotMonitoringComp = component "IotMonitoringComponent" "Sensor dashboard with KPI cards (online/offline/battery/alerts), filterable device table, per-row investigate and replace actions, and a reconnect modal." "Angular Component" "Presentation"
+                group "Presentation" {
+                    group "Views" {
+                        iotMonitoringComp = component "IotMonitoring" "Sensor dashboard with KPI cards (online/offline/battery/alerts), filterable device table, per-row investigate and replace actions, and a reconnect modal." "Angular Component" "Presentation"
+                    }
                 }
 
-                group "Application Layer" {
-                    appLayer = component "Application Layer" "IotStore: signal state with device list, computed counts and actions: refresh(), investigateAlert(), scheduleReplacement(), dismissReconnectedModal()." "Angular Injectable" "Application"
+                group "Application" {
+                    appLayer = component "Application" "IotStore: signal state with device list, computed counts and actions: refresh(), investigateAlert(), scheduleReplacement(), dismissReconnectedModal()." "Angular Injectable" "Application"
                 }
 
-                group "Domain Layer" {
-                    domainLayer = component "Domain Layer" "Iot Entity: id, equipmentId, location, status, lastHeartbeat, batteryLevel, signalStrength, firmwareVersion." "TypeScript Class" "Domain"
+                group "Domain" {
+                    domainLayer = component "Domain" "Iot Entity: id, equipmentId, location, status, lastHeartbeat, batteryLevel, signalStrength, firmwareVersion." "TypeScript Class" "Domain"
                 }
 
-                group "Infrastructure Layer" {
-                    infraLayer = component "Infrastructure Layer" "IotApi, IotApiEndpoint (/iot-devices), IotAssembler, IotResponse" "TypeScript Classes" "Infrastructure"
+                group "Infrastructure" {
+                    infraLayer = component "Infrastructure" "IotApi, IotApiEndpoint (/iot-devices), IotAssembler, IotResponse" "TypeScript Classes" "Infrastructure"
                 }
             }
         }

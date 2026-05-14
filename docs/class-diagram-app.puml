@@ -2,148 +2,95 @@
 
 package "app" {
   class App <<component>> {
-    + title: Signal<string>
-  }
-}
-
-package "shared.infrastructure" {
-  class I18nService {
-    - translateService: TranslateService
-    + setLanguage(lang: string): void
-    + translate(key: string): string
-    + getAvailableLanguages(): string[]
-  }
-  class AuthInterceptor {
-    + intercept(req: HttpRequest, next: HttpHandler): Observable<HttpEvent>
+    + title: string
   }
 }
 
 package "shared.application" {
-  class LanguageStore {
-    - currentLangSignal: Signal<string>
-    - i18nService: I18nService
-    + currentLang: Signal<string>
-    + availableLanguages: string[]
-    + changeLanguage(lang: string): void
+  abstract class BaseStore {
+  }
+
+  class SessionService {
+    - roleSignal: Signal<UserRole | null>
+    + role: Signal<UserRole | null>
+  }
+}
+
+package "shared.infrastructure" {
+  interface BaseEntity {
+    + id: number
+  }
+
+  interface BaseResource {
+    + id: number
+  }
+
+  interface BaseResponse {
+  }
+
+  interface BaseAssembler {
+    + toEntityFromResource(resource: TResource): TEntity
+    + toResourceFromEntity(entity: TEntity): TResource
+    + toEntitiesFromResponse(response: TResponse): TEntity[]
+  }
+
+  abstract class BaseApi {
+  }
+
+  abstract class BaseApiEndpoint {
+    # http: HttpClient
+    # endpointUrl: string
+    # assembler: TAssembler
+    + getAll(): Observable<TEntity[]>
+    + getById(id: number): Observable<TEntity>
+    + create(entity: TEntity): Observable<TEntity>
+    + update(entity: TEntity, id: number): Observable<TEntity>
+    + delete(id: number): Observable<void>
+    # handleError(operation: string): Function
   }
 }
 
 package "shared.presentation.components" {
-
   class Layout <<component>> {
     - authStore: AuthStore
-    + ngOnInit(): void
+    + sidebarOpen: boolean
+    + currentRole: "admin" | "client"
+    + toggleSidebar(): void
+    + closeSidebar(): void
+    + logout(): void
   }
 
-  class DashboardLayout <<component>> {
+  class Sidebar <<component>> {
     - authStore: AuthStore
+    + navItems: NavItem[]
+    + open: boolean
+    + role: "admin" | "client"
+    + linkClicked: EventEmitter<void>
   }
 
-  class SidebarComponent <<component>> {
-    # navItems: NavItem[]
-    # activeRoute: string
-  }
-
-  class HeaderComponent <<component>> {
-    # searchQuery: string
-    + onSearch(): void
+  class BottomBar <<component>> {
   }
 
   class LanguageSwitcher <<component>> {
-    - languageStore: LanguageStore
-    + currentLang: Signal<string>
-    + onChangeLanguage(lang: string): void
   }
 
-  class Footer <<component>> {
+  class UserProfile <<component>> {
   }
 
-  ' ---- IAM pages ----
-  class LoginPage <<component>> {
+  interface NavItem {
+    + path: string
+    + icon: string
+    + labelKey: string
   }
-  class RegisterPage <<component>> {
-  }
-
-  ' ---- Profiles pages ----
-  class ProfilePage <<component>> {
-  }
-
-  ' ---- Assets pages ----
-  class AssetManagementPage <<component>> {
-  }
-
-  ' ---- IoT pages ----
-  class IoTMonitoringPage <<component>> {
-  }
-
-  ' ---- Maintenance pages ----
-  class MaintenancePage <<component>> {
-  }
-
-  ' ---- Availability pages ----
-  class MobileHomePage <<component>> {
-  }
-  class MobileReservationsPage <<component>> {
-  }
-
-  ' ---- Routines pages ----
-  class MobileRoutinesPage <<component>> {
-  }
-
-  ' ---- Notifications pages ----
-  class MobileNotificationsPage <<component>> {
-  }
-
-  ' ---- Reports pages ----
-  class ReportsPage <<component>> {
-  }
-
-  ' ---- Financial pages ----
-  class FinancialImpactPage <<component>> {
-  }
-
-  ' ---- Settings pages ----
-  class SettingsPage <<component>> {
-  }
-
-  ' ---- Dashboard overview ----
-  class AdminDashboardPage <<component>> {
-  }
-
-
 }
 
-' App root
 App *-- Layout : composes
-
-' Layout is the root shell — composes structural components
-Layout *-- DashboardLayout : composes
+Layout *-- Sidebar : composes
+Layout *-- BottomBar : composes
+Layout *-- UserProfile : composes
 Layout *-- LanguageSwitcher : composes
-Layout *-- Footer : composes
-
-' Dashboard shell composes nav
-DashboardLayout *-- SidebarComponent : composes
-DashboardLayout *-- HeaderComponent : composes
-
-' Layout routes to all pages
-Layout *-- LandingPage : composes
-Layout *-- LoginPage : composes
-Layout *-- RegisterPage : composes
-Layout *-- ProfilePage : composes
-Layout *-- AdminDashboardPage : composes
-Layout *-- AssetManagementPage : composes
-Layout *-- IoTMonitoringPage : composes
-Layout *-- MaintenancePage : composes
-Layout *-- ReportsPage : composes
-Layout *-- FinancialImpactPage : composes
-Layout *-- SettingsPage : composes
-Layout *-- MobileHomePage : composes
-Layout *-- MobileReservationsPage : composes
-Layout *-- MobileRoutinesPage : composes
-Layout *-- MobileNotificationsPage : composes
-
-' i18n
-LanguageStore --> I18nService : uses
-LanguageSwitcher --> LanguageStore : uses
+Layout --> AuthStore : uses
+Sidebar --> NavItem : uses
+BaseApiEndpoint ..|> BaseAssembler : uses
 
 @enduml

@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration=production",
+    "build": "ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "server": "json-server --watch server/db.json --routes server/routes.json --port 3000"
