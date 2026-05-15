@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+  import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { FinancialApi } from '../infrastructure/financial-api';

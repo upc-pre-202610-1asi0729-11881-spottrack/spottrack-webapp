@@ -91,5 +91,6 @@ Configuration --> IoTConfiguration : contains
 Configuration --> FinancialConfiguration : contains
 Configuration --> AlertType : uses
 ConfigurationComponent --> ConfigurationStore : uses
+ConfigurationComponent --> ConfigurationSection : renders
 
 @enduml

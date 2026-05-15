@@ -90,7 +90,13 @@ Layout *-- BottomBar : composes
 Layout *-- UserProfile : composes
 Layout *-- LanguageSwitcher : composes
 Layout --> AuthStore : uses
+Layout --> SessionService : reads
 Sidebar --> NavItem : uses
-BaseApiEndpoint ..|> BaseAssembler : uses
+BaseStore --> BaseApi : uses
+BaseApi --> BaseApiEndpoint : delegates
+BaseApiEndpoint --> BaseAssembler : uses
+BaseAssembler ..> BaseEntity : creates
+BaseAssembler ..> BaseResource : maps
+BaseAssembler ..> BaseResponse : parses
 
 @enduml

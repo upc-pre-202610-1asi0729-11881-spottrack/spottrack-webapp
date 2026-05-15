@@ -135,6 +135,12 @@ package "analytics.presentation.views" {
 AnalyticsStore --> AnalyticsApi : uses
 AnalyticsStore --> EquipmentUsageStatResource : reads
 AnalyticsStore --> EquipmentResource : reads
+AnalyticsStore ..> AnalyticsStat : aggregates
+AnalyticsStore --> BranchStats : computes
+AnalyticsStore --> WeekDay : computes
+AnalyticsStore --> HourlyPoint : computes
+AnalyticsStore --> MachineTypeSegment : computes
+AnalyticsStore --> RelocationRec : computes
 AnalyticsComponent --> AnalyticsStore : uses
 
 @enduml

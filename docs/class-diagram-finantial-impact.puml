@@ -151,6 +151,15 @@ package "financial-impact.presentation.views" {
 FinancialImpactStore --> FinancialApi : uses
 FinancialImpactStore --> EquipmentUsageStatResource : reads
 FinancialImpactStore --> EquipmentResource : reads
+FinancialImpactStore ..> AnalyticsStat : aggregates
+FinancialImpactStore --> BranchStats : computes
+FinancialImpactStore --> WeekDay : computes
+FinancialImpactStore --> HourlyPoint : computes
+FinancialImpactStore --> MachineTypeSegment : computes
+FinancialImpactStore --> RelocationRec : computes
 FinancialImpactComponent --> FinancialImpactStore : uses
+FinancialImpactComponent --> InactivityRow : displays
+FinancialImpactComponent --> MaintenanceType : displays
+FinancialImpactComponent --> RoiMonth : computes
 
 @enduml
