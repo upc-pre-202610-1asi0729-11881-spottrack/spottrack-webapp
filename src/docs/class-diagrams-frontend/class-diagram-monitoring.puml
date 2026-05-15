@@ -142,5 +142,6 @@ IotAssembler ..> IotResource : transforms
 IotAssembler --> Iot : creates
 IotMonitoringComponent --> IotStore : uses
 Iot --> IotStatus : has
+IotStore --> AlertType : classifies
 
 @enduml

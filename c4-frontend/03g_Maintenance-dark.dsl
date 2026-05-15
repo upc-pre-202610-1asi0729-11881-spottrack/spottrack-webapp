@@ -13,9 +13,8 @@ workspace "SpotTrack – Maintenance" "C4 Component Diagram for the Maintenance 
 
                 group "Presentation" {
                     group "Views" {
-                        group "NewTicket" {
-                            maintenanceComp = component "Maintenance" "Kanban board with Open / In Progress / Resolved swimlanes; supports text search, status and priority filters, and Start / Complete ticket actions." "Angular Component" "Presentation"
-                        }
+                        maintenanceComp = component "Maintenance" "Kanban board with Open / In Progress / Resolved swimlanes; supports text search, status and priority filters, and Start / Complete ticket actions." "Angular Component" "Presentation"
+                        newTicketComp = component "NewTicket" "Form view to create a maintenance ticket or schedule a preventive block; includes peak-hour detection and suggested off-peak time slots." "Angular Component" "Presentation"
                     }
                 }
 
@@ -33,7 +32,8 @@ workspace "SpotTrack – Maintenance" "C4 Component Diagram for the Maintenance 
             }
         }
 
-        maintenanceComp -> appLayer "reads ticket signals; calls startTicket(), completeTicket(), createTicket(), isPeakHour()"
+        maintenanceComp -> appLayer "reads ticket signals; calls startTicket(), completeTicket()"
+        newTicketComp -> appLayer "calls createTicket(), scheduleBlock(), isPeakHour(); reads suggestedTimes"
         appLayer -> domainLayer "manages Ticket and Schedule entities"
         appLayer -> infraLayer "calls getTickets(), createTicket(), updateTicket(), getSchedules()"
         infraLayer -> restApi "GET / POST / PUT / DELETE /maintenance-tickets, /maintenance-schedules" "JSON / HTTPS"

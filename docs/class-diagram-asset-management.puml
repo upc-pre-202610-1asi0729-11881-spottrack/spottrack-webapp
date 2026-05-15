@@ -143,7 +143,9 @@ EquipmentStore --> EquipmentApi : uses
 EquipmentAssembler ..> EquipmentResource : transforms
 EquipmentAssembler --> Equipment : creates
 EquipmentManagementComponent --> EquipmentStore : uses
+EquipmentManagementComponent --> EquipmentRow : displays
 AddEquipmentDialogComponent --> EquipmentStore : uses
+AddEquipmentDialogComponent --> EquipmentFormData : uses
 Equipment --> EquipmentStatus : has
 
 @enduml

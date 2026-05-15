@@ -111,8 +111,10 @@ package "dashboard.presentation.views" {
 DashboardApi --|> BaseApi : extends
 EquipmentUsageStatApiEndpoint --|> BaseApiEndpoint : extends
 DashboardApi --> EquipmentUsageStatApiEndpoint : uses
+DashboardApi --> UsageSessionResource : fetches
 EquipmentUsageStatApiEndpoint --> EquipmentUsageStatAssembler : uses
 DashboardStore --> DashboardApi : uses
+DashboardStore --> HourlyCapacityPoint : computes
 EquipmentUsageStatAssembler ..> EquipmentUsageStatResource : transforms
 EquipmentUsageStatAssembler --> EquipmentUsageStat : creates
 DashboardStore --> EquipmentStore : uses

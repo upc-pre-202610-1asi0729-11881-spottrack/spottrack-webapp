@@ -12,6 +12,7 @@ export interface AlertType {
   description: string;
   enabled: boolean;
 }
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-configuration',
