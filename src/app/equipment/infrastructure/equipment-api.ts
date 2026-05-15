@@ -14,19 +14,9 @@ export class EquipmentApi extends BaseApi {
     this.endpoint = new EquipmentApiEndpoint(http);
   }
 
-  getEquipment(): Observable<Equipment[]> {
-    return this.endpoint.getAll();
-  }
-
-  registerEquipment(entity: Equipment): Observable<Equipment> {
-    return this.endpoint.create(entity);
-  }
-
-  updateEquipment(entity: Equipment): Observable<Equipment> {
-    return this.endpoint.update(entity, entity.id);
-  }
-
-  deleteEquipment(id: number): Observable<void> {
-    return this.endpoint.delete(id);
-  }
+  getEquipment(): Observable<Equipment[]>                          { return this.endpoint.getAll(); }
+  getEquipmentById(id: number): Observable<Equipment>              { return this.endpoint.getById(id); }
+  registerEquipment(entity: Equipment): Observable<Equipment>      { return this.endpoint.create(entity); }
+  updateEquipment(entity: Equipment): Observable<Equipment>        { return this.endpoint.update(entity, entity.id); }
+  deleteEquipment(id: number): Observable<void>                    { return this.endpoint.delete(id); }
 }

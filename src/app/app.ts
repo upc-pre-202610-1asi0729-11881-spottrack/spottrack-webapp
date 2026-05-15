@@ -1,16 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Layout } from './shared/presentation/components/layout/layout';
 
 @Component({
   selector: 'app-root',
-  imports: [Layout],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('SpotTrack-Frontend-Web-Applications');
-
   constructor() {
     const translate = inject(TranslateService);
     translate.setDefaultLang('en');

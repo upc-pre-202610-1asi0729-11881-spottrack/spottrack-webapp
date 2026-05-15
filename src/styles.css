@@ -2,6 +2,8 @@ html, body {
   margin: 0;
   height: 100%;
   background: #121212;
+  /* Prevent Material's light-theme typography from inheriting dark text into dark cards */
+  color: #e0e0e0;
 }
 
 app-root,
@@ -27,4 +29,82 @@ app-layout {
 .mdc-text-field__input {
   color: #fff !important;
   caret-color: #fff !important;
+}
+
+/* Mat-table dark theme — MDC resets cell color to near-black by default */
+.mat-mdc-header-cell,
+.mdc-data-table__header-cell {
+  color: #aaa !important;
+  border-bottom-color: #2a2a2a !important;
+}
+
+.mat-mdc-cell,
+.mdc-data-table__cell {
+  color: #e0e0e0 !important;
+  border-bottom-color: #2a2a2a !important;
+}
+
+.mat-mdc-no-data-row td {
+  color: #aaa !important;
+}
+
+/* Booking modal select panel */
+.booking-select-panel {
+  background: #1a1a1a !important;
+}
+
+.booking-select-panel .mat-mdc-option {
+  color: #fff !important;
+}
+
+.booking-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background: rgba(245, 197, 24, 0.12) !important;
+}
+
+.booking-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background: #f5c518 !important;
+}
+
+.booking-select-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: #000 !important;
+  font-weight: 600;
+}
+
+/* Routine modal select panel */
+.routine-select-panel {
+  background: #1a1a1a !important;
+}
+
+.routine-select-panel .mat-mdc-option {
+  color: #fff !important;
+}
+
+.routine-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background: rgba(245, 197, 24, 0.12) !important;
+}
+
+.routine-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background: #f5c518 !important;
+}
+
+.routine-select-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: #000 !important;
+  font-weight: 600;
+}
+
+/* Routine creation snackbar */
+.routine-snackbar {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+  border: 1px solid #f5c518 !important;
+  border-radius: 10px !important;
+}
+
+.routine-snackbar .mat-mdc-snack-bar-label {
+  color: #ffffff !important;
+}
+
+.routine-snackbar .mat-mdc-button {
+  color: #f5c518 !important;
+  font-weight: 700;
 }

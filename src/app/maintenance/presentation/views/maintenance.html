@@ -1,0 +1,188 @@
+<div class="maint-page">
+
+  <!-- ── Header ─────────────────────────────────────────────────────── -->
+  <div class="maint-header">
+    <div>
+      <h1 class="maint-title">{{ 'maintenance.title' | translate }}</h1>
+      <p class="maint-subtitle">{{ 'maintenance.subtitle' | translate }}</p>
+    </div>
+    <button class="btn-new" [routerLink]="['/maintenance/new-ticket']">
+      <mat-icon>add</mat-icon>
+      {{ 'maintenance.newTicket' | translate }}
+    </button>
+  </div>
+
+  <!-- ── Stats ──────────────────────────────────────────────────────── -->
+  <div class="maint-stats">
+    <div class="stat-card">
+      <div>
+        <p class="stat-label">{{ 'maintenance.stats.pending' | translate }}</p>
+        <p class="stat-value">{{ store.pendingTickets().length }}</p>
+      </div>
+      <mat-icon class="stat-icon stat-icon--red">schedule</mat-icon>
+    </div>
+    <div class="stat-card">
+      <div>
+        <p class="stat-label">{{ 'maintenance.stats.inProgress' | translate }}</p>
+        <p class="stat-value stat-value--amber">{{ store.inProgressTickets().length }}</p>
+      </div>
+      <mat-icon class="stat-icon stat-icon--amber">pending_actions</mat-icon>
+    </div>
+    <div class="stat-card">
+      <div>
+        <p class="stat-label">{{ 'maintenance.stats.completed' | translate }}</p>
+        <p class="stat-value stat-value--green">{{ store.resolvedTickets().length }}</p>
+      </div>
+      <mat-icon class="stat-icon stat-icon--green">task_alt</mat-icon>
+    </div>
+    <div class="stat-card">
+      <div>
+        <p class="stat-label">{{ 'maintenance.stats.totalTickets' | translate }}</p>
+        <p class="stat-value">{{ store.totalTickets() }}</p>
+      </div>
+      <mat-icon class="stat-icon stat-icon--blue">build</mat-icon>
+    </div>
+  </div>
+
+  <!-- ── Filters bar ────────────────────────────────────────────────── -->
+  <div class="filters-bar">
+    <div class="search-wrap">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input
+        class="search-input"
+        [placeholder]="'maintenance.search' | translate"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        name="search"
+      >
+    </div>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)" name="sf">
+        <mat-option value="">{{ 'maintenance.filter.allStatuses' | translate }}</mat-option>
+        <mat-option value="OPEN">{{ 'maintenance.status.OPEN' | translate }}</mat-option>
+        <mat-option value="IN_PROGRESS">{{ 'maintenance.status.IN_PROGRESS' | translate }}</mat-option>
+        <mat-option value="RESOLVED">{{ 'maintenance.status.RESOLVED' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-select [ngModel]="priorityFilter()" (ngModelChange)="priorityFilter.set($event)" name="pf">
+        <mat-option value="">{{ 'maintenance.filter.allPriorities' | translate }}</mat-option>
+        <mat-option value="HIGH">{{ 'maintenance.priority.HIGH' | translate }}</mat-option>
+        <mat-option value="MEDIUM">{{ 'maintenance.priority.MEDIUM' | translate }}</mat-option>
+        <mat-option value="LOW">{{ 'maintenance.priority.LOW' | translate }}</mat-option>
+        <mat-option value="URGENT">{{ 'maintenance.priority.URGENT' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- ── Kanban board ───────────────────────────────────────────────── -->
+  <div class="kanban">
+
+    <!-- Pendiente column -->
+    <div class="kanban-col">
+      <div class="kanban-col__header">
+        <div class="col-title">
+          <mat-icon class="col-dot col-dot--red">radio_button_checked</mat-icon>
+          <span>{{ 'maintenance.col.pending' | translate }} ({{ pendingFiltered().length }})</span>
+        </div>
+      </div>
+
+      <div class="ticket-list">
+        @for (t of pendingFiltered(); track t.id) {
+          <div class="ticket-card">
+            <div class="ticket-top">
+              <div class="ticket-meta">
+                <span class="ticket-id">{{ ticketId(t) }}</span>
+                <span class="ticket-name">{{ equipmentName(t.equipmentId) }}</span>
+                <p class="ticket-desc">{{ t.description }}</p>
+              </div>
+              <span class="status-dot status-dot--red"></span>
+            </div>
+            <div class="ticket-row">
+              <span class="priority-badge" [class]="'priority-badge--' + t.priority.toLowerCase()">
+                {{ 'maintenance.priority.' + t.priority | translate }}
+              </span>
+              <span class="ticket-age">{{ ticketAge(t) }}</span>
+            </div>
+            <button class="btn-start" (click)="startTicket(t.id)">
+              {{ 'maintenance.action.start' | translate }}
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        }
+        @empty {
+          <p class="col-empty">{{ 'maintenance.col.empty' | translate }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- En Progreso column -->
+    <div class="kanban-col">
+      <div class="kanban-col__header">
+        <div class="col-title">
+          <mat-icon class="col-dot col-dot--amber">radio_button_checked</mat-icon>
+          <span>{{ 'maintenance.col.inProgress' | translate }} ({{ inProgressFiltered().length }})</span>
+        </div>
+      </div>
+
+      <div class="ticket-list">
+        @for (t of inProgressFiltered(); track t.id) {
+          <div class="ticket-card ticket-card--in-progress">
+            <div class="ticket-top">
+              <div class="ticket-meta">
+                <span class="ticket-id">{{ ticketId(t) }}</span>
+                <span class="ticket-name">{{ equipmentName(t.equipmentId) }}</span>
+                <p class="ticket-desc">{{ t.description }}</p>
+                @if (t.assignee) {
+                  <p class="ticket-assignee">{{ 'maintenance.assignedTo' | translate }}: {{ t.assignee }}</p>
+                }
+              </div>
+              <span class="status-dot status-dot--amber"></span>
+            </div>
+            <button class="btn-complete" (click)="completeTicket(t.id)">
+              {{ 'maintenance.action.complete' | translate }}
+              <mat-icon>check_circle</mat-icon>
+            </button>
+          </div>
+        }
+        @empty {
+          <p class="col-empty">{{ 'maintenance.col.empty' | translate }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- Completado column -->
+    <div class="kanban-col">
+      <div class="kanban-col__header">
+        <div class="col-title">
+          <mat-icon class="col-dot col-dot--green">radio_button_checked</mat-icon>
+          <span>{{ 'maintenance.col.completed' | translate }} ({{ resolvedFiltered().length }})</span>
+        </div>
+      </div>
+
+      <div class="ticket-list">
+        @for (t of resolvedFiltered(); track t.id) {
+          <div class="ticket-card ticket-card--completed">
+            <div class="ticket-top">
+              <div class="ticket-meta">
+                <span class="ticket-id">{{ ticketId(t) }}</span>
+                <span class="ticket-name ticket-name--done">{{ equipmentName(t.equipmentId) }}</span>
+                <p class="ticket-desc">{{ t.description }}</p>
+                @if (t.completedBy) {
+                  <p class="ticket-assignee">{{ 'maintenance.completedBy' | translate }}: {{ t.completedBy }}</p>
+                }
+              </div>
+              <mat-icon class="done-check">check_circle</mat-icon>
+            </div>
+          </div>
+        }
+        @empty {
+          <p class="col-empty">{{ 'maintenance.col.empty' | translate }}</p>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -9,7 +9,7 @@ export class IotApiEndpoint extends BaseApiEndpoint<Iot, IotResource, IotRespons
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.equipmentApiProvider}${environment.iotEndpoint}`,
+      `${environment.apiProvider}${environment.iotEndpoint}`,
       new IotAssembler()
     );
   }

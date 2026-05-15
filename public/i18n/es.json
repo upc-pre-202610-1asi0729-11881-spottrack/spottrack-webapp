@@ -1,4 +1,168 @@
 {
+  "client": {
+    "welcome": "Bienvenido",
+    "subtitle": "Monitorea máquinas, reserva equipos y gestiona tus rutinas",
+    "role": "Cliente"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "subtitle": "¡Bienvenido de nuevo! Ingresa tus credenciales para continuar",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "submitBtn": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "register": "Regístrate",
+      "demoTitle": "Credenciales de demostración",
+      "demoPassword": "Contraseña: demo1234"
+    },
+    "error": {
+      "emptyFields": "Por favor ingresa tu correo y contraseña",
+      "invalidCredentials": "Correo o contraseña incorrectos"
+    }
+  },
+  "machines": {
+    "zones": {
+      "fuerza": "Zona Fuerza",
+      "cardio": "Zona Cardio"
+    },
+    "names": {
+      "cinta1": "Cinta 1",
+      "cinta2": "Cinta 2",
+      "prensa": "Prensa",
+      "prensaPiernas": "Prensa de Piernas",
+      "poleaAlta": "Polea Alta",
+      "rackSentadilla1": "Rack Sentadilla #1",
+      "rackSentadilla2": "Rack Sentadilla #2",
+      "bancoPecho": "Banco Pecho",
+      "bancoPechoPlano": "Banco Pecho Plano",
+      "bancoPechoInclinado": "Banco Pecho Inclinado",
+      "maquinaRemo": "Máquina de Remo",
+      "remo": "Remo",
+      "eliptica": "Elíptica",
+      "raquetmaquina": "Raquetmáquina"
+    }
+  },
+  "map": {
+    "title": "Mapa de Disponibilidad en Tiempo Real",
+    "subtitle": "Visualiza el estado de todas las máquinas del gimnasio",
+    "cardTitle": "Mapa de Disponibilidad",
+    "filter": {
+      "all": "Todos",
+      "strength": "Fuerza",
+      "cardio": "Cardio"
+    },
+    "legend": {
+      "available": "Libre ({{count}})",
+      "inUse": "Ocupado ({{count}})",
+      "reserved": "Reservado ({{count}})"
+    },
+    "gyms": {
+      "gym1": "Gimnasio Centro",
+      "gym2": "Gimnasio Norte",
+      "gym3": "Gimnasio Sur"
+    },
+    "detail": {
+      "statusLabel": "Estado",
+      "status": {
+        "AVAILABLE": "Disponible",
+        "IN_USE": "En Uso",
+        "RESERVED": "Reservado"
+      },
+      "reservedByUser": "Tienes esta máquina reservada",
+      "notifyBtn": "Notificarme cuando esté libre",
+      "alternativesBtn": "Ver alternativas",
+      "reportFreeBtn": "Reportar como libre",
+      "reserveBtn": "Reservar",
+      "reportOccupiedBtn": "Reportar como ocupada",
+      "notifications": {
+        "notified": "Te notificaremos cuando esta máquina esté libre",
+        "reportedFree": "Máquina reportada como libre. ¡Gracias!",
+        "reserved": "Máquina reservada con éxito",
+        "reportedOccupied": "Máquina reportada como ocupada. ¡Gracias!"
+      }
+    },
+    "alternatives": {
+      "title": "Máquinas Alternativas",
+      "subtitle": "Máquinas disponibles de la misma categoría",
+      "free": "Libre",
+      "reserveBtn": "Reservar"
+    },
+    "muscleGroups": {
+      "cardio": "Cardio",
+      "legs": "Piernas",
+      "back": "Espalda",
+      "chest": "Pecho"
+    }
+  },
+  "booking": {
+    "title": "Mis Reservas",
+    "subtitle": "Gestiona tus reservas activas y crea nuevas reservas",
+    "newBooking": "Nueva Reserva",
+    "timeRemaining": "Tiempo restante",
+    "expired": {
+      "title": "Reserva expirada",
+      "subtitle": "La máquina ha vuelto a estar disponible para otros usuarios"
+    },
+    "how": {
+      "title": "¿Cómo funcionan las reservas?",
+      "item1": "Puedes reservar una máquina libre por 10-15 minutos",
+      "item2": "Las reservas solo están disponibles en horas pico",
+      "item3": "Si no ocupas la máquina, volverá a estar disponible",
+      "item4": "Cancela tu reserva si cambias de plan"
+    },
+    "modal": {
+      "title": "Nueva Reserva",
+      "subtitle": "Reserva una máquina disponible por un tiempo limitado",
+      "machine": "Máquina",
+      "selectMachine": "Selecciona una máquina",
+      "duration": "Duración",
+      "minutesSuffix": "minutos",
+      "warning": "Las reservas solo están disponibles en horas pico. Si no ocupas la máquina en el tiempo establecido, la reserva expirará automáticamente.",
+      "option10s": "10 segundos",
+      "option10m": "10 minutos",
+      "option15m": "15 minutos",
+      "option20m": "20 minutos",
+      "cancel": "Cancelar",
+      "create": "Crear Reserva"
+    }
+  },
+  "clientAlerts": {
+    "reservationExpired": {
+      "title": "Reserva Expirada: {{machine}}",
+      "description": "Tu reserva de {{machine}} ha finalizado. La máquina ya está disponible para otros usuarios."
+    }
+  },
+  "alerts": {
+    "emptyState": "No tienes alertas pendientes",
+    "detailsBtn": "Ver detalles →",
+    "deleteTitle": "Eliminar alerta",
+    "time": {
+      "moment":  "Hace un momento",
+      "minute":  "Hace {{count}} minuto",
+      "minutes": "Hace {{count}} minutos",
+      "hour":    "Hace {{count}} hora",
+      "hours":   "Hace {{count}} horas",
+      "day":     "Hace {{count}} día",
+      "days":    "Hace {{count}} días"
+    },
+    "seeded": {
+      "alr001": {
+        "title":       "Alerta de reabastecimiento: Nivel crítico",
+        "description": "El inventario de \"Correa de transmisión XT-500\" ha llegado al nivel mínimo de seguridad tras la última reparación."
+      },
+      "alr002": {
+        "title":       "Desconexión de sensor IoT",
+        "description": "La Cinta de Correr #4 (Sede Central) ha perdido conexión con la red principal."
+      },
+      "alr003": {
+        "title":       "Actualización de rutina de cliente",
+        "description": "El cliente Juan Pérez ha solicitado una revisión de su plan de entrenamiento actual."
+      }
+    }
+  },
   "nav": {
     "dashboard": "Panel Principal",
     "equipment": "Equipos",
@@ -6,28 +170,142 @@
     "maintenance": "Mantenimiento",
     "analytics": "Analítica",
     "alerts": "Alertas",
-    "configuration": "Configuración"
+    "configuration": "Configuración",
+    "map": "Mapa",
+    "routines": "Rutinas",
+    "bookings": "Mis Reservas",
+    "reservations": "Mis Reservas",
+    "profile": "Mi Perfil",
+    "financial": "Impacto Financiero"
+  },
+  "dashboard": {
+    "welcome": "¡Hola de nuevo, {{name}}!",
+    "client_intro": "Aquí tienes un resumen de tu actividad.",
+    "admin_panel": "Panel de Administración"
   },
   "iot": {
     "title": "Monitoreo IoT",
-    "subtitle": "Monitorea el estado de los dispositivos IoT en todos los equipos",
-    "search": "Buscar por dirección MAC o ID de equipo...",
+    "subtitle": "Estado en tiempo real de sensores Edge IoT instalados en los equipos",
+    "search": "Buscar por ID sensor, máquina o zona...",
+    "actions": {
+      "refresh": "Actualizar"
+    },
+    "filter": {
+      "status": "Estado",
+      "allStatuses": "Todos los Estados"
+    },
     "stats": {
       "total": "Total Dispositivos",
-      "active": "Activos",
-      "inactive": "Inactivos"
+      "online": "Sensores en Línea",
+      "offline": "Desconectados",
+      "avgBattery": "Batería Promedio",
+      "activeAlerts": "Alertas Activas",
+      "ofTotal": "de {{total}} totales"
     },
     "table": {
-      "id": "ID",
-      "equipmentId": "Equipo",
-      "macAddress": "Dirección MAC",
+      "title": "Estado de Sensores",
+      "id": "ID Sensor",
+      "machine": "Máquina",
+      "location": "Ubicación",
       "status": "Estado",
-      "lastHeartbeat": "Último Heartbeat",
+      "lastPing": "Último Ping",
+      "battery": "Batería",
+      "signal": "Señal",
+      "firmware": "Firmware",
       "noData": "No se encontraron dispositivos"
     },
     "status": {
-      "ACTIVE": "Activo",
-      "INACTIVE": "Inactivo"
+      "ONLINE": "En Línea",
+      "OFFLINE": "Desconectado",
+      "WARNING": "Advertencia",
+      "ACTIVE": "En Línea",
+      "INACTIVE": "Desconectado"
+    },
+    "alerts": {
+      "title": "Alertas Activas",
+      "disconnectedTitle": "{{sensor}} - Sensor Desconectado",
+      "lowBatteryTitle": "{{sensor}} - Batería Baja",
+      "lastPing": "Último ping:",
+      "battery": "Batería:",
+      "signal": "Señal:",
+      "investigate": "Investigar",
+      "scheduleReplacement": "Programar Cambio",
+      "severity": {
+        "critical": "Crítico",
+        "warning": "Advertencia"
+      }
+    },
+    "modal": {
+      "title": "Máquina Reconectada",
+      "close": "Cerrar"
+    }
+  },
+  "configuration": {
+    "title": "Configuración",
+    "subtitle": "Gestiona los parámetros del sistema y preferencias de mantenimiento",
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar Cambios",
+    "maintenanceThresholds": {
+      "title": "Umbrales de Mantenimiento",
+      "subtitle": "Configura los límites que activan alertas de mantenimiento preventivo",
+      "criticalHour": "Horas de Uso Críticas",
+      "descriptionCriticalHour": "Genera ticket automático cuando una máquina alcanza este umbral",
+      "inactiveTime": "Tiempo Inactivo Máximo (min)",
+      "descriptionInactiveTime": "Alerta si una máquina está inactiva durante este tiempo en horas pico",
+      "peakHourBuffer": "Buffer de Horas Pico (horas)",
+      "descriptionPeakHourBuffer": "Evita programar mantenimiento dentro de este rango antes/después de horas pico",
+      "note": "Calendario Inteligente",
+      "descriptionNote": "El sistema automáticamente programa mantenimientos evitando las horas pico (6-9am, 6-9pm) y respetando el buffer configurado"
+    },
+    "configurationIoT": {
+      "title": "Configuración IoT",
+      "subtitle": "Parámetros de telemetría y sensores Edge",
+      "lowBattery": "Umbral de Batería Baja (%)",
+      "descriptionLowBattery": "Alerta cuando la batería de un sensor cae por debajo de este nivel",
+      "ping": "Intervalo de Ping (segundos)",
+      "DescriptionPing": "Frecuencia de actualización de estado de sensores",
+      "pingOptions": {
+        "5s": "5 segundos",
+        "10": "10 segundos (recomendado)",
+        "15": "15 segundos",
+        "30": "30 segundos",
+        "60": "60 segundos"
+      },
+      "graceTime": "Tiempo de Gracia Offline (minutos)",
+      "descriptionGraceTime": "Tiempo antes de marcar un sensor como desconectado"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "subtitle": "Configura las alertas y destinatarios",
+      "emailNotification": "Email de Notificaciones",
+      "descriptionEmailNotification": "Dirección principal para recibir alertas del sistema",
+      "alertType": {
+        "title": "Tipos de Alertas Habilitadas",
+        "preventiveMaintenance": "Mantenimiento Preventivo",
+        "descriptionPreventiveMaintenance": "Umbral de horas alcanzado",
+        "offlineSensors": "Sensores Offline",
+        "descriptionOfflineSensors": "Conectividad perdida",
+        "lowBattery": "Batería Baja",
+        "descriptionLowBattery": "Nivel crítico en sensores",
+        "weeklyReports": "Reportes Semanales",
+        "descriptionWeeklyReports": "Resumen de actividad"
+      }
+    },
+    "financialConfiguration": {
+      "title": "Configuración Financiera",
+      "subtitle": "Parámetros para cálculo de ROI e impacto financiero",
+      "averageCostHourDowntime": "Costo Promedio por Hora de Downtime",
+      "descriptionAverageCostHourDowntime": "Pérdida estimada por hora de máquina fuera de servicio",
+      "averageMonthlyMembership": "Membresía Promedio Mensual",
+      "descriptionAverageMonthlyMembership": "Usado para cálculo de ROI en proyecciones",
+      "systemCurrency": "Moneda del Sistema",
+      "moneySystemCurrency": {
+        "USD": "USD - Dólar Estadounidense",
+        "EUR": "EUR - Euro",
+        "PEN": "PEN - Sol Peruano",
+        "MXN": "MXN - Peso Mexicano",
+        "COP": "COP - Peso Colombiano"
+      }
     }
   },
   "equipment": {
@@ -85,6 +363,423 @@
         "required": "Este campo es obligatorio",
         "min": "El valor debe ser 0 o mayor"
       }
+    }
+  },
+  "analytics": {
+    "title": "Reportes y Analíticas",
+    "subtitle": "Análisis detallado de uso, afluencia y rendimiento operativo",
+    "exportCsv": "Exportar CSV",
+    "generatePdf": "Generar PDF",
+    "filters": {
+      "period": {
+        "label": "Período",
+        "month": "Último mes",
+        "quarter": "Últimos 3 meses",
+        "year": "Último año"
+      },
+      "branch": {
+        "label": "Sede",
+        "all": "Todas las sedes",
+        "main": "Sede Principal"
+      },
+      "customRange": "Rango Personalizado",
+      "dateStart": "Inicio",
+      "dateEnd": "Fin"
+    },
+    "stats": {
+      "totalHours": "Horas Totales de Uso",
+      "occupancyRate": "Tasa de Ocupación",
+      "peakUsage": "Pico Máximo",
+      "inactiveTime": "Tiempo Inactivo",
+      "vsLastMonth": "vs mes anterior"
+    },
+    "charts": {
+      "weeklyUsage": "Uso Semanal vs Capacidad",
+      "showComparison": "Mostrar Comparativa",
+      "hideComparison": "Ocultar Comparativa",
+      "prevMonth": "Mes anterior",
+      "usage": "Uso",
+      "capacity": "Capacidad",
+      "machineTypes": "Distribución por Tipo de Máquina",
+      "stressPeaks": "Picos de Estrés por Hora (Aforo > 90%)"
+    },
+    "relocation": {
+      "title": "Recomendaciones de Reubicación",
+      "subtitle": "Máquinas infrautilizadas detectadas entre sedes — reubicarlas maximiza el ROI de activos",
+      "opportunities": "oportunidades",
+      "action": "Reubicar"
+    },
+    "executive": {
+      "title": "Resumen Ejecutivo",
+      "positive": {
+        "title": "Rendimiento Positivo",
+        "description": "El uso de máquinas ha aumentado un 12% este mes, indicando mayor retención de clientes y mejor aprovechamiento de activos."
+      },
+      "bottleneck": {
+        "title": "Cuello de Botella Detectado",
+        "description": "Las horas de 18:00 a 20:00 consistentemente superan el 90% de capacidad. Recomendación: Considerar adquirir 2 máquinas adicionales de alto uso o implementar sistema de reservas."
+      },
+      "optimization": {
+        "title": "Optimización Requerida",
+        "description": "Se registraron 124 horas de inactividad programada por mantenimiento. Aplicar el calendario inteligente podría reducir este número en un 30%."
+      }
+    },
+    "financial": {
+      "title": "Impacto Financiero y ROI",
+      "subtitle": "Análisis de costos ocultos, pérdidas por inactividad y proyecciones de inversión",
+      "lossInactivity": "Pérdida por Inactividad",
+      "maintenanceCost": "Costo Mantenimiento",
+      "potentialSavings": "Ahorro Potencial",
+      "withPredictive": "Con mantenimiento predictivo",
+      "avgRoi": "ROI Promedio",
+      "months": "meses",
+      "investmentRecovery": "Recuperación de inversión",
+      "costBreakdown": "Desglose de Costos de Mantenimiento",
+      "lossTable": {
+        "title": "Pérdida por Inactividad de Equipos",
+        "machine": "Máquina",
+        "hours": "Horas",
+        "ratePerHour": "$/Hora",
+        "total": "Total",
+        "monthlyTotal": "TOTAL PÉRDIDA MENSUAL"
+      },
+      "costLabels": {
+        "corrective": "Mantenimiento Correctivo (3-5x más caro)",
+        "preventive": "Mantenimiento Preventivo",
+        "inventory": "Inventario de Repuestos"
+      },
+      "roiProjection": {
+        "title": "Proyección de ROI – Nueva Máquina"
+      },
+      "simulator": {
+        "title": "Simulador de Retorno de Inversión (ROI)",
+        "machineCost": "Costo de la Máquina ($)",
+        "unmetDemand": "Demanda Insatisfecha (usuarios/mes)",
+        "revenuePerUser": "Ingreso por Usuario ($)",
+        "calculate": "Calcular ROI"
+      },
+      "recommendations": {
+        "title": "Recomendaciones Financieras",
+        "preventive": {
+          "title": "Migrar a Mantenimiento Preventivo",
+          "description": "Implementar alertas automáticas puede reducir costos correctivos en un 60%, ahorrando aproximadamente $1,920/mes."
+        },
+        "investment": {
+          "title": "Inversión Recomendada: 2 Racks de Sentadilla",
+          "description": "Análisis muestra 98% de ocupación en horas pico. Inversión de $10,000 se recuperaría en ~7 meses según demanda actual."
+        },
+        "relocation": {
+          "title": "Reubicar Equipos Subutilizados",
+          "description": "3 máquinas con <30% de uso en Surco podrían generar $1,200/mes adicionales si se trasladan a Miraflores."
+        }
+      }
+    }
+  },
+  "financialImpact": {
+    "title": "Impacto Financiero y ROI",
+    "subtitle": "Análisis de costos ocultos, pérdidas por inactividad y proyecciones de inversión",
+    "exportCsv": "Exportar CSV",
+    "generatePdf": "Generar PDF",
+    "stats": {
+      "lossInactivity": "Pérdida por Inactividad",
+      "maintenanceCost": "Costo Mantenimiento",
+      "potentialSavings": "Ahorro Potencial",
+      "withPredictive": "Con mantenimiento predictivo",
+      "avgRoi": "ROI Promedio",
+      "months": "meses",
+      "investmentRecovery": "Recuperación de inversión",
+      "lastMonth": "Último mes"
+    },
+    "lossTable": {
+      "title": "Pérdida por Inactividad de Equipos",
+      "machine": "Máquina",
+      "hours": "Horas",
+      "ratePerHour": "$/Hora",
+      "total": "Total",
+      "monthlyTotal": "TOTAL PÉRDIDA MENSUAL"
+    },
+    "costBreakdown": {
+      "title": "Desglose de Costos de Mantenimiento"
+    },
+    "costLabels": {
+      "corrective": "Mantenimiento Correctivo (3-5x más caro)",
+      "preventive": "Mantenimiento Preventivo",
+      "inventory": "Inventario de Repuestos"
+    },
+    "roiProjection": {
+      "title": "Proyección de ROI – Nueva Máquina"
+    },
+    "simulator": {
+      "title": "Simulador de Retorno de Inversión (ROI)",
+      "machineCost": "Costo de la Máquina ($)",
+      "unmetDemand": "Demanda Insatisfecha (usuarios/mes)",
+      "revenuePerUser": "Ingreso por Usuario ($)",
+      "calculate": "Calcular ROI"
+    },
+    "recommendations": {
+      "title": "Recomendaciones Financieras",
+      "preventive": {
+        "title": "Migrar a Mantenimiento Preventivo",
+        "description": "Implementar alertas automáticas puede reducir costos correctivos en un 60%, ahorrando aproximadamente $1,920/mes."
+      },
+      "investment": {
+        "title": "Inversión Recomendada: 2 Racks de Sentadilla",
+        "description": "Análisis muestra 98% de ocupación en horas pico. Inversión de $10,000 se recuperaría en ~7 meses según demanda actual."
+      },
+      "relocation": {
+        "title": "Reubicar Equipos Subutilizados",
+        "description": "3 máquinas con menos del 30% de uso en Surco podrían generar $1,200/mes adicionales si se trasladan a Miraflores."
+      }
+    }
+  },
+  "maintenance": {
+    "title": "Centro de Mantenimiento",
+    "subtitle": "Gestiona tickets de mantenimiento preventivo y correctivo",
+    "newTicket": "Nuevo Ticket",
+    "search": "Buscar por ID, máquina o descripción...",
+    "assignedTo": "Asignado a",
+    "completedBy": "Completado por",
+    "stats": {
+      "totalTickets": "Total Tickets",
+      "pending": "Pendientes",
+      "inProgress": "En Progreso",
+      "completed": "Completados"
+    },
+    "filter": {
+      "allStatuses": "Todos los Estados",
+      "allPriorities": "Todas las Prioridades"
+    },
+    "col": {
+      "pending": "Pendiente",
+      "inProgress": "En Progreso",
+      "completed": "Completado",
+      "empty": "Sin tickets"
+    },
+    "action": {
+      "start": "Iniciar",
+      "complete": "Completar"
+    },
+    "form": {
+      "title": "Nuevo Ticket de Mantenimiento",
+      "equipment": "Equipo",
+      "priority": "Prioridad",
+      "type": "Tipo",
+      "date": "Fecha Programada",
+      "time": "Hora Programada",
+      "description": "Descripción",
+      "cancel": "Cancelar",
+      "submit": "Crear Ticket"
+    },
+    "scheduler": {
+      "peakWarning": "Hora de alta demanda",
+      "peakWarningMsg": "Esta franja tiene alto tráfico de miembros. Programar mantenimiento puede afectar la disponibilidad.",
+      "peakHint": "Alta demanda — considera un horario valle",
+      "suggestions": "Horarios valle sugeridos:",
+      "confirmedMsg": "Horario valle — no afectará a los miembros"
+    },
+    "status": {
+      "OPEN": "Abierto",
+      "IN_PROGRESS": "En Progreso",
+      "RESOLVED": "Resuelto",
+      "PENDING": "Pendiente",
+      "CONFIRMED": "Confirmado",
+      "CANCELLED": "Cancelado"
+    },
+    "priority": {
+      "LOW": "Baja",
+      "MEDIUM": "Media",
+      "HIGH": "Alta",
+      "URGENT": "Urgente"
+    },
+    "type": {
+      "CORRECTIVE": "Correctivo",
+      "PREVENTIVE": "Preventivo",
+      "LUBRICATION": "Lubricación",
+      "INSPECTION": "Inspección",
+      "OVERHAUL": "Revisión General"
+    }
+  },
+  "routines": {
+    "title": "Mis Rutinas",
+    "subtitle": "Gestiona tus rutinas de entrenamiento y verifica disponibilidad de máquinas",
+    "newRoutine": "Nueva Rutina",
+    "search": "Buscar rutinas...",
+    "filter": {
+      "all": "Todos",
+      "chest": "Pecho",
+      "legs": "Piernas",
+      "back": "Espalda",
+      "shoulders": "Hombros",
+      "arms": "Brazos"
+    },
+    "exercises": {
+      "pressDePecho": "Press de Pecho",
+      "sentadillaConBarra": "Sentadilla con Barra",
+      "pesoMuertoRumano": "Peso Muerto Rumano",
+      "dominadas": "Dominadas",
+      "pressMilitar": "Press Militar"
+    },
+    "machines": {
+      "bancoPechoPlano": "Banco Pecho Plano",
+      "rackSentadilla2": "Rack Sentadilla #2",
+      "plataformaPesoMuerto": "Plataforma de Peso Muerto",
+      "barraDeDominadas": "Barra de Dominadas",
+      "rackDeFuerza": "Rack de Fuerza"
+    },
+    "tags": {
+      "chest": "Pecho",
+      "legs": "Piernas",
+      "lowerBack": "Zona Lumbar",
+      "back": "Espalda",
+      "shoulders": "Hombros"
+    },
+    "level": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado"
+    },
+    "status": {
+      "available": "Disponible",
+      "inUse": "En Uso",
+      "maintenance": "Mantenimiento"
+    },
+    "alternatives": {
+      "title": "Sugerencias Inteligentes",
+      "prensaDePiernas": "Prensa de Piernas",
+      "hackSquat": "Hack Squat",
+      "sentadillaGoblet": "Sentadilla Goblet",
+      "poleaAlta": "Polea Alta",
+      "remoConBarra": "Remo con Barra",
+      "maquinaDeRemo": "Máquina de Remo",
+      "free": "Libre",
+      "viewMap": "Ver Mapa"
+    },
+    "suggestion": {
+      "title": "Motor de Sugerencias Inteligentes",
+      "item1": "Las rutinas se adaptan a la disponibilidad en tiempo real",
+      "item2": "Se sugieren alternativas cuando tu máquina está ocupada",
+      "item3": "Optimizado para horas pico y valle",
+      "item4": "Personalizado según tus objetivos de entrenamiento"
+    },
+    "modal": {
+      "title": "Nueva Rutina",
+      "subtitle": "Crea una rutina de entrenamiento personalizada",
+      "name": "Nombre de la Rutina",
+      "namePlaceholder": "Ej. Día A - Tren Superior",
+      "objective": "Objetivo",
+      "selectObjective": "Selecciona un objetivo",
+      "difficulty": "Nivel de Dificultad",
+      "notes": "Notas (opcional)",
+      "notesPlaceholder": "Agrega notas o instrucciones específicas...",
+      "cancel": "Cancelar",
+      "create": "Crear Rutina",
+      "successMessage": "Rutina \"{{name}}\" creada con éxito",
+      "objectives": {
+        "gainStrength": "Ganar Fuerza",
+        "muscleHypertrophy": "Hipertrofia Muscular",
+        "endurance": "Resistencia",
+        "weightLoss": "Pérdida de Peso",
+        "generalFitness": "Fitness General"
+      }
+    }
+  },
+  "profile": {
+    "admin": {
+      "title": "Panel del Administrador",
+      "roleBadge": "Administrador",
+      "memberSince": "Miembro desde",
+      "stats": {
+        "locations": "Sedes activas",
+        "equipment": "Equipos monitoreados",
+        "sensors": "Sensores IoT online",
+        "members": "Miembros registrados"
+      },
+      "plan": {
+        "active": "Activo",
+        "renewal": "Próxima renovación"
+      }
+    },
+    "client": {
+      "title": "Mi Perfil",
+      "roleBadge": "Cliente",
+      "points": "Puntos Acumulados",
+      "plan": {
+        "name": "Plan Basic",
+        "price": "$69/mes",
+        "upgrade": "Mejorar Plan",
+        "featuresTitle": "Características incluidas:",
+        "feature1": "Hasta 20 máquinas monitoreadas",
+        "feature2": "Mapa de calor en tiempo real",
+        "feature3": "1 sede",
+        "feature4": "Soporte por email",
+        "renewal": "Próxima renovación",
+        "renewalDate": "24 de Mayo, 2026"
+      },
+      "history": "Historial de Puntos",
+      "notifications": {
+        "title": "Notificaciones",
+        "availability": {
+          "title": "Alertas de disponibilidad",
+          "desc": "Cuando una máquina se libera"
+        },
+        "maintenance": {
+          "title": "Mantenimiento programado",
+          "desc": "Cuando un equipo entrará en mantenimiento"
+        },
+        "rewards": {
+          "title": "Puntos de recompensa",
+          "desc": "Cuando ganas puntos nuevos"
+        }
+      }
+    },
+    "account": {
+      "title": "Información de la Cuenta",
+      "email": "Email",
+      "gymName": "Nombre del Gimnasio",
+      "phone": "Teléfono"
+    },
+    "language": {
+      "title": "Preferencias de Idioma",
+      "label": "Idioma de la Interfaz",
+      "hint": "Los cambios se aplicarán inmediatamente en toda la plataforma"
+    },
+    "security": {
+      "title": "Seguridad",
+      "changePassword": "Cambiar Contraseña",
+      "logout": "Cerrar Sesión"
+    },
+    "saveChanges": "Guardar Cambios"
+  },
+  "dashboardAdmin": {
+    "kpis": {
+      "operationalEquipment": "Equipos Operativos",
+      "maintenance": "En Mantenimiento",
+      "outOfService": "Fuera de Servicio",
+      "totalTickets": "Total Tickets"
+    },
+    "charts": {
+      "peakCapacityHours": "Horas de Máxima Capacidad",
+      "machineUsage": "Uso de Máquinas",
+      "noUsageData": "Sin datos de uso disponibles"
+    },
+    "table": {
+      "title": "Equipos Infrautilizados",
+      "headers": {
+        "machineId": "ID Máquina",
+        "location": "Ubicación",
+        "hours": "Horas",
+        "roi": "ROI"
+      },
+      "empty": "No se encontraron equipos infrautilizados"
+    },
+    "maintenanceCenter": {
+      "title": "Centro de Mantenimiento",
+      "columns": {
+        "todo": "Pendiente",
+        "inProgress": "En Progreso",
+        "completed": "Completado"
+      },
+      "empty": "Sin tickets"
     }
   }
 }

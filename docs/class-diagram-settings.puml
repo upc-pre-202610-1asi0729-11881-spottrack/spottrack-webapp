@@ -1,73 +1,96 @@
-@startuml BC-11_Settings
+@startuml BC-11_Configuration
 
-package "settings.domain.model" {
-  class SystemSettings {
-    - criticalUsageHoursThreshold: number
-    - maxIdleTimeMinutes: number
-    - peakHourBuffer: number
-    - lowBatteryThreshold: number
-    - pingIntervalSeconds: number
-    - offlineGraceMinutes: number
-    - notificationEmail: string
-    - downtimeCostPerHour: number
-    - averageMonthlyMembership: number
-    - currency: string
-    + constructor()
+package "configuration.domain.model" {
+  interface MaintenanceThreshold {
+    + criticalUsageHours: number
+    + maxInactiveTime: number
+    + peakHoursBuffer: number
   }
-}
 
-package "settings.application" {
-  class SettingsStore {
-    - settingsSignal: Signal<SystemSettings | null>
-    - settingsApi: SettingsApi
-    - settingsAssembler: SettingsAssembler
-    + settings: Signal<SystemSettings | null>
-    + loadSettings(): void
-    + saveSettings(settings: SystemSettings): void
-  }
-}
-
-package "settings.infrastructure" {
-  class SettingsApi {
-    - http: HttpClient
-    + getSettings(): Observable<SystemSettingsResource>
-    + updateSettings(resource: SystemSettingsResource): Observable<SystemSettingsResource>
-  }
-  interface SystemSettingsResource {
-    + criticalUsageHoursThreshold: number
-    + maxIdleTimeMinutes: number
-    + peakHourBuffer: number
+  interface IoTConfiguration {
     + lowBatteryThreshold: number
-    + pingIntervalSeconds: number
-    + offlineGraceMinutes: number
+    + pingInterval: number
+    + offlineGracePeriod: number
+  }
+
+  interface FinancialConfiguration {
+    + costPerHourDowntime: number
+    + monthlyMembership: number
+    + systemCurrency: string
+  }
+
+  interface Configuration {
+    + maintenanceThresholds: MaintenanceThreshold
+    + iotConfig: IoTConfiguration
+    + financialConfig: FinancialConfiguration
     + notificationEmail: string
-    + downtimeCostPerHour: number
-    + averageMonthlyMembership: number
-    + currency: string
+    + enabledAlertTypes: AlertType[]
+    + intelligentScheduling: boolean
+    + lastUpdated?: Date
   }
-  class SettingsAssembler {
-    + toEntityFromResource(resource: SystemSettingsResource): SystemSettings
-    + toResourceFromEntity(settings: SystemSettings): SystemSettingsResource
+
+  interface ConfigurationSection {
+    + id: string
+    + title: string
+    + description: string
+    + icon: string
+    + config: object
   }
-  class BaseApi {
-    # http: HttpClient
-    # getAuthHeaders(): HttpHeaders
+
+  enum AlertType {
+    PREVENTIVE_MAINTENANCE
+    OFFLINE_SENSORS
+    LOW_BATTERY
+    WEEKLY_REPORTS
   }
 }
 
-package "settings.presentation.components" {
-  class SettingsPage <<component>> {
-    - settingsStore: SettingsStore
-    + settings: Signal<SystemSettings | null>
-    + onSaveSettings(): void
+package "configuration.application" {
+  class ConfigurationStore {
+    - maintenanceThresholds: Signal<MaintenanceThreshold>
+    - iotConfig: Signal<IoTConfiguration>
+    - financialConfig: Signal<FinancialConfiguration>
+    - notificationEmail: Signal<string>
+    - enabledAlertTypes: Signal<AlertType[]>
+    - intelligentScheduling: Signal<boolean>
+    - loading: Signal<boolean>
+    - isDirty: Signal<boolean>
+    + maintenanceThresholds$: Signal<MaintenanceThreshold>
+    + iotConfig$: Signal<IoTConfiguration>
+    + financialConfig$: Signal<FinancialConfiguration>
+    + notificationEmail$: Signal<string>
+    + enabledAlertTypes$: Signal<AlertType[]>
+    + intelligentScheduling$: Signal<boolean>
+    + loading$: Signal<boolean>
+    + isDirty$: Signal<boolean>
+    + configuration: Signal<Configuration>
+    + updateMaintenanceThresholds(thresholds: Partial<MaintenanceThreshold>): void
+    + updateIoTConfig(config: Partial<IoTConfiguration>): void
+    + updateFinancialConfig(config: Partial<FinancialConfiguration>): void
+    + setNotificationEmail(email: string): void
+    + setEnabledAlertTypes(types: AlertType[]): void
+    + setIntelligentScheduling(enabled: boolean): void
+    + saveConfiguration(): Promise<void>
+    + reloadConfiguration(): Promise<void>
+    + resetChanges(): void
   }
 }
 
-SettingsApi --|> BaseApi
-SettingsStore --> SettingsApi : uses
-SettingsStore --> SettingsAssembler : uses
-SettingsAssembler ..> SystemSettingsResource : transforms
-SettingsAssembler --> SystemSettings : creates
-SettingsPage --> SettingsStore : uses
+package "configuration.presentation.views" {
+  class ConfigurationComponent <<component>> {
+    - store: ConfigurationStore
+    + onSave(): void
+    + onReload(): void
+    + onReset(): void
+  }
+}
+
+ConfigurationStore --> Configuration : produces
+Configuration --> MaintenanceThreshold : contains
+Configuration --> IoTConfiguration : contains
+Configuration --> FinancialConfiguration : contains
+Configuration --> AlertType : uses
+ConfigurationComponent --> ConfigurationStore : uses
+ConfigurationComponent --> ConfigurationSection : renders
 
 @enduml

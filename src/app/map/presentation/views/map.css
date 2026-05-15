@@ -1,0 +1,540 @@
+/* ============================================================
+   MAP COMPONENT
+   ============================================================ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.map-view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 24px 0;
+  box-sizing: border-box;
+  background-color: #0f0f0f;
+  font-family: 'Segoe UI', sans-serif;
+  gap: 16px;
+}
+
+/* ===================== HEADER ===================== */
+.map-view-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.map-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+
+.map-subtitle {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* Gym selector */
+.gym-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.gym-location-icon {
+  color: #f5c518;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.gym-select {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
+  min-width: 140px;
+}
+
+/* Override Angular Material select styles */
+.gym-select .mat-mdc-select-trigger {
+  color: #ffffff;
+}
+.gym-select .mat-mdc-select-arrow {
+  color: #888;
+}
+
+/* ===================== FILTER TABS ===================== */
+.filter-tabs-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-tab {
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #2e2e2e;
+  cursor: pointer;
+  background-color: transparent;
+  color: #aaa;
+  transition: all 0.2s ease;
+}
+
+.filter-tab:hover {
+  border-color: #555;
+  color: #ddd;
+}
+
+.filter-tab.active {
+  background-color: #f5c518;
+  border-color: #f5c518;
+  color: #000000;
+}
+
+/* ===================== MAP CARD ===================== */
+.map-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1a1a !important;
+  border-radius: 16px !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.map-card-header {
+  padding: 16px 20px 0 !important;
+}
+
+.map-card-title {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #cccccc !important;
+}
+
+.map-card-content {
+  flex: 1;
+  padding: 0 !important;
+  min-height: 0;
+}
+
+/* ===================== MAP CANVAS ===================== */
+.map-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+}
+
+/* ===================== MACHINE PINS ===================== */
+.machine-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* The circle icon */
+.pin-circle {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a2a2a;
+  border: 2.5px solid transparent;
+  transition: transform 0.15s ease;
+}
+
+.machine-pin:hover .pin-circle {
+  transform: scale(1.1);
+}
+
+.machine-pin:active .pin-circle {
+  transform: scale(0.95);
+}
+
+.pin-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  color: #ffffff;
+}
+
+/* Status colours */
+.pin-available .pin-circle {
+  border-color: #4caf50;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.35);
+  background-color: #1e3a22;
+}
+
+.pin-in-use .pin-circle {
+  border-color: #f44336;
+  box-shadow: 0 0 12px rgba(244, 67, 54, 0.35);
+  background-color: #3a1e1e;
+}
+
+.pin-reserved .pin-circle {
+  border-color: #f5c518;
+  box-shadow: 0 0 12px rgba(245, 197, 24, 0.35);
+  background-color: #3a351a;
+}
+
+/* Pulse animation */
+.pin-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse 2.5s infinite;
+}
+
+.pin-available .pin-pulse  { background-color: rgba(76, 175, 80, 0.25); animation-duration: 3s; }
+.pin-in-use .pin-pulse     { background-color: rgba(244, 67, 54, 0.3); }
+.pin-reserved .pin-pulse   { background-color: rgba(245, 197, 24, 0.25); animation-duration: 2s; }
+
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Timer badge (floats above the pin) */
+.pin-timer {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #f5c518;
+  color: #000;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  z-index: 20;
+}
+
+/* Machine label below pin */
+.pin-label {
+  font-size: 11px;
+  color: #aaaaaa;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ===================== LEGEND ===================== */
+.map-legend {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 14px 16px;
+  border-top: 1px solid #2a2a2a;
+  background-color: #1a1a1a;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: #aaaaaa;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-available { background-color: #4caf50; }
+.dot-in-use    { background-color: #f44336; }
+.dot-reserved  { background-color: #f5c518; }
+
+/* ===================== MACHINE DETAIL POPUP ===================== */
+.detail-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.detail-popup {
+  background-color: #1e1e1e;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+/* Header */
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18px 18px 10px;
+  gap: 12px;
+}
+
+.detail-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.detail-status-row {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
+}
+
+.status-available { color: #4caf50; font-weight: 600; }
+.status-in-use    { color: #f44336; font-weight: 600; }
+.status-reserved  { color: #f5c518; font-weight: 600; }
+
+.detail-close {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.detail-close:hover { color: #fff; }
+
+.detail-close mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Reserved body */
+.detail-body-reserved {
+  padding: 8px 18px 22px;
+  text-align: center;
+}
+
+.reserved-msg {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0 0 14px;
+}
+
+.reserved-timer {
+  font-size: 38px;
+  font-weight: 700;
+  color: #f5c518;
+  letter-spacing: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Action buttons */
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 18px 20px;
+}
+
+.btn-notify {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #00bcd4;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-notify:hover { background-color: #00a5b9; }
+
+.btn-notify mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+.btn-action-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #111111;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-action-dark:hover { background-color: #1a1a1a; }
+
+.btn-action-dark mat-icon { font-size: 20px; width: 20px; height: 20px; color: #aaa; }
+
+.btn-action-yellow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #f5c518;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-action-yellow:hover { background-color: #e0b214; }
+
+.btn-action-yellow mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+.btn-full-width { width: 100%; box-sizing: border-box; }
+
+/* ===================== ALTERNATIVES POPUP ===================== */
+.alt-popup-subtitle {
+  font-size: 12px;
+  color: #888;
+  margin: 0 18px 12px;
+  line-height: 1.5;
+}
+
+.alt-popup-list {
+  margin: 0 18px 14px;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.alt-popup-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #2a2a2a;
+  background-color: #1a1a1a;
+}
+
+.alt-popup-item:last-child { border-bottom: none; }
+
+.alt-popup-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alt-popup-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.alt-popup-group {
+  font-size: 12px;
+  color: #888;
+}
+
+.alt-popup-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.alt-free-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #4caf50;
+  flex-shrink: 0;
+}
+
+.alt-free-text {
+  font-size: 13px;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.alt-popup-footer {
+  padding: 0 18px 18px;
+}
+
+/* Pin label — truncate if name is long */
+.pin-label {
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .map-view-container { padding: 12px 12px 0; gap: 10px; }
+  .map-title { font-size: 18px; }
+  .filter-tab { padding: 5px 12px; font-size: 12px; }
+  .gym-select { min-width: 100px; font-size: 13px; }
+  .pin-circle { width: 40px; height: 40px; }
+  .pin-icon { font-size: 18px; width: 18px; height: 18px; }
+  .pin-label { font-size: 10px; max-width: 60px; }
+  .legend-item { font-size: 12px; gap: 5px; }
+  .map-legend { padding: 10px 12px; gap: 0; }
+  .filter-tabs-wrapper { flex-wrap: wrap; }
+}
+
+@media (max-width: 480px) {
+  .map-view-container { padding: 10px 10px 0; gap: 8px; }
+  .map-title { font-size: 16px; }
+  .map-subtitle { font-size: 12px; }
+  .filter-tab { padding: 4px 10px; font-size: 11px; }
+  .pin-circle { width: 34px; height: 34px; }
+  .pin-icon { font-size: 16px; width: 16px; height: 16px; }
+  .pin-timer { font-size: 9px; padding: 1px 5px; top: -15px; }
+  .detail-popup { max-width: calc(100vw - 32px); }
+  .map-card-header { padding: 12px 14px 0 !important; }
+}
+
