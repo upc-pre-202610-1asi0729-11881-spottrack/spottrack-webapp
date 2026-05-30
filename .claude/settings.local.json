@@ -12,7 +12,9 @@
       "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('iot_devices', d.get\\('iot', []\\)\\), indent=2\\)\\)\")",
       "Bash(Get-ChildItem *)",
       "Bash(xargs grep -l \"@Component\")",
-      "Bash(Select-Object -ExpandProperty Name)"
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const a=require\\('./angular.json'\\); const s=a.projects['SpotTrack-Frontend-Web-Applications'].architect.serve; console.log\\(JSON.stringify\\(s,null,2\\)\\)\")"
     ]
   }
 }

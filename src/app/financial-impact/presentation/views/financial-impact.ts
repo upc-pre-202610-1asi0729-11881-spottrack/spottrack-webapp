@@ -1,35 +1,13 @@
-import { Component, computed, signal } from '@angular/core';
-import { DecimalPipe }                 from '@angular/common';
-import { TranslateModule }             from '@ngx-translate/core';
-import { MatIconModule }               from '@angular/material/icon';
+import { Component, computed, inject, signal } from '@angular/core';
+import { DecimalPipe }    from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatIconModule }  from '@angular/material/icon';
+import { FinancialImpactStore } from '../../application/financial-impact.store';
 
-// ── Interfaces ────────────────────────────────────────────────────────────────
-interface InactivityRow  { machine: string; hours: number; ratePerHour: number; total: number; }
-interface MaintenanceType { label: string; amount: number; pct: number; color: string; }
-interface RoiMonth        { month: string; cumulative: number; }
-
-// ── Static data ───────────────────────────────────────────────────────────────
-
-/**
- * Labels are intentionally hardcoded — they are technical/domain terms
- * that must NOT go through ngx-translate (per design requirement).
- */
-const INACTIVITY_LOSS: InactivityRow[] = [
-  { machine: 'Cinta #3',        hours: 48, ratePerHour: 12, total: 576 },
-  { machine: 'Elíptica Pro',    hours: 72, ratePerHour:  8, total: 576 },
-  { machine: 'Rack Sentadilla', hours: 24, ratePerHour: 15, total: 360 },
-  { machine: 'Prensa Piernas',  hours: 36, ratePerHour: 10, total: 360 },
-];
-
-const MAINTENANCE_TYPES: MaintenanceType[] = [
-  { label: 'financialImpact.costLabels.corrective', amount: 3200, pct: 62, color: '#fb2c36' },
-  { label: 'financialImpact.costLabels.preventive', amount: 1100, pct: 21, color: '#00c950' },
-  { label: 'financialImpact.costLabels.inventory',  amount:  850, pct: 17, color: '#f5bc36' },
-];
+interface RoiMonth { month: string; cumulative: number; }
 
 const ROI_MONTHS_LABELS = ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6', 'Mes 7', 'Mes 8'];
 
-// ── Component ─────────────────────────────────────────────────────────────────
 @Component({
   selector: 'app-financial-impact',
   standalone: true,
@@ -43,39 +21,30 @@ const ROI_MONTHS_LABELS = ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6',
 })
 export class FinancialImpactComponent {
 
-  // ── Summary stats (could be injected from a service later) ────────────────
-  readonly stats = {
-    lossInactivity:   1872,
-    maintenanceCost:  5150,
-    potentialSavings: 1840,
-    roiMonths:        7.2,
-  };
+  private readonly store = inject(FinancialImpactStore);
 
-  // ── Inactivity loss table ─────────────────────────────────────────────────
-  readonly inactivityLoss   = INACTIVITY_LOSS;
+  // ── Summary stats from store ──────────────────────────────────────────────
+  get stats()          { return this.store.financialStats(); }
 
-  readonly totalMonthlyLoss = computed(() =>
-    this.inactivityLoss.reduce((sum, row) => sum + row.total, 0)
-  );
+  // ── Inactivity loss table from store ─────────────────────────────────────
+  get inactivityLoss() { return this.store.inactivityLoss(); }
 
-  // ── Maintenance cost pie ──────────────────────────────────────────────────
-  readonly maintenanceTypes = MAINTENANCE_TYPES;
+  readonly totalMonthlyLoss = this.store.totalMonthlyLoss;
 
-  maintenancePieGradient(): string {
-    let cursor = 0;
-    return this.maintenanceTypes
-      .map(t => {
-        const from = cursor;
-        cursor += t.pct;
-        return `${t.color} ${from}% ${cursor}%`;
-      })
-      .join(', ');
-  }
+  // ── Maintenance cost pie from store ───────────────────────────────────────
+  get maintenanceTypes() { return this.store.maintenanceTypes(); }
 
-  // ── ROI Projection chart ──────────────────────────────────────────────────
-  readonly simMachineCost    = signal(5000);
-  readonly simUnmetDemand    = signal(120);
-  readonly simRevenuePerUser = signal(45);
+  maintenancePieGradient(): string { return this.store.financialPieGradient(); }
+
+  // ── ROI Projection chart (interactive simulation) ─────────────────────────
+  // Pending: updated as user types; applied: committed on button click
+  readonly pendingMachineCost    = signal(5000);
+  readonly pendingUnmetDemand    = signal(120);
+  readonly pendingRevenuePerUser = signal(45);
+
+  private readonly simMachineCost    = signal(5000);
+  private readonly simUnmetDemand    = signal(120);
+  private readonly simRevenuePerUser = signal(45);
 
   readonly roiProjectionData = computed((): RoiMonth[] => {
     const cost    = this.simMachineCost();
@@ -87,10 +56,10 @@ export class FinancialImpactComponent {
   });
 
   readonly roiYAxisLabels = ['6000', '3000', '0', '-3000', '-6000'];
-  readonly gridLines      = new Array(7);   // drives @for in template
+  readonly gridLines      = new Array(7);
 
   private readonly ROI_MIN   = -6000;
-  private readonly ROI_RANGE =  12000;      // 6000 - (-6000)
+  private readonly ROI_RANGE =  12000;
 
   roiZeroLinePct(): string {
     return `${((0 - this.ROI_MIN) / this.ROI_RANGE) * 100}%`;
@@ -101,8 +70,9 @@ export class FinancialImpactComponent {
   }
 
   calculateRoi(): void {
-    // Signals are reactive — re-setting a value forces recompute in the template
-    this.simMachineCost.set(this.simMachineCost());
+    this.simMachineCost.set(this.pendingMachineCost());
+    this.simUnmetDemand.set(this.pendingUnmetDemand());
+    this.simRevenuePerUser.set(this.pendingRevenuePerUser());
   }
 
   // ── Export actions ────────────────────────────────────────────────────────
