@@ -193,20 +193,20 @@
       <div class="roi-sim-field">
         <label class="roi-sim-label">{{ 'financialImpact.simulator.machineCost' | translate }}</label>
         <input class="roi-sim-input" type="number"
-               [value]="simMachineCost()"
-               (input)="simMachineCost.set(+$any($event.target).value)" />
+               [value]="pendingMachineCost()"
+               (input)="pendingMachineCost.set(+$any($event.target).value)" />
       </div>
       <div class="roi-sim-field">
         <label class="roi-sim-label">{{ 'financialImpact.simulator.unmetDemand' | translate }}</label>
         <input class="roi-sim-input" type="number"
-               [value]="simUnmetDemand()"
-               (input)="simUnmetDemand.set(+$any($event.target).value)" />
+               [value]="pendingUnmetDemand()"
+               (input)="pendingUnmetDemand.set(+$any($event.target).value)" />
       </div>
       <div class="roi-sim-field">
         <label class="roi-sim-label">{{ 'financialImpact.simulator.revenuePerUser' | translate }}</label>
         <input class="roi-sim-input" type="number"
-               [value]="simRevenuePerUser()"
-               (input)="simRevenuePerUser.set(+$any($event.target).value)" />
+               [value]="pendingRevenuePerUser()"
+               (input)="pendingRevenuePerUser.set(+$any($event.target).value)" />
       </div>
     </div>
 

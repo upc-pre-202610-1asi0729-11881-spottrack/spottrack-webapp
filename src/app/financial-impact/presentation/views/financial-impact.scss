@@ -90,6 +90,30 @@ $blue    : #4fc3f7;
   }
 }
 
+.btn-tab {
+  @extend %btn-base;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  animation: ease-in 1s;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.btn-tab:hover {
+  background-color: lightgray;
+}
+
 // ── Stat grid ─────────────────────────────────────────────────────────────────
 .stat-grid {
   display: grid;
