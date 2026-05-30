@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core'; // signal kept for showComparison
 import { DecimalPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,7 +31,7 @@ export class AnalyticsComponent {
   private readonly store = inject(AnalyticsStore);
 
   // ── Filters ──────────────────────────────────────────────────────────────
-  readonly selectedPeriod = signal<'month' | 'quarter' | 'year'>('month');
+  readonly selectedPeriod = this.store.selectedPeriod;
   readonly selectedBranch = this.store.selectedBranch;
   readonly showComparison = signal(false);
 

@@ -13,7 +13,7 @@ export const adminGuard: CanActivateFn = () => {
   const auth   = inject(AuthStore);
   const router = inject(Router);
   if (auth.isAdmin()) return true;
-  return router.createUrlTree(['/client']);
+  return router.createUrlTree(['/map']);
 };
 
 export const clientGuard: CanActivateFn = () => {
