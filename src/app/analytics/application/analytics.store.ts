@@ -52,7 +52,12 @@ export class AnalyticsStore {
   readonly error   = this._error.asReadonly();
 
   // ── Filter signals (driven from UI) ──────────────────────────────────────
-  readonly selectedBranch = signal<'all' | 'main'>('all');
+  readonly selectedBranch  = signal<'all' | 'main'>('all');
+  readonly selectedPeriod  = signal<'month' | 'quarter' | 'year'>('month');
+
+  private readonly periodMultiplier = computed(() =>
+    ({ month: 1, quarter: 3, year: 12 })[this.selectedPeriod()]
+  );
 
   // ── Filtered usage stats (reacts to selectedBranch) ─────────────────────
   private readonly _filteredStats = computed(() => {
@@ -66,20 +71,21 @@ export class AnalyticsStore {
 
   // ── KPI stat cards ────────────────────────────────────────────────────────
   readonly stats = computed<BranchStats>(() => {
-    const stats = this._filteredStats();
+    const stats      = this._filteredStats();
+    const multiplier = this.periodMultiplier();
+
     if (!stats.length) {
       return { totalHours: 0, hoursChange: 0, occupancy: 0, occupancyChange: 0,
                peak: 0, peakTime: '—', inactive: 0, inactiveChange: 0 };
     }
 
-    const totalHours  = Math.round(stats.reduce((s, r) => s + r.total_usage_hours, 0));
-    const avgWear     = stats.reduce((s, r) => s + r.estimated_wear_level, 0) / stats.length;
-    const occupancy   = Math.round((1 - avgWear) * 100);
-
+    const baseHours     = stats.reduce((s, r) => s + r.total_usage_hours, 0);
+    const totalHours    = Math.round(baseHours * multiplier);
+    const avgWear       = stats.reduce((s, r) => s + r.estimated_wear_level, 0) / stats.length;
+    const occupancy     = Math.round((1 - avgWear) * 100);
     const inactiveCount = stats.filter(r => r.estimated_wear_level >= 0.7).length;
-    const inactive      = Math.round(inactiveCount * 24);
-
-    const peakStat = stats.reduce((a, b) =>
+    const inactive      = Math.round(inactiveCount * 24 * multiplier);
+    const peakStat      = stats.reduce((a, b) =>
       a.usage_count_daily > b.usage_count_daily ? a : b, stats[0]);
     const peak = Math.min(100, Math.round((peakStat.usage_count_daily / 10) * 100));
 
