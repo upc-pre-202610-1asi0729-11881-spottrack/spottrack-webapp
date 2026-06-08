@@ -78,7 +78,7 @@
             >{{ tick.label }}</text>
           }
 
-          <path [attr.d]="store.areaPath()" class="area-fill"/>
+          <path [attr.d]="store.areaPath()" fill="url(#areaGrad)" class="area-fill"/>
 
           <polyline [attr.points]="store.polylinePoints()" class="line-stroke"/>
 
