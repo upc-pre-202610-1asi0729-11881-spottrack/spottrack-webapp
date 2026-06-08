@@ -53,14 +53,26 @@ export class FinancialImpactComponent {
   readonly gridLines      = new Array(7);
 
   private readonly ROI_MIN   = -6000;
+  private readonly ROI_MAX   =  6000;
   private readonly ROI_RANGE =  12000;
 
   roiZeroLinePct(): string {
     return `${((0 - this.ROI_MIN) / this.ROI_RANGE) * 100}%`;
   }
 
+  private clampRoi(value: number): number {
+    return Math.max(this.ROI_MIN, Math.min(this.ROI_MAX, value));
+  }
+
   roiBarHeight(value: number): string {
-    return `${(Math.abs(value) / this.ROI_RANGE) * 100}%`;
+    const clamped = this.clampRoi(value);
+    return `${(Math.abs(clamped) / this.ROI_RANGE) * 100}%`;
+  }
+
+  roiBarBottom(value: number): string {
+    const clamped = this.clampRoi(value);
+    const pct = (Math.min(clamped, 0) - this.ROI_MIN) / this.ROI_RANGE * 100;
+    return `${pct}%`;
   }
 
   calculateRoi(): void {

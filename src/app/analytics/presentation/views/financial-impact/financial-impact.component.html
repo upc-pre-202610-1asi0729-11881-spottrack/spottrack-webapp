@@ -169,6 +169,7 @@
                      [class.bar--roi-pos]="m.cumulative >= 0"
                      [class.bar--roi-neg]="m.cumulative < 0"
                      [style.height]="roiBarHeight(m.cumulative)"
+                     [style.bottom]="roiBarBottom(m.cumulative)"
                      [title]="'$' + m.cumulative">
                 </div>
               </div>

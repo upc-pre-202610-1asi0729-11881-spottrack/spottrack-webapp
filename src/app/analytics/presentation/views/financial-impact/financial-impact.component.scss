@@ -436,30 +436,27 @@ $blue    : #4fc3f7;
   justify-content: center;
 
   &__bars--roi {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
     width: 100%;
     flex: 1;
   }
 }
 
 .bar--roi {
-  width: 100%;
-  max-height: 100%; /* No permite que la barra sea más alta que el gráfico */
+  position: absolute;
+  left: 10%;
+  right: 10%;
   border-radius: 4px;
-  transition: height 0.3s ease;
+  transition: height 0.3s ease, bottom 0.3s ease;
 
   &-pos {
-    background: $red;
+    background: $green;
     border-radius: 4px 4px 0 0;
-    align-self: flex-end;
   }
 
   &-neg {
-    background: rgba(251, 44, 54, 0.45);
+    background: $red;
     border-radius: 0 0 4px 4px;
-    align-self: flex-start;
   }
 }
 
