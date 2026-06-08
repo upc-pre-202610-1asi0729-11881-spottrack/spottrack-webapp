@@ -421,9 +421,8 @@ $blue    : #4fc3f7;
   padding-bottom: 20px;
   position: relative;
   z-index: 1;
-  height: 200px;
+  min-height: 160px;
   overflow: hidden;
-
 }
 
 .bar-group {
@@ -465,6 +464,9 @@ $blue    : #4fc3f7;
   color: $muted;
   text-align: center;
   flex-shrink: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 // ── ROI Simulator ─────────────────────────────────────────────────────────────
@@ -606,9 +608,23 @@ $blue    : #4fc3f7;
     gap: 12px;
   }
 
-  .stat-grid     { grid-template-columns: repeat(2, 1fr); }
-  .pie-container { flex-direction: column; }
+  .stat-grid        { grid-template-columns: repeat(2, 1fr); }
+  .pie-container    { flex-direction: column; }
   .maint-row__label { min-width: 120px; }
+
+  .roi-bar-chart {
+    height: 240px;
+    gap: 4px;
+  }
+
+  .bar-chart__y-axis {
+    min-width: 36px;
+    font-size: 0.6rem;
+  }
+
+  .bar-chart__bars--roi {
+    gap: 6px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -619,6 +635,29 @@ $blue    : #4fc3f7;
   .stat-card__value { font-size: 1.5rem; }
   .maint-row__label { min-width: 80px; }
   .header-actions { flex-wrap: wrap; width: 100%; }
+
+  .roi-bar-chart {
+    height: 200px;
+    gap: 2px;
+  }
+
+  .bar-chart__y-axis {
+    display: none;
+  }
+
+  .bar-chart__bars--roi {
+    gap: 3px;
+    padding-bottom: 16px;
+  }
+
+  .bar--roi {
+    left: 5%;
+    right: 5%;
+  }
+
+  .bar-label {
+    font-size: 0.6rem;
+  }
 }
 
 // ── Print ─────────────────────────────────────────────────────────────────────
