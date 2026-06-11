@@ -49,12 +49,12 @@
 }
 
 .sidebar__item--active {
-  background: rgba(79, 195, 247, 0.12);
-  color: #4fc3f7;
+  background: #f5c518;
+  color: #1a1a1a;
 }
 
 .sidebar__item--active .sidebar__icon {
-  color: #4fc3f7;
+  color: #1a1a1a;
 }
 
 .sidebar__icon {

@@ -1,7 +1,7 @@
 html, body {
   margin: 0;
   height: 100%;
-  background: #121212;
+  background: #0d0d0d;
   /* Prevent Material's light-theme typography from inheriting dark text into dark cards */
   color: #e0e0e0;
 }
