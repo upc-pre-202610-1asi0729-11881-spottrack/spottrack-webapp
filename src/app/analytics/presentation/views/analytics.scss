@@ -150,7 +150,13 @@ $blue    : #4fc3f7;
     .mat-date-range-input-container {
       display: flex;
       align-items: center;
+      justify-content: center;
       height: 100%;
+    }
+
+    input[matStartDate],
+    input[matEndDate] {
+      text-align: center !important;
     }
 
     .mat-date-range-input-separator {
