@@ -31,7 +31,8 @@
     } @else {
       <div class="plans-grid">
         @for (plan of activePlans(); track plan.id) {
-          <div class="plan-card" (click)="selectPlan(plan.id)" [routerLink]="['/membership', plan.id]">
+          <div class="plan-card" (click)="selectPlan(plan.id)" [routerLink]="['/membership', plan.id]"
+               [appContextMenu]="planMenu(plan.id, plan.name)">
             <div class="plan-card__header">
               <mat-icon class="plan-icon">workspace_premium</mat-icon>
               <div>

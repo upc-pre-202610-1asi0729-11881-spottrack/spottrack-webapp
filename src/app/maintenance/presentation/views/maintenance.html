@@ -91,7 +91,7 @@
 
       <div class="ticket-list">
         @for (t of pendingFiltered(); track t.id) {
-          <div class="ticket-card">
+          <div class="ticket-card" [appContextMenu]="pendingMenu(t)">
             <div class="ticket-top">
               <div class="ticket-meta">
                 <span class="ticket-id">{{ ticketId(t) }}</span>
@@ -129,7 +129,7 @@
 
       <div class="ticket-list">
         @for (t of inProgressFiltered(); track t.id) {
-          <div class="ticket-card ticket-card--in-progress">
+          <div class="ticket-card ticket-card--in-progress" [appContextMenu]="inProgressMenu(t)">
             <div class="ticket-top">
               <div class="ticket-meta">
                 <span class="ticket-id">{{ ticketId(t) }}</span>
@@ -164,7 +164,7 @@
 
       <div class="ticket-list">
         @for (t of resolvedFiltered(); track t.id) {
-          <div class="ticket-card ticket-card--completed">
+          <div class="ticket-card ticket-card--completed" [appContextMenu]="resolvedMenu(t)">
             <div class="ticket-top">
               <div class="ticket-meta">
                 <span class="ticket-id">{{ ticketId(t) }}</span>

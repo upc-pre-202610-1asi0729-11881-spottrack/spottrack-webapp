@@ -3,6 +3,8 @@ import { DecimalPipe }    from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule }  from '@angular/material/icon';
 import { FinancialImpactStore } from '../../../application/financial-impact.store';
+import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
 
 interface RoiMonth { month: string; cumulative: number; }
 
@@ -15,6 +17,7 @@ const ROI_MONTHS_LABELS = ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6',
     DecimalPipe,
     TranslateModule,
     MatIconModule,
+    ContextMenuDirective,
   ],
   templateUrl: './financial-impact.component.html',
   styleUrl:    './financial-impact.component.scss',
@@ -119,4 +122,18 @@ export class FinancialImpactComponent {
   }
 
   generatePdf(): void { window.print(); }
+
+  readonly pageMenu: ContextMenuItem[] = [
+    { label: 'Export CSV',   icon: 'download',       action: () => this.exportCsv() },
+    { label: 'Generate PDF', icon: 'picture_as_pdf', action: () => this.generatePdf() },
+  ];
+
+  lossRowMenu(machine: string, total: number): ContextMenuItem[] {
+    return [
+      { label: 'Copy machine', icon: 'content_copy', action: () => navigator.clipboard.writeText(machine) },
+      { label: 'Copy total',   icon: 'attach_money', action: () => navigator.clipboard.writeText(`$${total}`) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Export CSV',   icon: 'download',     action: () => this.exportCsv() },
+    ];
+  }
 }

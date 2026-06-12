@@ -1,18 +1,22 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardStore } from '../../application/dashboard.store';
 import { TicketType } from '../../../maintenance/domain/model/maintenance-ticket.entity';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ContextMenuDirective } from '../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatIconModule, TranslatePipe],
+  imports: [MatIconModule, TranslatePipe, ContextMenuDirective],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
 export class DashboardComponent {
-  readonly store = inject(DashboardStore);
+  readonly store  = inject(DashboardStore);
+  private  router = inject(Router);
 
   // ── SVG dimensions (must match store) ─────────────────────────────────
   readonly SVG_W = 680;
@@ -47,4 +51,20 @@ export class DashboardComponent {
   ticketDesc(type: TicketType): string {
     return type === TicketType.PREVENTIVE ? 'Mantenimiento preventivo' : 'Mantenimiento correctivo';
   }
+
+  readonly kpiMenu: ContextMenuItem[] = [
+    { label: 'Go to Equipment',  icon: 'fitness_center', action: () => this.router.navigate(['/equipments']) },
+    { label: 'Go to Maintenance',icon: 'build',          action: () => this.router.navigate(['/maintenance']) },
+    { label: 'Go to Analytics',  icon: 'bar_chart',      action: () => this.router.navigate(['/analytics']) },
+  ];
+
+  readonly tableMenu: ContextMenuItem[] = [
+    { label: 'Go to Equipment',  icon: 'fitness_center', action: () => this.router.navigate(['/equipments']) },
+    { label: 'Go to Maintenance',icon: 'build',          action: () => this.router.navigate(['/maintenance']) },
+  ];
+
+  readonly kanbanMenu: ContextMenuItem[] = [
+    { label: 'Go to Maintenance', icon: 'build',     action: () => this.router.navigate(['/maintenance']) },
+    { label: 'Go to Analytics',   icon: 'bar_chart', action: () => this.router.navigate(['/analytics']) },
+  ];
 }

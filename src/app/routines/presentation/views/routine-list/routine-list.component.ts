@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RoutinesStore, FilterGroup } from '../../../application/routines.store';
+import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
 
 // Keep local types for UI-level concerns the store does not own
 export type MachineStatus = 'available' | 'inUse' | 'maintenance';
@@ -37,6 +39,7 @@ export interface RoutineCard {
     MatButtonModule,
     MatSelectModule,
     TranslateModule,
+    ContextMenuDirective,
   ],
   templateUrl: './routine-list.component.html',
   styleUrl: './routine-list.component.css',
@@ -88,6 +91,14 @@ export class RoutineListComponent {
 
   openModal(): void { this.routineName = ''; this.selectedObjective = null; this.selectedLevel = 'intermediate'; this.routineNotes = ''; this.showModal.set(true); }
   closeModal(): void { this.showModal.set(false); }
+
+  routineMenu(r: RoutineCard): ContextMenuItem[] {
+    return [
+      { label: 'New routine',       icon: 'add',          action: () => this.openModal() },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Copy exercise name',icon: 'content_copy', action: () => navigator.clipboard.writeText(r.exerciseKey) },
+    ];
+  }
 
   createRoutine(): void {
     if (!this.routineName.trim() || !this.selectedObjective) return;

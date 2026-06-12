@@ -15,7 +15,7 @@
   <!-- ===== ACTIVE RESERVATION CARDS ===== -->
   <div class="booking-list">
     @for (machine of reservations(); track machine.id) {
-      <mat-card class="booking-card">
+      <mat-card class="booking-card" [appContextMenu]="reservationMenu(machine.id)">
         <mat-card-content class="card-content">
 
           <div class="card-top">

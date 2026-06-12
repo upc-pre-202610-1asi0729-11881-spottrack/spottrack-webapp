@@ -138,7 +138,8 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="iot-row"
-          [ngClass]="row.status === IotStatus.OFFLINE ? 'iot-row--offline' : ''"></tr>
+          [ngClass]="row.status === IotStatus.OFFLINE ? 'iot-row--offline' : ''"
+          [appContextMenu]="rowMenu(row)"></tr>
 
       <tr class="mat-mdc-no-data-row" *matNoDataRow>
         <td [colSpan]="displayedColumns.length" class="no-data-cell">
@@ -159,7 +160,8 @@
       </div>
       <div class="alerts-list">
         @for (sensor of activeAlerts(); track sensor.id) {
-          <div class="alert-item" [ngClass]="sensor.status === IotStatus.OFFLINE ? 'alert-item--critical' : 'alert-item--warning'">
+          <div class="alert-item" [ngClass]="sensor.status === IotStatus.OFFLINE ? 'alert-item--critical' : 'alert-item--warning'"
+               [appContextMenu]="alertMenu(sensor)">
             <mat-icon class="alert-item__icon">
               {{ sensor.status === IotStatus.OFFLINE ? 'sensors_off' : 'battery_alert' }}
             </mat-icon>

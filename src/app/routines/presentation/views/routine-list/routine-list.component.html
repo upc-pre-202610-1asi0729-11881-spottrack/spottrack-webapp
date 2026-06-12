@@ -40,7 +40,7 @@
   <!-- ROUTINE CARDS LIST -->
   <div class="routines-list">
     @for (routine of filteredRoutines(); track routine.id) {
-      <mat-card class="routine-card">
+      <mat-card class="routine-card" [appContextMenu]="routineMenu(routine)">
         <mat-card-content class="card-content">
 
           <!-- Card Top: Exercise Name + Status Dot -->

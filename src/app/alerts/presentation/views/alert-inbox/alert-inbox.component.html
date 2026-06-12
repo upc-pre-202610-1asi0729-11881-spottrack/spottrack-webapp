@@ -1,7 +1,7 @@
 <div class="alerts-container">
   <div class="alerts-grid">
     @for (alert of alertsList; track alert.id) {
-      <div class="alert-card">
+      <div class="alert-card" [appContextMenu]="alertMenu(alert)">
 
         <button class="close-btn" (click)="deleteAlert($event, alert.id)" [title]="'alerts.deleteTitle' | translate">
           <mat-icon>close</mat-icon>

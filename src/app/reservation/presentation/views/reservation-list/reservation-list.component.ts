@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReservationStore } from '../../../application/reservation.store';
+import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-reservation-list',
@@ -21,6 +23,7 @@ import { ReservationStore } from '../../../application/reservation.store';
     MatButtonModule,
     MatSelectModule,
     TranslateModule,
+    ContextMenuDirective,
   ],
   templateUrl: './reservation-list.component.html',
   styleUrl: './reservation-list.component.css',
@@ -55,6 +58,14 @@ export class ReservationListComponent {
 
   openModal(): void  { this.showModal = true; this.selectedMachineId = null; this.selectedDurationSeconds = 15 * 60; }
   closeModal(): void { this.showModal = false; }
+
+  reservationMenu(machineId: string): ContextMenuItem[] {
+    return [
+      { label: 'Cancel reservation', icon: 'cancel',    action: () => this.cancelReservation(machineId) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'New reservation',    icon: 'add',       action: () => this.openModal() },
+    ];
+  }
 
   createReservation(): void {
     if (!this.selectedMachineId) return;
