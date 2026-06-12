@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthStore } from '../../../../auth/application/auth.store';
+import { NgOptimizedImage } from '@angular/common';
 
 // Exportamos la interfaz para evitar errores en WebStorm
 export interface NavItem {
@@ -33,7 +34,7 @@ const CLIENT_NAV: NavItem[] = [
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, MatIconModule, TranslateModule],
+  imports: [RouterLink, RouterLinkActive, MatIconModule, TranslateModule, NgOptimizedImage],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
