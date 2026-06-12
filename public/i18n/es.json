@@ -349,6 +349,7 @@
     "dialog": {
       "addTitle": "Registrar Nuevo Equipo",
       "editTitle": "Editar Equipo",
+      "subtitle": "Completa todos los campos requeridos para registrar el equipo en el sistema.",
       "deleteTitle": "Eliminar Equipo",
       "deleteMessage": "¿Estás seguro de que deseas eliminar este equipo? Esta acción no se puede deshacer.",
       "fields": {

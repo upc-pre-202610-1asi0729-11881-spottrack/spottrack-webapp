@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -48,10 +48,10 @@ export class NewTicketComponent {
     time:        '',
   };
 
-  readonly selectedEquipmentId = computed(() => {
+  get selectedEquipmentId(): string {
     const eq = this.equipmentStore.equipment().find(e => e.id === this.form.equipmentId);
     return eq ? `M-${eq.id.toString().padStart(3, '0')}` : '';
-  });
+  }
 
   onTimeChange(): void { this.selectedTime.set(this.form.time); }
 
