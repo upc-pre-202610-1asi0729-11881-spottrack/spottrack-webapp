@@ -6,11 +6,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AlertsStore } from '../../../application/alerts.store';
 import { AppAlert } from '../../../application/alerts.service';
 import { AuthStore } from '../../../../auth/application/auth.store';
+import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-alert-inbox',
   standalone: true,
-  imports: [CommonModule, MatIconModule, TranslateModule],
+  imports: [CommonModule, MatIconModule, TranslateModule, ContextMenuDirective],
   templateUrl: './alert-inbox.component.html',
   styleUrl: './alert-inbox.component.scss',
 })
@@ -47,6 +49,13 @@ export class AlertInboxComponent implements OnInit {
 
   resolveDescription(alert: AppAlert): string {
     return alert.descriptionKey ? this.translate.instant(alert.descriptionKey) : (alert.description ?? '');
+  }
+
+  alertMenu(alert: AppAlert): ContextMenuItem[] {
+    return [
+      { label: 'View details', icon: 'open_in_new',  action: () => this.navigateTo(alert.targetRoute) },
+      { label: 'Delete',       icon: 'delete',        action: () => this.store.deleteAlert(alert.id) },
+    ];
   }
 
   getRelativeTime(date: Date): string {

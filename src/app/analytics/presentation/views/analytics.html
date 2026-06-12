@@ -53,7 +53,7 @@
   <!-- ── Stat cards ─────────────────────────────────────────────────────── -->
   <div class="stat-grid">
 
-    <div class="stat-card">
+    <div class="stat-card" [appContextMenu]="chartMenu">
       <div class="stat-card__info">
         <p class="stat-card__label">{{ 'analytics.stats.totalHours' | translate }}</p>
         <p class="stat-card__value">{{ stats().totalHours | number:'1.0-0' }}h</p>
@@ -221,7 +221,7 @@
 
     <div class="reloc-list">
       @for (r of relocationData; track r.machine) {
-        <div class="reloc-row">
+        <div class="reloc-row" [appContextMenu]="relocationMenu(r.machine)">
 
           <span class="priority-badge" [class]="'priority-badge--' + r.priority.toLowerCase()">
             {{ r.priority }}

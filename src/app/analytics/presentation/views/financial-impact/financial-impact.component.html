@@ -1,4 +1,4 @@
-<div class="fin-page">
+<div class="fin-page" [appContextMenu]="pageMenu">
 
   <!-- ── Header ────────────────────────────────────────────────────────────── -->
   <div class="page-header">
@@ -81,7 +81,7 @@
           </thead>
           <tbody>
             @for (row of inactivityLoss; track row.machine) {
-              <tr>
+              <tr [appContextMenu]="lossRowMenu(row.machine, row.total)">
                 <td>{{ row.machine }}</td>
                 <td><span class="hours-badge">{{ row.hours }}h</span></td>
                 <td>${{ row.ratePerHour }}</td>

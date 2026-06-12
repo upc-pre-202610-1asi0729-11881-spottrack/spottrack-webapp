@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AnalyticsStore } from '../../application/analytics.store';
+import { ContextMenuDirective } from '../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-analytics',
@@ -23,6 +25,7 @@ import { AnalyticsStore } from '../../application/analytics.store';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ContextMenuDirective,
   ],
   templateUrl: './analytics.html',
   styleUrl:    './analytics.scss',
@@ -107,5 +110,18 @@ export class AnalyticsComponent {
 
   generatePdf(): void {
     window.print();
+  }
+
+  readonly chartMenu: ContextMenuItem[] = [
+    { label: 'Export CSV',    icon: 'download',         action: () => this.exportCsv() },
+    { label: 'Generate PDF',  icon: 'picture_as_pdf',   action: () => this.generatePdf() },
+  ];
+
+  relocationMenu(machine: string): ContextMenuItem[] {
+    return [
+      { label: 'Copy machine name', icon: 'content_copy', action: () => navigator.clipboard.writeText(machine) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Export CSV',        icon: 'download',     action: () => this.exportCsv() },
+    ];
   }
 }

@@ -4,17 +4,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 import { AuthStore } from '../../../application/auth.store';
+import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
-  imports: [LanguageSwitcher, MatIconModule, TranslateModule],
+  imports: [LanguageSwitcher, MatIconModule, TranslateModule, ContextMenuDirective],
 })
 export class ProfileComponent {
   private authStore = inject(AuthStore);
   private router    = inject(Router);
+
+  readonly pageMenu: ContextMenuItem[] = [
+    { label: 'Logout', icon: 'logout', action: () => this.logout() },
+  ];
 
   logout() {
     this.authStore.logout();

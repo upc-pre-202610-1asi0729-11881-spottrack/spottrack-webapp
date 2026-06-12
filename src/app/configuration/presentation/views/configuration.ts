@@ -13,6 +13,8 @@ export interface AlertType {
   enabled: boolean;
 }
 import { TranslateModule } from '@ngx-translate/core';
+import { ContextMenuDirective } from '../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-configuration',
@@ -25,6 +27,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatSnackBarModule,
     MatSliderModule,
     TranslatePipe,
+    ContextMenuDirective,
   ],
   templateUrl: './configuration.html',
   styleUrl: './configuration.scss',
@@ -82,6 +85,11 @@ export class ConfigurationComponent {
       duration: 3000,
     });
   }
+
+  readonly pageMenu: ContextMenuItem[] = [
+    { label: 'Save settings',    icon: 'save',   action: () => this.onSave() },
+    { label: 'Discard changes',  icon: 'undo',   action: () => this.onCancel() },
+  ];
 
   onCancel(): void {
     this.snackBar.open('Cambios descartados', 'Cerrar', {
