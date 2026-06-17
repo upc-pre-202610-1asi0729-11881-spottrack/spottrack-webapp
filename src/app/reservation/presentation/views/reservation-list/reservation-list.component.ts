@@ -32,6 +32,7 @@ export class ReservationListComponent {
   readonly store = inject(ReservationStore);
 
   readonly reservations        = this.store.reservations;
+  readonly pendingReservations = this.store.pendingReservations;
   readonly availableMachines   = this.store.availableMachines;
   readonly expiredReservations = this.store.expiredReservations;
 
@@ -51,10 +52,11 @@ export class ReservationListComponent {
     return m ? this.store.isExpired(m) : false;
   }
 
-  cancelReservation(machineId: string): void { this.store.cancelReservation(machineId); }
-  dismissExpired(machineId: string): void    { this.store.dismissExpired(machineId); }
-  formatTimer(seconds: number): string        { return this.store.formatTimer(seconds); }
-  getZoneKey(category: string): string        { return this.store.getZoneKey(category); }
+  activateReservation(machineId: string): void { this.store.activateReservation(machineId); }
+  cancelReservation(machineId: string): void   { this.store.cancelReservation(machineId); }
+  dismissExpired(machineId: string): void      { this.store.dismissExpired(machineId); }
+  formatTimer(seconds: number): string         { return this.store.formatTimer(seconds); }
+  getZoneKey(category: string): string         { return this.store.getZoneKey(category); }
 
   openModal(): void  { this.showModal = true; this.selectedMachineId = null; this.selectedDurationSeconds = 15 * 60; }
   closeModal(): void { this.showModal = false; }

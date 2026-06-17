@@ -12,6 +12,53 @@
     </button>
   </header>
 
+  <!-- ===== PENDING RESERVATION CARDS ===== -->
+  <div class="booking-list">
+    @for (machine of pendingReservations(); track machine.id) {
+      <mat-card class="booking-card pending" [appContextMenu]="reservationMenu(machine.id)">
+        <mat-card-content class="card-content">
+
+          <div class="card-top">
+            <div class="machine-info">
+              <div class="machine-icon-wrap">
+                <mat-icon class="machine-icon">{{ machine.icon }}</mat-icon>
+              </div>
+              <div class="machine-details">
+                <span class="machine-name">{{ 'machines.names.' + machine.nameKey | translate }}</span>
+                <span class="machine-zone">{{ 'machines.zones.' + getZoneKey(machine.category) | translate }}</span>
+              </div>
+            </div>
+            <button mat-icon-button class="cancel-btn" (click)="cancelReservation(machine.id)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+
+          <mat-divider class="card-divider"></mat-divider>
+
+          <div class="card-bottom">
+            <div class="timer-label">
+              <mat-icon class="clock-icon">hourglass_empty</mat-icon>
+              <span>{{ 'booking.activationWindow' | translate }}</span>
+            </div>
+            <span class="timer-value">{{ formatTimer(machine.activationTimerSeconds ?? 0) }}</span>
+          </div>
+
+        </mat-card-content>
+
+        <div class="pending-banner">
+          <div class="pending-banner-info">
+            <span class="pending-title">{{ 'booking.pending.title' | translate }}</span>
+            <span class="pending-subtitle">{{ 'booking.pending.subtitle' | translate }}</span>
+          </div>
+          <button class="btn-activate" (click)="activateReservation(machine.id)">
+            <mat-icon>play_arrow</mat-icon>
+            {{ 'booking.activate' | translate }}
+          </button>
+        </div>
+      </mat-card>
+    }
+  </div>
+
   <!-- ===== ACTIVE RESERVATION CARDS ===== -->
   <div class="booking-list">
     @for (machine of reservations(); track machine.id) {
