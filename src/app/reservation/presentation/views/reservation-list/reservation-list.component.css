@@ -84,7 +84,8 @@
   transition: border-color 0.3s ease;
 }
 
-.booking-card.expired { border-color: #f44336 !important; }
+.booking-card.expired  { border-color: #f44336 !important; }
+.booking-card.pending  { border-color: #ff9800 !important; }
 
 .card-content { padding: 0 !important; }
 
@@ -119,6 +120,11 @@
   border-color: #f44336;
 }
 
+.booking-card.pending .machine-icon-wrap {
+  background-color: #3a2a0a;
+  border-color: #ff9800;
+}
+
 .machine-icon {
   font-size: 22px;
   width: 22px;
@@ -128,6 +134,7 @@
 }
 
 .booking-card.expired .machine-icon { color: #f44336; }
+.booking-card.pending .machine-icon { color: #ff9800; }
 
 .machine-details { display: flex; flex-direction: column; gap: 2px; }
 
@@ -174,6 +181,7 @@
 }
 
 .booking-card.expired .clock-icon { color: #f44336; }
+.booking-card.pending .clock-icon { color: #ff9800; }
 
 .timer-value {
   font-size: 22px;
@@ -185,6 +193,7 @@
 }
 
 .booking-card.expired .timer-value { color: #f44336; }
+.booking-card.pending .timer-value { color: #ff9800; }
 
 .expired-banner {
   display: flex;
@@ -202,6 +211,56 @@
 }
 
 .expired-subtitle { font-size: 12px; color: rgba(244, 67, 54, 0.75); }
+
+.pending-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px 12px;
+  background-color: rgba(255, 152, 0, 0.08);
+  border-top: 1px solid rgba(255, 152, 0, 0.25);
+  flex-wrap: wrap;
+}
+
+.pending-banner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pending-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff9800;
+}
+
+.pending-subtitle { font-size: 12px; color: rgba(255, 152, 0, 0.75); }
+
+.btn-activate {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ff9800;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-activate:hover { background-color: #e68900; }
+
+.btn-activate mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
 
 /* ===================== INFO CARD ===================== */
 .info-card {

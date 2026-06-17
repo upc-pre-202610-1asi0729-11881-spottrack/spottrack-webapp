@@ -7,11 +7,16 @@ export class ReservationStore {
   private readonly gymState = inject(GymStateService);
 
   readonly reservations        = this.gymState.reservedMachines;
+  readonly pendingReservations = this.gymState.pendingMachines;
   readonly availableMachines   = this.gymState.availableMachines;
   readonly expiredReservations = this.gymState.expiredReservations;
 
   createReservation(machineId: string, durationSeconds: number): void {
     this.gymState.createReservation(machineId, durationSeconds);
+  }
+
+  activateReservation(machineId: string): void {
+    this.gymState.activateReservation(machineId);
   }
 
   cancelReservation(machineId: string): void {
