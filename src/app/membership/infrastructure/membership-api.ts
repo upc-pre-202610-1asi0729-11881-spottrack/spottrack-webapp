@@ -6,8 +6,8 @@ import { MembershipPlanResource, BranchAccessResource } from './membership-respo
 
 @Injectable({ providedIn: 'root' })
 export class MembershipApi {
-  private readonly plansUrl  = `${environment.apiProvider}membership_plans`;
-  private readonly accessUrl = `${environment.apiProvider}branch_access`;
+  private readonly plansUrl  = `${environment.apiBase}/membership-plans`;
+  private readonly accessUrl = `${environment.apiBase}/branch-access`;
 
   constructor(private readonly http: HttpClient) {}
 

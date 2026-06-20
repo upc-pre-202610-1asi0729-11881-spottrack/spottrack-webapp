@@ -1,15 +1,11 @@
 import { BaseResource } from '../../shared/infrastructure/base-response';
 
-export interface MaintenanceTicketResource extends BaseResource {
-  id:           number;
-  equipment_id: number;
-  status:       string;
-  priority:     string;
-  type:         string;
-  created_at:   string;
-  description:  string;
-  assignee:     string | null;
-  completed_by: string | null;
+export interface MaintenanceTicketResource {
+  id:            string;
+  equipmentId:   string;
+  status:        string;
+  ticketId:      string;
+  maintenanceId: string;
 }
 
 export type MaintenanceTicketResponse = MaintenanceTicketResource[];

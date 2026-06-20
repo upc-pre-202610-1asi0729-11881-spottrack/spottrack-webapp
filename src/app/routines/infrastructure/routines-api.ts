@@ -6,8 +6,8 @@ import { RoutineResource, ExerciseBlockResource } from './routines-response';
 
 @Injectable({ providedIn: 'root' })
 export class RoutinesApi {
-  private readonly routinesUrl = `${environment.apiProvider}routines`;
-  private readonly blocksUrl   = `${environment.apiProvider}exercise_blocks`;
+  private readonly routinesUrl = `${environment.apiBase}/routines`;
+  private readonly blocksUrl   = `${environment.apiBase}/exercise-blocks`;
 
   constructor(private readonly http: HttpClient) {}
 

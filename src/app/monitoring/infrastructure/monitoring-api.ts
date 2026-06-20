@@ -6,8 +6,8 @@ import { SensorSessionResource, SensorReadingResource } from './monitoring-respo
 
 @Injectable({ providedIn: 'root' })
 export class MonitoringApi {
-  private readonly sessionsUrl = `${environment.apiProvider}sensor_sessions`;
-  private readonly readingsUrl = `${environment.apiProvider}sensor_readings`;
+  private readonly sessionsUrl = `${environment.apiBase}/sensor-sessions`;
+  private readonly readingsUrl = `${environment.apiBase}/sensor-readings`;
 
   constructor(private readonly http: HttpClient) {}
 

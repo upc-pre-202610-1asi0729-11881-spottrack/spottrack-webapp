@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class DashboardApi extends BaseApi {
   private readonly usageStatsEndpoint: EquipmentUsageStatApiEndpoint;
-  private readonly sessionsUrl = `${environment.apiProvider}usage_sessions`;
+  private readonly sessionsUrl = `${environment.apiBase}/usage-sessions`;
 
   constructor(private readonly http: HttpClient) {
     super();

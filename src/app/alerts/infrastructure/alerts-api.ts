@@ -6,7 +6,7 @@ import { AlertResource } from './alerts-response';
 
 @Injectable({ providedIn: 'root' })
 export class AlertsApi {
-  private readonly alertsUrl = `${environment.apiProvider}alerts`;
+  private readonly alertsUrl = `${environment.apiBase}/alerts`;
 
   constructor(private readonly http: HttpClient) {}
 

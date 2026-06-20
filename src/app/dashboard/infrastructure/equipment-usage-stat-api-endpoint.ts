@@ -17,7 +17,7 @@ export class EquipmentUsageStatApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.apiProvider}${environment.equipmentUsageStatsEndpoint}`,
+      `${environment.apiBase}/equipment-usage-stats`,
       new EquipmentUsageStatAssembler()
     );
   }

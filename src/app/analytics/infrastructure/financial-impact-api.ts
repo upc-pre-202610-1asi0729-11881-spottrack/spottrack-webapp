@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   EquipmentUsageStatResource,
@@ -12,16 +12,12 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class FinancialImpactApi {
-  private readonly statsUrl   = `${environment.apiProvider}${environment.equipmentUsageStatsEndpoint}`;
-  private readonly equipUrl   = `${environment.apiProvider}${environment.equipmentEndpoints}`;
-  private readonly ticketsUrl = `${environment.apiProvider}${environment.maintenanceTicketsEndpoint}`;
-  private readonly logsUrl    = `${environment.apiProvider}${environment.maintenanceLogsEndpoint}`;
-  private readonly partsUrl   = `${environment.apiProvider}${environment.sparePartsEndpoint}`;
+  private readonly equipUrl = `${environment.apiBase}/equipments`;
 
   constructor(private readonly http: HttpClient) {}
 
   getUsageStats(): Observable<EquipmentUsageStatResource[]> {
-    return this.http.get<EquipmentUsageStatResource[]>(this.statsUrl);
+    return of([]);
   }
 
   getEquipments(): Observable<EquipmentResource[]> {
@@ -29,14 +25,14 @@ export class FinancialImpactApi {
   }
 
   getMaintenanceTickets(): Observable<MaintenanceTicketResource[]> {
-    return this.http.get<MaintenanceTicketResource[]>(this.ticketsUrl);
+    return of([]);
   }
 
   getMaintenanceLogs(): Observable<MaintenanceLogResource[]> {
-    return this.http.get<MaintenanceLogResource[]>(this.logsUrl);
+    return of([]);
   }
 
   getSpareParts(): Observable<SparePartResource[]> {
-    return this.http.get<SparePartResource[]>(this.partsUrl);
+    return of([]);
   }
 }

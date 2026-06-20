@@ -2,23 +2,44 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ReservationResource } from './reservation-response';
+import { ReservationResource, ReservationRequestResource } from './reservation-response';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationApi {
-  private readonly reservationsUrl = `${environment.apiProvider}reservations`;
+  private readonly base    = `${environment.apiBase}/reservations`;
+  private readonly reqBase = `${environment.apiBase}/reservation-requests`;
 
   constructor(private readonly http: HttpClient) {}
 
-  getReservations(): Observable<ReservationResource[]> {
-    return this.http.get<ReservationResource[]>(this.reservationsUrl);
+  initiateExpressReservation(body: {
+    clientId: number; equipmentId: string;
+    startTime: string; endTime: string;
+    startedAt: string; timeExpiry: string;
+  }): Observable<ReservationResource> {
+    return this.http.post<ReservationResource>(`${this.base}/reserve`, body);
   }
 
-  createReservation(machineId: string, durationSeconds: number): Observable<ReservationResource> {
-    return this.http.post<ReservationResource>(this.reservationsUrl, { machine_id: machineId, duration_seconds: durationSeconds });
+  startTimer(id: string, durationMinutes: number): Observable<ReservationResource> {
+    return this.http.patch<ReservationResource>(
+      `${this.base}/${id}/timer`, { durationMinutes }
+    );
   }
 
-  cancelReservation(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.reservationsUrl}/${id}`);
+  endReservation(id: string): Observable<ReservationResource> {
+    return this.http.patch<ReservationResource>(`${this.base}/${id}/end`, {});
+  }
+
+  cancelReservation(id: string): Observable<ReservationResource> {
+    return this.http.delete<ReservationResource>(`${this.base}/${id}`);
+  }
+
+  submitRequest(clientId: number, equipmentId: string): Observable<ReservationRequestResource> {
+    return this.http.post<ReservationRequestResource>(this.reqBase, { clientId, equipmentId });
+  }
+
+  releaseEquipment(requestId: string): Observable<ReservationRequestResource> {
+    return this.http.patch<ReservationRequestResource>(
+      `${this.reqBase}/${requestId}/release`, {}
+    );
   }
 }

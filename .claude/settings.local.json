@@ -15,7 +15,13 @@
       "Bash(Select-Object -ExpandProperty Name)",
       "Bash(npx tsc *)",
       "Bash(node -e \"const a=require\\('./angular.json'\\); const s=a.projects['SpotTrack-Frontend-Web-Applications'].architect.serve; console.log\\(JSON.stringify\\(s,null,2\\)\\)\")",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(git checkout *)",
+      "Bash(git stash *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(ng build *)",
+      "Bash(git log *)"
     ]
   }
 }
