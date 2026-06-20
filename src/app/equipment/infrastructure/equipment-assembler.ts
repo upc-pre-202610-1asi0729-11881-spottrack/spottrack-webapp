@@ -10,24 +10,25 @@ export class EquipmentAssembler implements BaseAssembler<Equipment, EquipmentRes
   toEntityFromResource(resource: EquipmentResource): Equipment {
     return new Equipment({
       id:            resource.id,
-      zoneId:        resource.zone_id,
-      name:          resource.name,
-      brand:         resource.brand,
+      zoneId:        Number(resource.zoneId),
+      name:          resource.equipmentName,
+      brand:         resource.manufacturerId,
       model:         resource.model,
-      purchasePrice: resource.purchase_price,
+      purchasePrice: resource.purchasePrice,
       status:        resource.status as EquipmentStatus,
     });
   }
 
   toResourceFromEntity(entity: Equipment): EquipmentResource {
     return {
-      id:             entity.id,
-      zone_id:        entity.zoneId,
-      name:           entity.name,
-      brand:          entity.brand,
-      model:          entity.model,
-      purchase_price: entity.purchasePrice,
-      status:         entity.status,
+      id:                   entity.id,
+      equipmentName:        entity.name,
+      model:                entity.model,
+      status:               entity.status,
+      zoneId:               String(entity.zoneId),
+      manufacturerId:       entity.brand,
+      purchasePrice:        entity.purchasePrice,
+      maintenanceThreshold: '',
     };
   }
 }
