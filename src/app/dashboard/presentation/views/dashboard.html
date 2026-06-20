@@ -2,7 +2,7 @@
 
   <div class="kpi-row">
 
-    <div class="kpi-card">
+    <div class="kpi-card" [appContextMenu]="kpiMenu">
       <div class="kpi-card__icon kpi-card__icon--green">
         <mat-icon>check_circle</mat-icon>
       </div>
@@ -78,7 +78,7 @@
             >{{ tick.label }}</text>
           }
 
-          <path [attr.d]="store.areaPath()" class="area-fill"/>
+          <path [attr.d]="store.areaPath()" fill="url(#areaGrad)" class="area-fill"/>
 
           <polyline [attr.points]="store.polylinePoints()" class="line-stroke"/>
 
@@ -168,7 +168,7 @@
             </tr>
           } @else {
             @for (row of store.underutilizedEquipment(); track row.machineId) {
-              <tr>
+              <tr [appContextMenu]="tableMenu">
                 <td class="cell--id">{{ row.machineId }}</td>
                 <td>{{ row.location }}</td>
                 <td>{{ row.hours }}</td>
@@ -196,7 +196,7 @@
               <p class="kanban-empty">{{ 'dashboardAdmin.maintenanceCenter.empty' | translate }}</p>
             }
             @for (ticket of store.pendingTickets(); track ticket.id) {
-              <div class="kanban-item kanban-item--open">
+              <div class="kanban-item kanban-item--open" [appContextMenu]="kanbanMenu">
                 <div class="kanban-item__top">
                   <mat-icon class="ki-icon ki-icon--warn">warning</mat-icon>
                   <span class="kanban-item__id">{{ store.ticketLabel(ticket.id) }}</span>
@@ -215,7 +215,7 @@
               <p class="kanban-empty">{{ 'dashboardAdmin.maintenanceCenter.empty' | translate }}</p>
             }
             @for (ticket of store.inProgressTickets(); track ticket.id) {
-              <div class="kanban-item kanban-item--progress">
+              <div class="kanban-item kanban-item--progress" [appContextMenu]="kanbanMenu">
                 <div class="kanban-item__top">
                   <mat-icon class="ki-icon ki-icon--blue">build</mat-icon>
                   <span class="kanban-item__id">{{ store.ticketLabel(ticket.id) }}</span>
@@ -234,7 +234,7 @@
               <p class="kanban-empty">{{ 'dashboardAdmin.maintenanceCenter.empty' | translate }}</p>
             }
             @for (ticket of store.resolvedTickets(); track ticket.id) {
-              <div class="kanban-item kanban-item--resolved">
+              <div class="kanban-item kanban-item--resolved" [appContextMenu]="kanbanMenu">
                 <div class="kanban-item__top">
                   <mat-icon class="ki-icon ki-icon--green">task_alt</mat-icon>
                   <span class="kanban-item__id">{{ store.ticketLabel(ticket.id) }}</span>

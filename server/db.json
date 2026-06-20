@@ -169,17 +169,38 @@
   "equipment_usage_stats": [
     {
       "id": 1,
-      "equipment_id": 1,
+      "equipment_id": 3,
       "total_usage_hours": 120.5,
       "usage_count_daily": 8,
       "estimated_wear_level": 0.35
     },
     {
       "id": 2,
-      "equipment_id": 3,
-      "total_usage_hours": 95,
-      "usage_count_daily": 6,
-      "estimated_wear_level": 0.28
+      "equipment_id": 4,
+      "total_usage_hours": 45,
+      "usage_count_daily": 3,
+      "estimated_wear_level": 0.82
+    },
+    {
+      "id": 3,
+      "equipment_id": 5,
+      "total_usage_hours": 38,
+      "usage_count_daily": 2,
+      "estimated_wear_level": 0.78
+    },
+    {
+      "id": 4,
+      "equipment_id": 6,
+      "total_usage_hours": 88,
+      "usage_count_daily": 5,
+      "estimated_wear_level": 0.31
+    },
+    {
+      "id": 5,
+      "equipment_id": 7,
+      "total_usage_hours": 62,
+      "usage_count_daily": 4,
+      "estimated_wear_level": 0.22
     }
   ],
   "maintenance_tickets": [
@@ -246,6 +267,34 @@
       "action_description": "Replaced internal belt",
       "cost": 150,
       "completed_at": "2026-05-04T15:00:00Z"
+    },
+    {
+      "id": 2,
+      "ticket_id": 2,
+      "action_description": "Replaced hydraulic seal",
+      "cost": 280,
+      "completed_at": "2026-05-09T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "ticket_id": 3,
+      "action_description": "Resistance motor repair",
+      "cost": 420,
+      "completed_at": "2026-05-08T16:00:00Z"
+    },
+    {
+      "id": 4,
+      "ticket_id": 4,
+      "action_description": "Lubrication and bolt tightening",
+      "cost": 95,
+      "completed_at": "2026-05-07T12:00:00Z"
+    },
+    {
+      "id": 5,
+      "ticket_id": 5,
+      "action_description": "Upholstery replacement",
+      "cost": 135,
+      "completed_at": "2026-05-06T14:00:00Z"
     }
   ],
   "maintenance_schedules": [

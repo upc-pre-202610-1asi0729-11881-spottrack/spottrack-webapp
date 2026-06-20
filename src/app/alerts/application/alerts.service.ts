@@ -51,6 +51,24 @@ export class AlertsService {
     },
   ]);
 
+  // Called when a pending reservation is not activated within 5 minutes
+  addReservationAutoCancelledAlert(nameKey: string): void {
+    const machine = this.translate.instant('machines.names.' + nameKey);
+    this.alerts.update(list => [
+      {
+        id:          `RES-CANCEL-${Date.now()}`,
+        title:       this.translate.instant('clientAlerts.reservationAutoCancelled.title',       { machine }),
+        description: this.translate.instant('clientAlerts.reservationAutoCancelled.description', { machine }),
+        type:        'client',
+        icon:        'event_busy',
+        date:        new Date(),
+        targetRoute: '/bookings',
+        read:        false,
+      },
+      ...list,
+    ]);
+  }
+
   // Called when a reservation timer expires
   addReservationExpiredAlert(nameKey: string): void {
     const machine = this.translate.instant('machines.names.' + nameKey);

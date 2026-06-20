@@ -144,10 +144,24 @@ $blue    : #4fc3f7;
     .mat-date-range-input-container input {
       color: $text !important;
       font-size: 0.875rem;
+      line-height: normal;
+    }
+
+    .mat-date-range-input-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    input[matStartDate],
+    input[matEndDate] {
+      text-align: center !important;
     }
 
     .mat-date-range-input-separator {
       color: $muted !important;
+      line-height: normal;
     }
 
     .mat-mdc-icon-button {

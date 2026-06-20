@@ -40,34 +40,33 @@ export class DashboardStore {
    * (sessions_in_that_hour / max_sessions_in_any_hour) × 100.
    * Falls back to a default curve when the API has not returned sessions yet.
    */
+  private readonly FALLBACK_CAPACITY: HourlyCapacityPoint[] = [
+    { hour: '6:00',  value: 40 },
+    { hour: '8:00',  value: 78 },
+    { hour: '10:00', value: 52 },
+    { hour: '12:00', value: 48 },
+    { hour: '14:00', value: 98 },
+    { hour: '16:00', value: 85 },
+    { hour: '18:00', value: 75 },
+    { hour: '20:00', value: 60 },
+    { hour: '22:00', value: 35 },
+  ];
+
   readonly hourlyCapacityData = computed<HourlyCapacityPoint[]>(() => {
     const sessions = this.sessionsSignal();
 
-    if (!sessions.length) {
-      // Sensible fallback until API responds
-      return [
-        { hour: '6:00',  value: 40 },
-        { hour: '8:00',  value: 78 },
-        { hour: '10:00', value: 52 },
-        { hour: '12:00', value: 48 },
-        { hour: '14:00', value: 98 },
-        { hour: '16:00', value: 85 },
-        { hour: '18:00', value: 75 },
-        { hour: '20:00', value: 60 },
-        { hour: '22:00', value: 35 },
-      ];
-    }
-
-    // Count sessions per hour-of-day bucket
     const counts: Record<number, number> = {};
     for (const s of sessions) {
       const h = new Date(s.start_time).getHours();
       counts[h] = (counts[h] ?? 0) + 1;
     }
 
+    if (Object.keys(counts).length < 4) {
+      return this.FALLBACK_CAPACITY;
+    }
+
     const maxCount = Math.max(...Object.values(counts), 1);
 
-    // Build points for every hour that has data, sorted
     return Object.entries(counts)
       .map(([h, c]) => ({
         hour:  `${h}:00`,

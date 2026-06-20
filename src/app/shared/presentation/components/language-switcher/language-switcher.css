@@ -83,7 +83,8 @@
 }
 
 ::ng-deep .custom-lang-menu .active-item {
-  background-color: #f7b924 !important; : #000000 !important;
+  background-color: #f7b924 !important;
+  color: #000000 !important;
   width: 100%;
 }
 

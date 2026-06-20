@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { AlertsService } from '../../alerts/application/alerts.service';
 
-export type MachineStatus = 'AVAILABLE' | 'IN_USE' | 'RESERVED';
+export type MachineStatus = 'AVAILABLE' | 'IN_USE' | 'RESERVED' | 'PENDING';
 export type MachineCategory = 'CARDIO' | 'STRENGTH';
 
 export interface GymMachine {
@@ -14,6 +14,7 @@ export interface GymMachine {
   left: string;
   icon: string;
   timerSeconds?: number;
+  activationTimerSeconds?: number;
 }
 
 export interface ExpiredReservation {
@@ -42,20 +43,33 @@ export class GymStateService {
   expiredReservations = signal<ExpiredReservation[]>([]);
 
   reservedMachines  = computed(() => this.machines().filter(m => m.status === 'RESERVED'));
+  pendingMachines   = computed(() => this.machines().filter(m => m.status === 'PENDING'));
   availableMachines = computed(() => this.machines().filter(m => m.status === 'AVAILABLE'));
 
   constructor() {
     setInterval(() => {
       const expiring: ExpiredReservation[] = [];
+      const autoCancelled: ExpiredReservation[] = [];
 
       this.machines.update(ms =>
         ms.map(m => {
-          if (m.status !== 'RESERVED' || m.timerSeconds === undefined) return m;
-          if (m.timerSeconds <= 1) {
-            expiring.push({ machineId: m.id, nameKey: m.nameKey, icon: m.icon, category: m.category });
-            return { ...m, status: 'AVAILABLE', timerSeconds: undefined };
+          if (m.status === 'RESERVED') {
+            if (m.timerSeconds === undefined) return m;
+            if (m.timerSeconds <= 1) {
+              expiring.push({ machineId: m.id, nameKey: m.nameKey, icon: m.icon, category: m.category });
+              return { ...m, status: 'AVAILABLE', timerSeconds: undefined };
+            }
+            return { ...m, timerSeconds: m.timerSeconds - 1 };
           }
-          return { ...m, timerSeconds: m.timerSeconds - 1 };
+          if (m.status === 'PENDING') {
+            if (m.activationTimerSeconds === undefined) return m;
+            if (m.activationTimerSeconds <= 1) {
+              autoCancelled.push({ machineId: m.id, nameKey: m.nameKey, icon: m.icon, category: m.category });
+              return { ...m, status: 'AVAILABLE', activationTimerSeconds: undefined, timerSeconds: undefined };
+            }
+            return { ...m, activationTimerSeconds: m.activationTimerSeconds - 1 };
+          }
+          return m;
         })
       );
 
@@ -63,14 +77,28 @@ export class GymStateService {
         this.expiredReservations.update(list => [...list, ...expiring]);
         expiring.forEach(e => this.alertsService.addReservationExpiredAlert(e.nameKey));
       }
+      if (autoCancelled.length > 0) {
+        autoCancelled.forEach(e => this.alertsService.addReservationAutoCancelledAlert(e.nameKey));
+      }
     }, 1000);
   }
 
   // durationSeconds: pass seconds directly (e.g. 10 for test, 600 for 10 min)
+  // Creates a PENDING reservation — client must activate within 5 minutes
   createReservation(machineId: string, durationSeconds: number): void {
     this.machines.update(ms =>
       ms.map(m => m.id === machineId
-        ? { ...m, status: 'RESERVED', timerSeconds: durationSeconds }
+        ? { ...m, status: 'PENDING', timerSeconds: durationSeconds, activationTimerSeconds: 300 }
+        : m
+      )
+    );
+  }
+
+  // Client explicitly activates the reservation — starts the real timer
+  activateReservation(machineId: string): void {
+    this.machines.update(ms =>
+      ms.map(m => m.id === machineId
+        ? { ...m, status: 'RESERVED', activationTimerSeconds: undefined }
         : m
       )
     );
@@ -79,7 +107,7 @@ export class GymStateService {
   cancelReservation(machineId: string): void {
     this.machines.update(ms =>
       ms.map(m => m.id === machineId
-        ? { ...m, status: 'AVAILABLE', timerSeconds: undefined }
+        ? { ...m, status: 'AVAILABLE', timerSeconds: undefined, activationTimerSeconds: undefined }
         : m
       )
     );

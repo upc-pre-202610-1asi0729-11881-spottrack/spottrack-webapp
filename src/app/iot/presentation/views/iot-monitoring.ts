@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { IotStore } from '../../application/iot.store';
 import { Iot, IotStatus } from '../../domain/model/iot.entity';
+import { ContextMenuDirective } from '../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-iot-monitoring',
@@ -22,6 +24,7 @@ import { Iot, IotStatus } from '../../domain/model/iot.entity';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatSelectModule,
+    ContextMenuDirective,
   ],
   templateUrl: './iot-monitoring.html',
   styleUrl: './iot-monitoring.scss',
@@ -95,4 +98,24 @@ export class IotMonitoringComponent {
   onScheduleReplacement(sensorId: number): void { this.store.scheduleReplacement(sensorId); }
 
   onDismissModal(): void { this.store.dismissReconnectedModal(); }
+
+  rowMenu(row: Iot): ContextMenuItem[] {
+    return [
+      { label: 'Refresh',             icon: 'refresh',       action: () => this.onRefresh() },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Investigate alert',   icon: 'search',        action: () => this.onInvestigate(row) },
+      { label: 'Schedule replacement',icon: 'battery_alert', action: () => this.onScheduleReplacement(row.id) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Copy sensor ID',      icon: 'content_copy',  action: () => navigator.clipboard.writeText(this.sensorId(row.id)) },
+    ];
+  }
+
+  alertMenu(row: Iot): ContextMenuItem[] {
+    return [
+      { label: 'Investigate',          icon: 'search',        action: () => this.onInvestigate(row) },
+      { label: 'Schedule replacement', icon: 'battery_alert', action: () => this.onScheduleReplacement(row.id) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Copy sensor ID',       icon: 'content_copy',  action: () => navigator.clipboard.writeText(this.sensorId(row.id)) },
+    ];
+  }
 }

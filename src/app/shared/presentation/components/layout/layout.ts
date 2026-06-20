@@ -10,6 +10,7 @@ import { BottomBar } from '../bottom-bar/bottom-bar';
 import { AuthStore } from '../../../../auth/application/auth.store';
 import { UserProfile } from '../user-profile/user-profile';
 import { AlertsService } from '../../../../alerts/application/alerts.service';
+import { ContextMenuComponent } from '../context-menu/context-menu.component';
 
 @Component({
   selector: 'app-layout',
@@ -24,6 +25,7 @@ import { AlertsService } from '../../../../alerts/application/alerts.service';
     MatBadgeModule,
     TranslateModule,
     UserProfile,
+    ContextMenuComponent,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',

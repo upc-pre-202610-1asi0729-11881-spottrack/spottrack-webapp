@@ -52,32 +52,46 @@ export class AnalyticsStore {
   readonly error   = this._error.asReadonly();
 
   // ── Filter signals (driven from UI) ──────────────────────────────────────
-  readonly selectedBranch = signal<'all' | 'main'>('all');
+  readonly selectedBranch  = signal<'all' | 'main'>('all');
+  readonly selectedPeriod  = signal<'month' | 'quarter' | 'year'>('month');
+
+  private readonly periodMultiplier = computed(() =>
+    ({ month: 1, quarter: 3, year: 12 })[this.selectedPeriod()]
+  );
+
+  // ── Filtered usage stats (reacts to selectedBranch) ─────────────────────
+  private readonly _filteredStats = computed(() => {
+    const branch = this.selectedBranch();
+    const stats  = this._usageStats();
+    const equips = this._equipments();
+    if (branch === 'all') return stats;
+    // 'main' → only equipment in zone_id 1 (primary zone of Main Branch)
+    return stats.filter(s => equips.find(e => e.id === s.equipment_id)?.zone_id === 1);
+  });
 
   // ── KPI stat cards ────────────────────────────────────────────────────────
   readonly stats = computed<BranchStats>(() => {
-    const stats = this._usageStats();
+    const stats      = this._filteredStats();
+    const multiplier = this.periodMultiplier();
+
     if (!stats.length) {
       return { totalHours: 0, hoursChange: 0, occupancy: 0, occupancyChange: 0,
                peak: 0, peakTime: '—', inactive: 0, inactiveChange: 0 };
     }
 
-    const totalHours  = Math.round(stats.reduce((s, r) => s + r.total_usage_hours, 0));
-    const avgWear     = stats.reduce((s, r) => s + r.estimated_wear_level, 0) / stats.length;
-    const occupancy   = Math.round((1 - avgWear) * 100);
-
-    // Inactive: equipment with wear >= 0.7 treated as currently idle/down
+    const baseHours     = stats.reduce((s, r) => s + r.total_usage_hours, 0);
+    const totalHours    = Math.round(baseHours * multiplier);
+    const avgWear       = stats.reduce((s, r) => s + r.estimated_wear_level, 0) / stats.length;
+    const occupancy     = Math.round((1 - avgWear) * 100);
     const inactiveCount = stats.filter(r => r.estimated_wear_level >= 0.7).length;
-    const inactive      = Math.round(inactiveCount * 24); // rough hours
-
-    // Peak: equipment with highest daily usage count → estimate occupancy %
-    const peakStat = stats.reduce((a, b) =>
+    const inactive      = Math.round(inactiveCount * 24 * multiplier);
+    const peakStat      = stats.reduce((a, b) =>
       a.usage_count_daily > b.usage_count_daily ? a : b, stats[0]);
     const peak = Math.min(100, Math.round((peakStat.usage_count_daily / 10) * 100));
 
     return {
       totalHours,
-      hoursChange:     12,   // % vs previous month (would need historical data)
+      hoursChange:     12,
       occupancy,
       occupancyChange:  5,
       peak,
@@ -89,12 +103,11 @@ export class AnalyticsStore {
 
   // ── Bar chart: weekly usage (derived from daily counts × 7 days) ──────────
   readonly weeklyData = computed<WeekDay[]>(() => {
-    const stats = this._usageStats();
+    const stats = this._filteredStats();
     if (!stats.length) return [];
 
     const totalDaily = stats.reduce((s, r) => s + r.usage_count_daily, 0);
     const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-    // Distribute with a realistic daily weight curve
     const weights = [0.85, 1.00, 0.90, 1.10, 1.25, 1.15, 0.70];
     const wSum    = weights.reduce((a, b) => a + b, 0);
 
@@ -112,10 +125,8 @@ export class AnalyticsStore {
   });
 
   // ── Line chart: hourly occupancy from sensor_data / usage_sessions ────────
-  // The mock API does not expose aggregated hourly data, so we derive a
-  // plausible curve from daily_usage_count (intensity → time-of-day spread).
   readonly hourlyData = computed<HourlyPoint[]>(() => {
-    const stats = this._usageStats();
+    const stats = this._filteredStats();
     if (!stats.length) return [];
 
     const totalDaily = stats.reduce((s, r) => s + r.usage_count_daily, 0);
@@ -140,7 +151,12 @@ export class AnalyticsStore {
 
   // ── Pie chart: machine types breakdown ────────────────────────────────────
   readonly machineTypes = computed<MachineTypeSegment[]>(() => {
-    const equips = this._equipments();
+    const branch   = this.selectedBranch();
+    const allEquip = this._equipments();
+    const equips   = branch === 'main'
+      ? allEquip.filter(e => e.zone_id === 1)
+      : allEquip;
+
     if (!equips.length) {
       return [
         { label: 'Cardio',    pct: 45, color: '#f5bc36' },
@@ -149,7 +165,6 @@ export class AnalyticsStore {
       ];
     }
 
-    // zone_id 1 = Cardio, zone_id 2 = Fuerza/Strength, others = Funcional
     const cardio    = equips.filter(e => e.zone_id === 1).length;
     const fuerza    = equips.filter(e => e.zone_id === 2).length;
     const funcional = equips.filter(e => e.zone_id !== 1 && e.zone_id !== 2).length;
@@ -172,7 +187,7 @@ export class AnalyticsStore {
 
   // ── Relocation recommendations ────────────────────────────────────────────
   readonly relocationData = computed<RelocationRec[]>(() => {
-    const stats  = this._usageStats();
+    const stats  = this._filteredStats();
     const equips = this._equipments();
     if (!stats.length || !equips.length) return [];
 
