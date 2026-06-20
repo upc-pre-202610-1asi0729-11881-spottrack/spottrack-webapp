@@ -8,11 +8,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MaintenanceStore } from '../../application/maintenance.store';
 import { EquipmentStore } from '../../../equipment/application/equipment.store';
 import { MaintenanceTicket, TicketPriority, TicketStatus } from '../../domain/model/maintenance-ticket.entity';
+import { ContextMenuDirective } from '../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../shared/application/context-menu.service';
 
 @Component({
   selector: 'app-maintenance',
   standalone: true,
-  imports: [FormsModule, RouterLink, TranslateModule, MatIconModule, MatFormFieldModule, MatSelectModule],
+  imports: [FormsModule, RouterLink, TranslateModule, MatIconModule, MatFormFieldModule, MatSelectModule, ContextMenuDirective],
   templateUrl: './maintenance.html',
   styleUrl:    './maintenance.scss',
 })
@@ -59,4 +61,26 @@ export class MaintenanceComponent {
 
   startTicket(id: number): void    { this.store.startTicket(id); }
   completeTicket(id: number): void { this.store.completeTicket(id); }
+
+  pendingMenu(t: MaintenanceTicket): ContextMenuItem[] {
+    return [
+      { label: 'Start ticket',  icon: 'play_arrow',   action: () => this.startTicket(t.id) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Copy ticket ID', icon: 'content_copy', action: () => navigator.clipboard.writeText(this.ticketId(t)) },
+    ];
+  }
+
+  inProgressMenu(t: MaintenanceTicket): ContextMenuItem[] {
+    return [
+      { label: 'Mark complete', icon: 'check_circle', action: () => this.completeTicket(t.id) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'Copy ticket ID', icon: 'content_copy', action: () => navigator.clipboard.writeText(this.ticketId(t)) },
+    ];
+  }
+
+  resolvedMenu(t: MaintenanceTicket): ContextMenuItem[] {
+    return [
+      { label: 'Copy ticket ID', icon: 'content_copy', action: () => navigator.clipboard.writeText(this.ticketId(t)) },
+    ];
+  }
 }

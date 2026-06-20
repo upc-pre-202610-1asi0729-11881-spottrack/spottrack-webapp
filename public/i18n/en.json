@@ -102,16 +102,22 @@
     "subtitle": "Manage your active reservations and create new ones",
     "newBooking": "New Reservation",
     "timeRemaining": "Time remaining",
+    "activationWindow": "Activation window",
+    "activate": "Start Reservation",
+    "pending": {
+      "title": "Waiting for activation",
+      "subtitle": "Activate within the time limit or it will be cancelled"
+    },
     "expired": {
       "title": "Reservation expired",
       "subtitle": "The machine is now available for other users"
     },
     "how": {
       "title": "How do reservations work?",
-      "item1": "You can reserve a free machine for 10–20 minutes",
-      "item2": "Reservations are only available during peak hours",
-      "item3": "If you don't use the machine, it will become available again",
-      "item4": "Cancel your reservation if your plans change"
+      "item1": "Create a reservation for an available machine",
+      "item2": "You have 5 minutes to activate your reservation from this screen",
+      "item3": "Once activated, the countdown timer starts for your selected duration",
+      "item4": "If not activated in time, the reservation is automatically cancelled"
     },
     "modal": {
       "title": "New Reservation",
@@ -120,7 +126,7 @@
       "selectMachine": "Select a machine",
       "duration": "Duration",
       "minutesSuffix": "minutes",
-      "warning": "Reservations are only available during peak hours. If you don't use the machine within the set time, the reservation will expire automatically.",
+      "warning": "After creating the reservation, you have 5 minutes to activate it. If not activated in time, it will be automatically cancelled.",
       "option10s": "10 seconds",
       "option10m": "10 minutes",
       "option15m": "15 minutes",
@@ -133,6 +139,10 @@
     "reservationExpired": {
       "title": "Reservation Expired: {{machine}}",
       "description": "Your reservation for {{machine}} has ended. The machine is now available for other users."
+    },
+    "reservationAutoCancelled": {
+      "title": "Reservation Cancelled: {{machine}}",
+      "description": "Your reservation for {{machine}} was not activated within 5 minutes and has been automatically cancelled."
     }
   },
   "alerts": {
@@ -349,6 +359,7 @@
     "dialog": {
       "addTitle": "Register New Equipment",
       "editTitle": "Edit Equipment",
+      "subtitle": "Fill in all required fields to register the equipment in the system.",
       "deleteTitle": "Delete Equipment",
       "deleteMessage": "Are you sure you want to delete this equipment? This action cannot be undone.",
       "fields": {

@@ -5,7 +5,10 @@ import { environment } from '../../../environments/environment';
 import {
   EquipmentUsageStatResource,
   EquipmentResource,
-} from './analytics-response';
+  MaintenanceTicketResource,
+  MaintenanceLogResource,
+  SparePartResource,
+} from './financial-impact-response';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialImpactApi {
@@ -21,15 +24,15 @@ export class FinancialImpactApi {
     return this.http.get<EquipmentResource[]>(this.equipUrl);
   }
 
-  getMaintenanceTickets(): Observable<any[]> {
+  getMaintenanceTickets(): Observable<MaintenanceTicketResource[]> {
     return of([]);
   }
 
-  getMaintenanceLogs(): Observable<any[]> {
+  getMaintenanceLogs(): Observable<MaintenanceLogResource[]> {
     return of([]);
   }
 
-  getSpareParts(): Observable<any[]> {
+  getSpareParts(): Observable<SparePartResource[]> {
     return of([]);
   }
 }

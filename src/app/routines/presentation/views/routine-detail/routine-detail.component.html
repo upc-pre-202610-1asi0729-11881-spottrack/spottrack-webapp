@@ -1,0 +1,62 @@
+<div class="detail-page">
+
+  <div class="breadcrumb">
+    <a routerLink="/routines" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      {{ 'routines.title' | translate }}
+    </a>
+  </div>
+
+  @if (routine) {
+    <div class="routine-header">
+      <div>
+        <h1 class="routine-name">{{ routine.name }}</h1>
+        <div class="routine-tags">
+          <span class="tag tag--level">{{ 'routines.level.' + routine.level | translate }}</span>
+          <span class="tag tag--group">{{ 'routines.filter.' + routine.filter_group | translate }}</span>
+        </div>
+      </div>
+      <div class="blocks-count">
+        <mat-icon>fitness_center</mat-icon>
+        <span>{{ routine.block_count }} ejercicios</span>
+      </div>
+    </div>
+
+    <div class="blocks-section">
+      <h2 class="section-title">Bloques de Ejercicio</h2>
+
+      @if (loading()) {
+        <div class="loading-state">
+          <mat-icon class="spin">refresh</mat-icon>
+          Cargando ejercicios…
+        </div>
+      }
+
+      @if (!loading() && blocks().length === 0) {
+        <p class="empty-msg">No hay bloques de ejercicio registrados.</p>
+      }
+
+      <div class="blocks-list">
+        @for (block of blocks(); track block.id) {
+          <div class="block-card">
+            <span class="block-order">{{ block.order }}</span>
+            <div class="block-info">
+              <p class="block-exercise">{{ 'routines.exercises.' + block.exercise_key | translate }}</p>
+              <p class="block-machine">{{ 'routines.machines.' + block.machine_key | translate }}</p>
+            </div>
+            <div class="block-meta">
+              <span class="meta-badge">{{ block.sets }} series</span>
+              <span class="meta-badge">{{ block.reps }} reps</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="not-found">
+      <mat-icon>search_off</mat-icon>
+      <p>Rutina no encontrada.</p>
+    </div>
+  }
+
+</div>

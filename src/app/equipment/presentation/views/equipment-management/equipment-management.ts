@@ -13,6 +13,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EquipmentStatus } from '../../../domain/model/equipment.entity';
 import { EquipmentStore } from '../../../application/equipment.store';
+import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
+import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
 
 
 
@@ -41,6 +43,7 @@ export interface EquipmentRow {
     MatSelectModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
+    ContextMenuDirective,
   ],
   templateUrl: './equipment-management.html',
   styleUrl: './equipment-management.scss',
@@ -98,4 +101,14 @@ export class EquipmentManagementComponent {
 
   onSearchChange(value: string): void               { this.searchQuery.set(value); }
   onStatusChange(value: EquipmentStatus | ''): void { this.selectedStatus.set(value); }
+
+  rowMenu(row: EquipmentRow): ContextMenuItem[] {
+    return [
+      { label: 'Edit',              icon: 'edit',         action: () => this.navigateToEdit(row) },
+      { label: 'Delete',            icon: 'delete',       action: () => this.deleteEquipment(row.id) },
+      { label: '', icon: '', separator: true, action: () => {} },
+      { label: 'New ticket',        icon: 'build',        action: () => this.router.navigate(['/maintenance/new-ticket']) },
+      { label: 'Copy ID',           icon: 'content_copy', action: () => navigator.clipboard.writeText(String(row.id)) },
+    ];
+  }
 }

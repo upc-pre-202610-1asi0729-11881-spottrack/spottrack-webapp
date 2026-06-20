@@ -26,7 +26,7 @@ export class LoginComponent {
   constructor() {
     effect(() => {
       if (this.auth.isAuthenticated()) {
-        const dest = this.auth.isAdmin() ? '/dashboard' : '/client';
+        const dest = this.auth.isAdmin() ? '/dashboard' : '/map';
         this.router.navigate([dest]);
       }
     });
