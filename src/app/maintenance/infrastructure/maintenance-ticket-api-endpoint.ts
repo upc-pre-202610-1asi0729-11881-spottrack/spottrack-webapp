@@ -14,7 +14,7 @@ export class MaintenanceTicketApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.apiProvider}${environment.maintenanceTicketsEndpoint}`,
+      `${environment.apiBase}/maintenance/tickets`,
       new MaintenanceTicketAssembler()
     );
   }
