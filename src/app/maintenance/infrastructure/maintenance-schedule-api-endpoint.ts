@@ -14,7 +14,7 @@ export class MaintenanceScheduleApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.apiProvider}${environment.maintenanceSchedulesEndpoint}`,
+      `${environment.apiBase}/maintenance/schedules`,
       new MaintenanceScheduleAssembler()
     );
   }
