@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { EquipmentUsageStatResource, EquipmentResource } from './analytics-response';
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsApi {
   private readonly base = environment.apiBase;
 
   constructor(private readonly http: HttpClient) {}
+
+  getUsageStats(): Observable<EquipmentUsageStatResource[]> {
+    return of([]);
+  }
+
+  getEquipments(): Observable<EquipmentResource[]> {
+    return this.http.get<EquipmentResource[]>(`${this.base}/equipments`);
+  }
 
   requestActivityAnalysis(body: {
     minutesActive: number; minutesInactive: number;
