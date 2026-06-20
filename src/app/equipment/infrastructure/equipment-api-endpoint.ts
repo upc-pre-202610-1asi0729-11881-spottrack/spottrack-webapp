@@ -9,7 +9,7 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<Equipment, EquipmentRe
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.apiProvider}${environment.equipmentEndpoints}`,
+      `${environment.apiBase}/equipments`,
       new EquipmentAssembler()
     );
   }
