@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router';
+ import { Routes } from '@angular/router';
 import { Layout } from './shared/presentation/components/layout/layout';
-import { equipmentRoutes } from './equipment/presentation/views/equipment.routes';
+import { equipmentRoutes } from './gym/presentation/views/equipment.routes';
 import { analyticsRoutes } from './analytics/analytics.routes';
 import { monitoringRoutes } from './monitoring/monitoring.routes';
 import { membershipRoutes } from './membership/membership.routes';
@@ -21,7 +21,6 @@ export const routes: Routes = [
     component: Layout,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'profile',
         loadComponent: () =>
@@ -36,8 +35,9 @@ export const routes: Routes = [
       // ── Admin routes ────────────────────────────────────────────────────────
       {
         path: '',
-        canActivate: [adminGuard],
+        canMatch: [adminGuard],
         children: [
+          { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
           {
             path: 'dashboard',
             loadComponent: () =>
@@ -73,8 +73,9 @@ export const routes: Routes = [
       // ── Client routes ───────────────────────────────────────────────────────
       {
         path: '',
-        canActivate: [clientGuard],
+        canMatch: [clientGuard],
         children: [
+          { path: '', redirectTo: 'map', pathMatch: 'full' },
           {
             path: 'client',
             loadComponent: () =>

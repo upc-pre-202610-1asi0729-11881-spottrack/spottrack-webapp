@@ -319,7 +319,7 @@
     }
   },
   "equipment": {
-    "title": "Equipment Management",
+    "title": "Gym Equipment",
     "subtitle": "Monitor and manage all gym equipment",
     "search": "Search by name, brand or model...",
     "filter": {
@@ -329,45 +329,58 @@
     "actions": {
       "register": "Register Equipment",
       "edit": "Edit",
-      "delete": "Delete",
-      "save": "Save",
+      "editStatus": "Update status",
+      "decommission": "Decommission",
+      "save": "Register",
+      "updateStatus": "Update Status",
       "cancel": "Cancel",
       "confirm": "Confirm"
     },
     "table": {
       "id": "ID",
       "name": "Name",
-      "brand": "Brand",
+      "brand": "Brand / Manufacturer",
       "model": "Model",
       "zoneId": "Zone",
-      "purchasePrice": "Purchase Price",
+      "purchaseAmount": "Purchase Price",
       "status": "Status",
       "actions": "Actions",
-      "noData": "No equipment found"
+      "noData": "No equipment registered yet"
     },
     "stats": {
       "total": "Total Equipment",
-      "operational": "Operational",
+      "available": "Available",
+      "inUse": "In Use",
       "maintenance": "In Maintenance",
-      "outOfOrder": "Out of Order"
+      "outOfService": "Out of Service"
     },
     "status": {
-      "OPERATIONAL": "Operational",
+      "AVAILABLE": "Available",
+      "IN_USE": "In Use",
       "MAINTENANCE": "Maintenance",
-      "OUT_OF_ORDER": "Out of Order"
+      "OUT_OF_SERVICE": "Out of Service"
     },
     "dialog": {
       "addTitle": "Register New Equipment",
-      "editTitle": "Edit Equipment",
+      "editTitle": "Update Equipment Status",
       "subtitle": "Fill in all required fields to register the equipment in the system.",
-      "deleteTitle": "Delete Equipment",
-      "deleteMessage": "Are you sure you want to delete this equipment? This action cannot be undone.",
+      "editHint": "In edit mode only the status can be updated.",
+      "editMode": "Edit mode",
+      "newMode": "New equipment",
+      "deleteTitle": "Decommission Equipment",
+      "deleteMessage": "Are you sure you want to decommission this equipment? This action cannot be undone.",
+      "sections": {
+        "identification": "Identification",
+        "configuration": "Pricing & Location",
+        "status": "Operational Status"
+      },
       "fields": {
         "name": "Equipment name",
-        "brand": "Brand",
+        "brand": "Brand / Manufacturer",
         "model": "Model",
         "zoneId": "Zone ID",
-        "purchasePrice": "Purchase price ($)",
+        "purchaseCurrency": "Currency",
+        "purchaseAmount": "Purchase amount",
         "status": "Status"
       },
       "validation": {

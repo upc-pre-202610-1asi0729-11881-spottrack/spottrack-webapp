@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MaintenanceStore } from '../../../application/maintenance.store';
-import { EquipmentStore } from '../../../../equipment/application/equipment.store';
+import { EquipmentStore } from '../../../../gym/application/equipment.store';
 import { TicketPriority, TicketType } from '../../../domain/model/maintenance-ticket.entity';
 
 interface NewTicketForm {

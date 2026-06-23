@@ -4,7 +4,7 @@ import { forkJoin } from 'rxjs';
 import { DashboardApi } from '../infrastructure/dashboard-api';
 import { EquipmentUsageStat } from '../domain/model/equipment-usage-stat.entity';
 import { UsageSessionResource } from '../infrastructure/dashboard-response';
-import { EquipmentStore } from '../../equipment/application/equipment.store';
+import { EquipmentStore } from '../../gym/application/equipment.store';
 import { MaintenanceStore } from '../../maintenance/application/maintenance.store';
 
 export interface HourlyCapacityPoint {
@@ -29,9 +29,9 @@ export class DashboardStore {
   readonly error      = this.errorSignal.asReadonly();
 
   // ── KPI summary cards ─────────────────────────────────────────────────────
-  readonly operationalCount = computed(() => this.equipmentStore.operationalCount());
+  readonly operationalCount = computed(() => this.equipmentStore.availableCount());
   readonly maintenanceCount = computed(() => this.equipmentStore.maintenanceCount());
-  readonly outOfOrderCount  = computed(() => this.equipmentStore.outOfOrderCount());
+  readonly outOfOrderCount  = computed(() => this.equipmentStore.outOfServiceCount());
   readonly totalTickets     = computed(() => this.maintenanceStore.totalTickets());
 
   // ── Horas Pico de Capacidad — derived from usage_sessions ────────────────

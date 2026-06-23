@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MaintenanceStore } from '../../application/maintenance.store';
-import { EquipmentStore } from '../../../equipment/application/equipment.store';
+import { EquipmentStore } from '../../../gym/application/equipment.store';
 import { MaintenanceTicket, TicketPriority, TicketStatus } from '../../domain/model/maintenance-ticket.entity';
 import { ContextMenuDirective } from '../../../shared/presentation/directives/context-menu.directive';
 import { ContextMenuItem } from '../../../shared/application/context-menu.service';

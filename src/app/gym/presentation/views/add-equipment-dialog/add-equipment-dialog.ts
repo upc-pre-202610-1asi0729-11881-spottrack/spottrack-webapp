@@ -12,15 +12,7 @@ import { Equipment, EquipmentStatus } from '../../../domain/model/equipment.enti
 import { EquipmentStore } from '../../../application/equipment.store';
 import { EquipmentRow } from '../equipment-management/equipment-management';
 
-export interface EquipmentFormData {
-  id?:           number;
-  name:          string;
-  brand:         string;
-  model:         string;
-  zoneId:        number;
-  purchasePrice: number;
-  status:        EquipmentStatus;
-}
+export const CURRENCIES = ['USD', 'EUR', 'PEN', 'MXN', 'COP', 'GBP', 'BRL'] as const;
 
 @Component({
   selector: 'app-add-equipment-dialog',
@@ -45,42 +37,45 @@ export class AddEquipmentDialogComponent {
   private store  = inject(EquipmentStore);
 
   readonly equipmentStatuses = Object.values(EquipmentStatus);
+  readonly currencies        = CURRENCIES;
 
   private existing: EquipmentRow | undefined = (history.state as { equipment?: EquipmentRow }).equipment;
   readonly isEditMode = !!this.route.snapshot.paramMap.get('id');
 
   form = this.fb.nonNullable.group({
-    name:          [this.existing?.name          ?? '',                          Validators.required],
-    brand:         [this.existing?.brand         ?? '',                          Validators.required],
-    model:         [this.existing?.model         ?? '',                          Validators.required],
-    zoneId:        [this.existing?.zoneId        ?? (null as unknown as number), Validators.required],
-    purchasePrice: [this.existing?.purchasePrice ?? (null as unknown as number), [Validators.required, Validators.min(0)]],
-    status:        [this.existing?.status        ?? EquipmentStatus.OPERATIONAL,  Validators.required],
+    name:             [{ value: this.existing?.name  ?? '', disabled: this.isEditMode },  Validators.required],
+    brand:            [{ value: this.existing?.brand ?? '', disabled: this.isEditMode },  Validators.required],
+    model:            [{ value: this.existing?.model ?? '', disabled: this.isEditMode },  Validators.required],
+    zoneId:           [{ value: this.existing?.zoneId ?? (null as unknown as number), disabled: this.isEditMode }, Validators.required],
+    purchaseAmount:   [{ value: this.existing?.purchaseAmount ?? (null as unknown as number), disabled: this.isEditMode }, [Validators.required, Validators.min(0)]],
+    purchaseCurrency: [{ value: this.existing?.purchaseCurrency ?? 'USD', disabled: this.isEditMode }, Validators.required],
+    status:           [this.existing?.status ?? EquipmentStatus.AVAILABLE, Validators.required],
   });
 
   submit(): void {
     if (this.form.invalid) return;
     const val = this.form.getRawValue();
-    const entity = new Equipment({
-      id:            this.existing?.id ?? 0,
-      name:          val.name,
-      brand:         val.brand,
-      model:         val.model,
-      zoneId:        val.zoneId,
-      purchasePrice: val.purchasePrice,
-      status:        val.status,
-    });
 
-    if (this.isEditMode) {
-      this.store.updateEquipment(entity);
+    if (this.isEditMode && this.existing?.id != null) {
+      this.store.updateEquipmentStatus(this.existing.id, val.status);
     } else {
+      const entity = new Equipment({
+        id:               0,
+        name:             val.name,
+        brand:            val.brand,
+        model:            val.model,
+        zoneId:           val.zoneId,
+        purchaseAmount:   val.purchaseAmount,
+        purchaseCurrency: val.purchaseCurrency,
+        status:           val.status,
+      });
       this.store.addEquipment(entity);
     }
 
-    this.router.navigate(['/equipment']);
+    this.router.navigate(['/equipments']);
   }
 
   cancel(): void {
-    this.router.navigate(['/equipment']);
+    this.router.navigate(['/equipments']);
   }
 }
