@@ -35,17 +35,15 @@ export class AuthStore {
     }
     this.api.signIn({ username: email.trim(), password }).subscribe({
       next: res => {
-        const roleStr = res.roles?.[0] ?? '';
-        const role =
-          roleStr === 'ROLE_ADMIN' ? UserRole.ADMIN : UserRole.CLIENT;
+        const rawRole = (res.roles?.[0] ?? '').toUpperCase();
+        const role = rawRole.includes('ADMIN') ? UserRole.ADMIN : UserRole.CLIENT;
         const user: User = { email: res.username, name: res.username, role };
-        this.userSignal.set(user);
         this.tokenSignal.set(res.token);
+        this.userSignal.set(user);
         this.errorSignal.set(null);
         localStorage.setItem(TOKEN_KEY, res.token);
         localStorage.setItem(USER_KEY, JSON.stringify(user));
-        const dest = role === UserRole.ADMIN ? '/dashboard' : '/map';
-        this.router.navigate([dest]);
+        this.router.navigate([role === UserRole.ADMIN ? '/dashboard' : '/map']);
       },
       error: () => this.errorSignal.set('auth.error.invalidCredentials'),
     });

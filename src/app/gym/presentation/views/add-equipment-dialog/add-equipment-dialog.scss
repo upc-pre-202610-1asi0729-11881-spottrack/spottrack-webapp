@@ -25,24 +25,31 @@
   margin: 0;
   font-size: 22px;
   font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.form-page__subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #9ca3af;
 }
 
 .form-page__card {
-  background: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 12px;
+  background: #1a1a1a;
+  border: 1px solid #2d2d2d;
+  border-radius: 14px;
   overflow: hidden;
-  max-width: 800px;
+  max-width: 820px;
 }
 
-// ── Intro banner ───────────────────────────────────────────────────────────────
+// ── Intro banner ──────────────────────────────────────────────────────────────
 .form-intro {
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 20px 28px;
-  background: rgba(245, 188, 54, 0.05);
-  border-bottom: 1px solid #2a2a2a;
+  background: rgba(245, 188, 54, 0.04);
+  border-bottom: 1px solid #252525;
 }
 
 .form-intro__icon-wrap {
@@ -52,8 +59,8 @@
   width: 48px;
   height: 48px;
   background: rgba(245, 188, 54, 0.12);
-  border: 1px solid rgba(245, 188, 54, 0.3);
-  border-radius: 10px;
+  border: 1px solid rgba(245, 188, 54, 0.25);
+  border-radius: 12px;
   flex-shrink: 0;
 }
 
@@ -93,7 +100,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   background: rgba(79, 195, 247, 0.1);
-  border: 1px solid rgba(79, 195, 247, 0.3);
+  border: 1px solid rgba(79, 195, 247, 0.25);
   color: #4fc3f7;
   flex-shrink: 0;
 
@@ -101,19 +108,19 @@
 
   &--edit {
     background: rgba(245, 188, 54, 0.1);
-    border-color: rgba(245, 188, 54, 0.3);
+    border-color: rgba(245, 188, 54, 0.25);
     color: #f5bc36;
   }
 }
 
-// ── Form ───────────────────────────────────────────────────────────────────────
+// ── Form ──────────────────────────────────────────────────────────────────────
 .eq-form {
   display: flex;
   flex-direction: column;
   padding: 0 28px 28px;
 }
 
-// ── Sections ──────────────────────────────────────────────────────────────────
+// ── Sections ─────────────────────────────────────────────────────────────────
 .form-section {
   display: flex;
   flex-direction: column;
@@ -122,7 +129,8 @@
   padding-bottom: 8px;
 
   & + & {
-    border-top: 1px solid #2a2a2a;
+    border-top: 1px solid #252525;
+    padding-top: 20px;
   }
 }
 
@@ -140,12 +148,27 @@
   }
 
   span {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #9ca3af;
+    letter-spacing: 0.09em;
+    color: #6b7280;
   }
+}
+
+// ── Edit hint ─────────────────────────────────────────────────────────────────
+.edit-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(96, 165, 250, 0.07);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #93c5fd;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; flex-shrink: 0; }
 }
 
 // ── Rows & fields ─────────────────────────────────────────────────────────────
@@ -156,9 +179,8 @@
   .form-field { flex: 1; }
 }
 
-.form-field--full {
-  width: 100%;
-}
+.form-field--full     { width: 100%; }
+.form-field--currency { max-width: 140px; flex: none !important; }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 .form-actions {
@@ -167,7 +189,9 @@
   gap: 12px;
   margin-top: 8px;
   padding-top: 20px;
-  border-top: 1px solid #2a2a2a;
+  border-top: 1px solid #252525;
+
+  button { display: flex; align-items: center; gap: 6px; }
 }
 
 .btn-cancel {
@@ -185,14 +209,14 @@
   color: #000;
   font-weight: 700;
 
-  &:disabled { background-color: #333; color: #9ca3af; }
+  &:disabled { background-color: #2a2a2a; color: #555; }
 }
 
-// ── Material overrides ────────────────────────────────────────────────────────
+// ── Material dark overrides ───────────────────────────────────────────────────
 ::ng-deep .mat-mdc-form-field {
   .mdc-notched-outline__leading,
   .mdc-notched-outline__notch,
-  .mdc-notched-outline__trailing { border-color: #333 !important; }
+  .mdc-notched-outline__trailing { border-color: #2d2d2d !important; }
 
   &:hover .mdc-notched-outline__leading,
   &:hover .mdc-notched-outline__notch,
@@ -203,10 +227,15 @@
   .mdc-text-field--focused .mdc-notched-outline__trailing { border-color: #f5bc36 !important; }
 
   .mdc-floating-label,
-  .mat-mdc-floating-label { color: #b0b0b0 !important; }
+  .mat-mdc-floating-label { color: #888 !important; }
 
   .mdc-text-field__input,
   .mat-mdc-input-element { color: #e0e0e0 !important; }
+
+  .mdc-text-field--disabled .mdc-text-field__input { color: #555 !important; }
+  .mdc-text-field--disabled .mdc-notched-outline__leading,
+  .mdc-text-field--disabled .mdc-notched-outline__notch,
+  .mdc-text-field--disabled .mdc-notched-outline__trailing { border-color: #222 !important; border-style: dashed !important; }
 
   .mat-mdc-select-value,
   .mat-mdc-select-value-text { color: #e0e0e0 !important; }
@@ -220,4 +249,11 @@
     height: 18px;
     padding-right: 8px;
   }
+}
+
+@media (max-width: 600px) {
+  .form-page { padding: 16px; }
+  .form-intro { flex-wrap: wrap; }
+  .form-row { flex-direction: column; }
+  .form-field--currency { max-width: 100%; }
 }

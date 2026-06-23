@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
 import { AuthStore } from '../application/auth.store';
 
 export const authGuard: CanActivateFn = () => {
@@ -9,16 +9,7 @@ export const authGuard: CanActivateFn = () => {
   return router.createUrlTree(['/login']);
 };
 
-export const adminGuard: CanActivateFn = () => {
-  const auth   = inject(AuthStore);
-  const router = inject(Router);
-  if (auth.isAdmin()) return true;
-  return router.createUrlTree(['/map']);
-};
-
-export const clientGuard: CanActivateFn = () => {
-  const auth   = inject(AuthStore);
-  const router = inject(Router);
-  if (auth.isClient()) return true;
-  return router.createUrlTree(['/dashboard']);
-};
+// canMatch guards: return boolean so Angular falls through to the next sibling
+// route group instead of triggering a redirect loop.
+export const adminGuard: CanMatchFn = () => inject(AuthStore).isAdmin();
+export const clientGuard: CanMatchFn = () => inject(AuthStore).isClient();

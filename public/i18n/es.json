@@ -319,7 +319,7 @@
     }
   },
   "equipment": {
-    "title": "Gestión de Equipos",
+    "title": "Equipos del Gimnasio",
     "subtitle": "Monitorea y gestiona todos los equipos del gimnasio",
     "search": "Buscar por nombre, marca o modelo...",
     "filter": {
@@ -329,45 +329,58 @@
     "actions": {
       "register": "Registrar Equipo",
       "edit": "Editar",
-      "delete": "Eliminar",
-      "save": "Guardar",
+      "editStatus": "Actualizar estado",
+      "decommission": "Dar de baja",
+      "save": "Registrar",
+      "updateStatus": "Actualizar Estado",
       "cancel": "Cancelar",
       "confirm": "Confirmar"
     },
     "table": {
       "id": "ID",
       "name": "Nombre",
-      "brand": "Marca",
+      "brand": "Marca / Fabricante",
       "model": "Modelo",
       "zoneId": "Zona",
-      "purchasePrice": "Precio de Compra",
+      "purchaseAmount": "Precio de Compra",
       "status": "Estado",
       "actions": "Acciones",
-      "noData": "No se encontraron equipos"
+      "noData": "No hay equipos registrados aún"
     },
     "stats": {
       "total": "Total Equipos",
-      "operational": "Operativos",
+      "available": "Disponibles",
+      "inUse": "En Uso",
       "maintenance": "En Mantenimiento",
-      "outOfOrder": "Fuera de Servicio"
+      "outOfService": "Fuera de Servicio"
     },
     "status": {
-      "OPERATIONAL": "Operativo",
+      "AVAILABLE": "Disponible",
+      "IN_USE": "En Uso",
       "MAINTENANCE": "Mantenimiento",
-      "OUT_OF_ORDER": "Fuera de Servicio"
+      "OUT_OF_SERVICE": "Fuera de Servicio"
     },
     "dialog": {
       "addTitle": "Registrar Nuevo Equipo",
-      "editTitle": "Editar Equipo",
+      "editTitle": "Actualizar Estado del Equipo",
       "subtitle": "Completa todos los campos requeridos para registrar el equipo en el sistema.",
-      "deleteTitle": "Eliminar Equipo",
-      "deleteMessage": "¿Estás seguro de que deseas eliminar este equipo? Esta acción no se puede deshacer.",
+      "editHint": "En modo edición solo se puede actualizar el estado del equipo.",
+      "editMode": "Modo edición",
+      "newMode": "Nuevo equipo",
+      "deleteTitle": "Dar de baja",
+      "deleteMessage": "¿Estás seguro de que deseas dar de baja este equipo? Esta acción no se puede deshacer.",
+      "sections": {
+        "identification": "Identificación",
+        "configuration": "Precio y Ubicación",
+        "status": "Estado Operacional"
+      },
       "fields": {
         "name": "Nombre del equipo",
-        "brand": "Marca",
+        "brand": "Marca / Fabricante",
         "model": "Modelo",
         "zoneId": "ID de zona",
-        "purchasePrice": "Precio de compra ($)",
+        "purchaseCurrency": "Moneda",
+        "purchaseAmount": "Monto de compra",
         "status": "Estado"
       },
       "validation": {

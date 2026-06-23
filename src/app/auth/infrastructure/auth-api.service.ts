@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 
 export interface SignInRequest  { username: string; password: string; }
 export interface SignUpRequest  { username: string; password: string; roles: string[]; }
-export interface AuthResponse   { id: number; username: string; token: string; roles: string[]; }
+export interface AuthResponse   { id: number; username: string; token: string; roles?: string[]; role?: string; }
 
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
@@ -19,5 +19,9 @@ export class AuthApiService {
 
   signUp(body: SignUpRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.base}/sign-up`, body);
+  }
+
+  getUser(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.apiBase}/users/${id}`);
   }
 }

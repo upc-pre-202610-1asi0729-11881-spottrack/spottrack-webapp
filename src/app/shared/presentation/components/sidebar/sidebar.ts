@@ -24,7 +24,7 @@ const ADMIN_NAV: NavItem[] = [
 ];
 
 const CLIENT_NAV: NavItem[] = [
-  { path: '/dashboard', icon: 'home', labelKey: 'nav.dashboard' },
+  { path: '/client', icon: 'home', labelKey: 'nav.dashboard' },
   { path: '/map', icon: 'map', labelKey: 'nav.map' },
   { path: '/routines', icon: 'fitness_center', labelKey: 'nav.routines' },
   { path: '/bookings', icon: 'event_available', labelKey: 'nav.bookings' }, // Nota: si quitaste las reservas del proyecto, capaz luego te toque comentar esta línea también.

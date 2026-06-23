@@ -11,21 +11,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 import { EquipmentStatus } from '../../../domain/model/equipment.entity';
 import { EquipmentStore } from '../../../application/equipment.store';
 import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
 import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
 
-
-
 export interface EquipmentRow {
-  id:            number;
-  zoneId:        number;
-  name:          string;
-  brand:         string;
-  model:         string;
-  purchasePrice: number;
-  status:        EquipmentStatus;
+  id:               number;
+  zoneId:           number;
+  name:             string;
+  brand:            string;
+  model:            string;
+  purchaseAmount:   number;
+  purchaseCurrency: string;
+  status:           EquipmentStatus;
 }
 
 @Component({
@@ -43,6 +43,7 @@ export interface EquipmentRow {
     MatSelectModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
     ContextMenuDirective,
   ],
   templateUrl: './equipment-management.html',
@@ -52,21 +53,21 @@ export class EquipmentManagementComponent {
   private router = inject(Router);
   private store  = inject(EquipmentStore);
 
-
   readonly EquipmentStatus   = EquipmentStatus;
   readonly equipmentStatuses = Object.values(EquipmentStatus);
-  readonly displayedColumns  = ['id', 'name', 'brand', 'model', 'zoneId', 'purchasePrice', 'status', 'actions'];
+  readonly displayedColumns  = ['id', 'name', 'brand', 'model', 'zoneId', 'purchaseAmount', 'status', 'actions'];
 
   searchQuery    = signal('');
   selectedStatus = signal<EquipmentStatus | ''>('');
 
-  readonly isLoading       = this.store.loading;
+  readonly isLoading        = this.store.loading;
   readonly totalEquipment   = this.store.equipmentCount;
-  readonly operationalCount = this.store.operationalCount;
+  readonly availableCount   = this.store.availableCount;
+  readonly inUseCount       = this.store.inUseCount;
   readonly maintenanceCount = this.store.maintenanceCount;
-  readonly outOfOrderCount  = this.store.outOfOrderCount;
+  readonly outOfServiceCount = this.store.outOfServiceCount;
 
-    filteredEquipment = computed(() => {
+  filteredEquipment = computed(() => {
     const query  = this.searchQuery().toLowerCase();
     const status = this.selectedStatus();
     return this.store.equipment()
@@ -77,38 +78,51 @@ export class EquipmentManagementComponent {
         (!status || e.status === status)
       )
       .map(e => ({
-        id:            e.id,
-        zoneId:        e.zoneId,
-        name:          e.name,
-        brand:         e.brand,
-        model:         e.model,
-        purchasePrice: e.purchasePrice,
-        status:        e.status,
+        id:               e.id,
+        zoneId:           e.zoneId,
+        name:             e.name,
+        brand:            e.brand,
+        model:            e.model,
+        purchaseAmount:   e.purchaseAmount,
+        purchaseCurrency: e.purchaseCurrency,
+        status:           e.status,
       } as EquipmentRow));
   });
 
   navigateToNew(): void {
-    this.router.navigate(['equipments', 'new']);
+    this.router.navigate(['/equipments', 'new']);
   }
 
   navigateToEdit(row: EquipmentRow): void {
-    this.router.navigate(['equipments', row.id, 'edit'], { state: { equipment: row } });
+    this.router.navigate(['/equipments', row.id, 'edit'], { state: { equipment: row } });
   }
 
-  deleteEquipment(id: number): void {
-    this.store.deleteEquipment(id);
+  decommissionEquipment(id: number): void {
+    if (confirm('Decommission this equipment? This action cannot be undone.')) {
+      this.store.decommissionEquipment(id);
+    }
   }
 
   onSearchChange(value: string): void               { this.searchQuery.set(value); }
   onStatusChange(value: EquipmentStatus | ''): void { this.selectedStatus.set(value); }
 
+  statusIcon(status: EquipmentStatus): string {
+    const icons: Record<EquipmentStatus, string> = {
+      [EquipmentStatus.AVAILABLE]:      'check_circle',
+      [EquipmentStatus.IN_USE]:         'person',
+      [EquipmentStatus.MAINTENANCE]:    'build',
+      [EquipmentStatus.OUT_OF_SERVICE]: 'cancel',
+    };
+    return icons[status] ?? 'help';
+  }
+
   rowMenu(row: EquipmentRow): ContextMenuItem[] {
     return [
-      { label: 'Edit',              icon: 'edit',         action: () => this.navigateToEdit(row) },
-      { label: 'Delete',            icon: 'delete',       action: () => this.deleteEquipment(row.id) },
+      { label: 'Edit status',   icon: 'edit',         action: () => this.navigateToEdit(row) },
+      { label: 'Decommission',  icon: 'delete',       action: () => this.decommissionEquipment(row.id) },
       { label: '', icon: '', separator: true, action: () => {} },
-      { label: 'New ticket',        icon: 'build',        action: () => this.router.navigate(['/maintenance/new-ticket']) },
-      { label: 'Copy ID',           icon: 'content_copy', action: () => navigator.clipboard.writeText(String(row.id)) },
+      { label: 'New ticket',    icon: 'build',        action: () => this.router.navigate(['/maintenance/new-ticket']) },
+      { label: 'Copy ID',       icon: 'content_copy', action: () => navigator.clipboard.writeText(String(row.id)) },
     ];
   }
 }
