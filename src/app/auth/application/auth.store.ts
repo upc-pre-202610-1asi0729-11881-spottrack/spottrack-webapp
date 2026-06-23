@@ -35,15 +35,28 @@ export class AuthStore {
     }
     this.api.signIn({ username: email.trim(), password }).subscribe({
       next: res => {
-        const rawRole = (res.roles?.[0] ?? '').toUpperCase();
-        const role = rawRole.includes('ADMIN') ? UserRole.ADMIN : UserRole.CLIENT;
-        const user: User = { email: res.username, name: res.username, role };
+        // Token must be set before the next call so the JWT interceptor attaches it
         this.tokenSignal.set(res.token);
-        this.userSignal.set(user);
-        this.errorSignal.set(null);
         localStorage.setItem(TOKEN_KEY, res.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(user));
-        this.router.navigate([role === UserRole.ADMIN ? '/dashboard' : '/map']);
+        this.errorSignal.set(null);
+
+        this.api.getUser(res.id).subscribe({
+          next: details => {
+            const raw     = details.roles?.[0] ?? details.role ?? '';
+            const roleStr = String(raw).toUpperCase();
+            const role    = roleStr.includes('ADMIN') ? UserRole.ADMIN : UserRole.CLIENT;
+            const user: User = { email: res.username, name: res.username, role };
+            this.userSignal.set(user);
+            localStorage.setItem(USER_KEY, JSON.stringify(user));
+            this.router.navigate([role === UserRole.ADMIN ? '/dashboard' : '/map']);
+          },
+          error: () => {
+            // getUser failed — clear session and show error
+            this.tokenSignal.set(null);
+            localStorage.removeItem(TOKEN_KEY);
+            this.errorSignal.set('auth.error.invalidCredentials');
+          },
+        });
       },
       error: () => this.errorSignal.set('auth.error.invalidCredentials'),
     });
