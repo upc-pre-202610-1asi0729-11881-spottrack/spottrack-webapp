@@ -162,7 +162,11 @@
             [style.left]="item.left"
             (click)="openEquipmentDetail(item.eq.uuid, $event)"
           >
-            <div class="pin-dot"></div>
+            <div class="pin-ring ring-a"></div>
+            <div class="pin-ring ring-b"></div>
+            <div class="pin-body">
+              <mat-icon class="pin-icon">{{ item.icon }}</mat-icon>
+            </div>
             <span class="pin-label">{{ item.eq.name }}</span>
           </div>
         }
