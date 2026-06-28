@@ -350,8 +350,8 @@
 }
 
 .pin-dot {
-  width: 10px;
-  height: 10px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: 2px solid rgba(255,255,255,0.55);
   transition: transform 0.18s, box-shadow 0.18s;
@@ -359,9 +359,9 @@
   z-index: 2;
 }
 
-.machine-pin:hover .pin-dot  { transform: scale(2); }
+.machine-pin:hover .pin-dot  { transform: scale(1.7); }
 .machine-pin:hover .pin-label { opacity: 1; transform: translateX(-50%) translateY(0); }
-.machine-pin:active .pin-dot  { transform: scale(1.4); }
+.machine-pin:active .pin-dot  { transform: scale(1.2); }
 
 /* Status dot colours */
 .pin-available .pin-dot {
