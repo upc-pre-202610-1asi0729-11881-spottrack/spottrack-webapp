@@ -31,13 +31,14 @@ import { ContextMenuItem } from '../../../../shared/application/context-menu.ser
 export class ReservationListComponent implements OnInit {
   readonly store = inject(ReservationStore);
 
-  readonly activeReservations  = this.store.activeReservations;
-  readonly availableEquipment  = this.store.availableEquipment;
-  readonly expiredReservations = this.store.expiredReservations;
-  readonly history             = this.store.history;
-  readonly historyLoading      = this.store.historyLoading;
-  readonly reservationError    = this.store.reservationError;
-  readonly creating            = this.store.creating;
+  readonly activeReservations   = this.store.activeReservations;
+  readonly availableEquipment   = this.store.availableEquipment;
+  readonly expiredReservations  = this.store.expiredReservations;
+  readonly history              = this.store.history;
+  readonly historyLoading       = this.store.historyLoading;
+  readonly reservationError     = this.store.reservationError;
+  readonly creating             = this.store.creating;
+  readonly hasActiveReservation = this.store.hasActiveReservation;
 
   readonly pageSize  = 5;
   readonly pageIndex = signal(0);
@@ -72,7 +73,7 @@ export class ReservationListComponent implements OnInit {
           this.showModal.set(false);
         }
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   ngOnInit(): void {
@@ -89,8 +90,8 @@ export class ReservationListComponent implements OnInit {
   getZoneKey(category: string):             string { return this.store.getZoneKey(category); }
   equipmentName(equipmentId: string):       string { return this.store.getEquipmentName(equipmentId); }
 
-  timeRemaining(timerExpiry: string | null | undefined): number {
-    return this.store.timeRemainingSeconds(timerExpiry);
+  timeRemaining(reservationId: string, timerExpiry: string | null | undefined): number {
+    return this.store.timeRemainingSeconds(reservationId, timerExpiry);
   }
 
   openModal(): void {

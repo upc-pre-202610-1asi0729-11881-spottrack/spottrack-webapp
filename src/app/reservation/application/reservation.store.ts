@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { AuthStore } from '../../auth/application/auth.store';
 import { EquipmentStore } from '../../gym/application/equipment.store';
 import { EquipmentStatus } from '../../gym/domain/model/equipment.entity';
@@ -10,8 +10,9 @@ interface TrackedReservation {
   reservationId:   string;
   machineId:       string;
   equipmentId:     string;
-  durationMinutes: number;
+  durationSeconds: number;
   timerStarted:    boolean;
+  activatedAtMs:   number | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,25 +30,52 @@ export class ReservationStore {
   private readonly creatingSignal    = signal(false);
   private readonly nowMs             = signal(Date.now());
 
-  readonly activeReservations  = computed(() => this.historySignal().filter(r => r.status === 'ACTIVE'));
-  readonly availableMachines   = this.gymState.availableMachines;
-  readonly availableEquipment  = computed(() =>
+  private readonly endedIds = new Set<string>();
+
+  readonly activeReservations   = computed(() => this.historySignal().filter(r => r.status === 'ACTIVE'));
+  readonly availableMachines    = this.gymState.availableMachines;
+  readonly availableEquipment   = computed(() =>
     this.equipmentStore.equipment().filter(e => e.status === EquipmentStatus.AVAILABLE)
   );
-  readonly expiredReservations = this.gymState.expiredReservations;
-  readonly history             = this.historySignal.asReadonly();
-  readonly historyLoading      = this.histLoadingSignal.asReadonly();
-  readonly reservationError    = this.errorSignal.asReadonly();
-  readonly creating            = this.creatingSignal.asReadonly();
+  readonly expiredReservations  = this.gymState.expiredReservations;
+  readonly history              = this.historySignal.asReadonly();
+  readonly historyLoading       = this.histLoadingSignal.asReadonly();
+  readonly reservationError     = this.errorSignal.asReadonly();
+  readonly creating             = this.creatingSignal.asReadonly();
+  readonly hasActiveReservation = computed(() => this.activeReservations().length > 0);
+
+  private readonly justExpired = computed(() =>
+    this.activeReservations().filter(r =>
+      r.timerExpiry != null && this.timeRemainingSeconds(r.id, r.timerExpiry) === 0
+    )
+  );
 
   constructor() {
     setInterval(() => this.nowMs.set(Date.now()), 1000);
+
+    effect(() => {
+      const expired = this.justExpired();
+      untracked(() => {
+        expired.forEach(r => {
+          if (!this.endedIds.has(r.id)) {
+            this.endedIds.add(r.id);
+            this.endReservation(r.id);
+          }
+        });
+      });
+    });
   }
 
-  timeRemainingSeconds(timerExpiry: string | null | undefined): number {
+  timeRemainingSeconds(reservationId: string | null, timerExpiry: string | null | undefined): number {
+    if (reservationId) {
+      const entry = [...this.tracked().values()].find(v => v.reservationId === reservationId);
+      if (entry?.activatedAtMs) {
+        const remaining = entry.activatedAtMs + entry.durationSeconds * 1000 - this.nowMs();
+        return Math.max(0, Math.floor(remaining / 1000));
+      }
+    }
     if (!timerExpiry) return 0;
-    const remaining = new Date(timerExpiry).getTime() - this.nowMs();
-    return Math.max(0, Math.floor(remaining / 1000));
+    return Math.max(0, Math.floor((new Date(timerExpiry).getTime() - this.nowMs()) / 1000));
   }
 
   loadHistory(): void {
@@ -62,8 +90,6 @@ export class ReservationStore {
   }
 
   createReservation(machineId: string, durationSeconds: number): void {
-    const durationMinutes = Math.max(1, Math.ceil(durationSeconds / 60));
-
     this.creatingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -94,8 +120,9 @@ export class ReservationStore {
             reservationId:   res.id,
             machineId,
             equipmentId:     machineId,
-            durationMinutes,
+            durationSeconds,
             timerStarted:    false,
+            activatedAtMs:   null,
           });
           return next;
         });
@@ -103,8 +130,9 @@ export class ReservationStore {
         this.loadHistory();
       },
       error: (err) => {
-        const serverMsg: string = err?.error?.message ?? '';
-        const isConflict = serverMsg.toLowerCase().includes('active reservation');
+        const errBody   = err?.error ?? {};
+        const serverMsg = ((errBody.details ?? errBody.message ?? '') as string).toLowerCase();
+        const isConflict = serverMsg.includes('active reservation');
         this.errorSignal.set(
           isConflict ? 'reservation.error.alreadyActive' : 'reservation.error.generic'
         );
@@ -116,17 +144,27 @@ export class ReservationStore {
   clearError(): void { this.errorSignal.set(null); }
 
   activateReservation(reservationId: string, startTime: string, endTime: string): void {
-    const durationMinutes = this.parseDurationMinutes(startTime, endTime);
+    const entry       = [...this.tracked().values()].find(v => v.reservationId === reservationId);
+    const storedSecs  = entry?.durationSeconds ?? null;
+    const durationMinutes = storedSecs != null
+      ? Math.max(1, Math.round(storedSecs / 60))
+      : this.parseDurationMinutes(startTime, endTime);
+
+    const activatedAtMs = Date.now();
 
     this.api.startTimer(reservationId, durationMinutes).subscribe({
       next: () => {
-        const entry = [...this.tracked().values()].find(v => v.reservationId === reservationId);
         if (entry) {
           this.gymState.activateReservation(entry.machineId);
           this.tracked.update(map => {
             const next = new Map(map);
             const cur  = next.get(entry.machineId);
-            if (cur) next.set(entry.machineId, { ...cur, timerStarted: true });
+            if (cur) next.set(entry.machineId, {
+              ...cur,
+              timerStarted:    true,
+              activatedAtMs,
+              durationSeconds: storedSecs ?? cur.durationSeconds,
+            });
             return next;
           });
         }

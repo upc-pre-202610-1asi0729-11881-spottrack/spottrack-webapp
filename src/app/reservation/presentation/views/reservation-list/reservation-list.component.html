@@ -6,7 +6,7 @@
       <h1 class="booking-title">{{ 'reservation.title' | translate }}</h1>
       <p class="booking-subtitle">{{ 'reservation.subtitle' | translate }}</p>
     </div>
-    <button class="new-booking-btn" (click)="openModal()">
+    <button class="new-booking-btn" (click)="openModal()" [disabled]="hasActiveReservation()">
       <mat-icon>add</mat-icon>
       {{ 'reservation.newReservation' | translate }}
     </button>
@@ -42,7 +42,7 @@
               <span>{{ (r.timerExpiry ? 'reservation.timeRemaining' : 'reservation.activationWindow') | translate }}</span>
             </div>
             <span class="timer-value">
-              {{ r.timerExpiry ? formatTimer(timeRemaining(r.timerExpiry)) : (trimTime(r.startTime) + ' – ' + trimTime(r.endTime)) }}
+              {{ r.timerExpiry ? formatTimer(timeRemaining(r.id, r.timerExpiry)) : (trimTime(r.startTime) + ' – ' + trimTime(r.endTime)) }}
             </span>
           </div>
 
