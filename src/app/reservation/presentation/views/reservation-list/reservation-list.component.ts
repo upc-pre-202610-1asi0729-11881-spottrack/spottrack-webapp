@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ReservationStore } from '../../../application/reservation.store';
 import { ContextMenuDirective } from '../../../../shared/presentation/directives/context-menu.directive';
 import { ContextMenuItem } from '../../../../shared/application/context-menu.service';
+import { QrScannerComponent } from '../../../../shared/presentation/components/qr-scanner/qr-scanner.component';
 
 @Component({
   selector: 'app-reservation-list',
@@ -24,6 +25,7 @@ import { ContextMenuItem } from '../../../../shared/application/context-menu.ser
     MatSelectModule,
     TranslateModule,
     ContextMenuDirective,
+    QrScannerComponent,
   ],
   templateUrl: './reservation-list.component.html',
   styleUrl: './reservation-list.component.css',
@@ -60,6 +62,8 @@ export class ReservationListComponent implements OnInit {
   ];
 
   readonly showModal              = signal(false);
+  readonly showScanner            = signal(false);
+  readonly scanFeedback           = signal<{ ok: boolean; msg: string } | null>(null);
   selectedMachineId: string | null = null;
   selectedDurationSeconds          = 15 * 60;
 
@@ -92,6 +96,20 @@ export class ReservationListComponent implements OnInit {
 
   timeRemaining(reservationId: string, timerExpiry: string | null | undefined): number {
     return this.store.timeRemainingSeconds(reservationId, timerExpiry);
+  }
+
+  openScanner(): void  { this.scanFeedback.set(null); this.showScanner.set(true); }
+  closeScanner(): void { this.showScanner.set(false); }
+
+  onQrScanned(uuid: string): void {
+    this.showScanner.set(false);
+    const result = this.store.scanAndActivate(uuid);
+    if (result === 'activated') {
+      this.scanFeedback.set({ ok: true,  msg: '¡Check-in confirmado! Tu reserva está activa.' });
+    } else {
+      this.scanFeedback.set({ ok: false, msg: 'No tienes una reserva pendiente para esa máquina.' });
+    }
+    setTimeout(() => this.scanFeedback.set(null), 4000);
   }
 
   openModal(): void {

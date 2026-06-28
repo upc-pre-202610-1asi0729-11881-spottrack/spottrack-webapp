@@ -200,6 +200,14 @@ export class ReservationStore {
     });
   }
 
+  scanAndActivate(scannedEquipmentId: string): 'activated' | 'no_reservation' {
+    const reservation = this.activeReservations()
+      .find(r => r.equipmentId === scannedEquipmentId && !r.timerExpiry);
+    if (!reservation) return 'no_reservation';
+    this.activateReservation(reservation.id, reservation.startTime, reservation.endTime);
+    return 'activated';
+  }
+
   dismissExpired(machineId: string): void {
     this.gymState.dismissExpiredReservation(machineId);
     this.removeTracked(machineId);
