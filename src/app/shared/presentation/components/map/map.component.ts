@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { GymStateService, GymMachine } from '../../../application/gym-state.service';
+import { ReservationStore } from '../../../../reservation/application/reservation.store';
 
 export type { MachineStatus, MachineCategory, GymMachine as MachineMarker } from '../../../application/gym-state.service';
 
@@ -37,9 +38,10 @@ export interface Gym {
   styleUrl: './map.component.css',
 })
 export class MapComponent {
-  private gymState = inject(GymStateService);
-  private snackBar  = inject(MatSnackBar);
-  private translate = inject(TranslateService);
+  private gymState         = inject(GymStateService);
+  private reservationStore = inject(ReservationStore);
+  private snackBar         = inject(MatSnackBar);
+  private translate        = inject(TranslateService);
 
   selectedGymId         = 'gym1';
   activeFilter          = signal<FilterTab>('ALL');
@@ -109,7 +111,7 @@ export class MapComponent {
   reserveMachine(): void {
     const machine = this.selectedMachine();
     if (!machine) return;
-    this.gymState.createReservation(machine.id, 15 * 60);
+    this.reservationStore.createReservation(machine.id, 15 * 60);
     this.confirm('map.detail.notifications.reserved');
   }
 }
