@@ -19,6 +19,7 @@ import { ContextMenuItem } from '../../../../shared/application/context-menu.ser
 
 export interface EquipmentRow {
   id:               number;
+  uuid:             string;
   zoneId:           number;
   name:             string;
   brand:            string;
@@ -57,6 +58,9 @@ export class EquipmentManagementComponent {
   readonly equipmentStatuses = Object.values(EquipmentStatus);
   readonly displayedColumns  = ['id', 'name', 'brand', 'model', 'zoneId', 'purchaseAmount', 'status', 'actions'];
 
+  readonly qrTarget    = signal<EquipmentRow | null>(null);
+  readonly testQrUuid  = signal<string | null>(null);
+
   searchQuery    = signal('');
   selectedStatus = signal<EquipmentStatus | ''>('');
 
@@ -79,6 +83,7 @@ export class EquipmentManagementComponent {
       )
       .map(e => ({
         id:               e.id,
+        uuid:             e.uuid,
         zoneId:           e.zoneId,
         name:             e.name,
         brand:            e.brand,
@@ -88,6 +93,18 @@ export class EquipmentManagementComponent {
         status:           e.status,
       } as EquipmentRow));
   });
+
+  openQrModal(row: EquipmentRow): void  { this.qrTarget.set(row); }
+  closeQrModal(): void                  { this.qrTarget.set(null); this.testQrUuid.set(null); }
+
+  qrUrl(uuid: string): string {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(uuid)}&format=png&bgcolor=ffffff&color=000000&margin=10`;
+  }
+
+  generateTestQr(): void {
+    const uuid = crypto.randomUUID();
+    this.testQrUuid.set(uuid);
+  }
 
   navigateToNew(): void {
     this.router.navigate(['/equipments', 'new']);

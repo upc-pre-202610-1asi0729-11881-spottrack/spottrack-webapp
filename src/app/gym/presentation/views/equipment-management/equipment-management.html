@@ -133,6 +133,14 @@
           <div class="actions-cell">
             <button
               mat-icon-button
+              class="action-btn action-btn--qr"
+              matTooltip="Ver QR de check-in"
+              (click)="openQrModal(row)"
+            >
+              <mat-icon>qr_code</mat-icon>
+            </button>
+            <button
+              mat-icon-button
               class="action-btn action-btn--edit"
               [matTooltip]="'equipment.actions.editStatus' | translate"
               (click)="navigateToEdit(row)"
@@ -165,3 +173,51 @@
   </div>
 
 </div>
+
+<!-- ── QR Code Modal ─────────────────────────────────────────────────────── -->
+@if (qrTarget()) {
+  <div class="qr-backdrop" (click)="closeQrModal()">
+    <div class="qr-modal" (click)="$event.stopPropagation()">
+
+      <div class="qr-modal__header">
+        <div class="qr-modal__title-wrap">
+          <mat-icon class="qr-modal__icon">qr_code</mat-icon>
+          <div>
+            <h3 class="qr-modal__title">QR de Check-in</h3>
+            <p class="qr-modal__subtitle">{{ qrTarget()!.name }}</p>
+          </div>
+        </div>
+        <button mat-icon-button class="qr-modal__close" (click)="closeQrModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="qr-modal__body">
+        <div class="qr-image-wrap">
+          <img
+            class="qr-image"
+            [src]="qrUrl(qrTarget()!.uuid)"
+            alt="QR de check-in"
+          />
+        </div>
+        <p class="qr-uuid">{{ qrTarget()!.uuid }}</p>
+        <p class="qr-hint">Imprime o muestra este código en la máquina para que los clientes confirmen su presencia física.</p>
+      </div>
+
+      <div class="qr-modal__footer">
+        <button class="btn-test-qr" (click)="generateTestQr()">
+          <mat-icon>shuffle</mat-icon>
+          Generar QR de prueba
+        </button>
+        @if (testQrUuid()) {
+          <div class="test-qr-wrap">
+            <p class="test-qr-label">QR aleatorio para probar el escáner:</p>
+            <img class="test-qr-image" [src]="qrUrl(testQrUuid()!)" alt="Test QR" />
+            <p class="qr-uuid">{{ testQrUuid() }}</p>
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+}
