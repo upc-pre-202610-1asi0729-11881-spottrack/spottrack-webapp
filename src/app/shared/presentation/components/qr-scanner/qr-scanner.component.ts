@@ -76,19 +76,44 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
     this.mode.set(m);
   }
 
-  onFileSelected(event: Event): void {
+  onFileSelected(event: Event, inputEl: HTMLInputElement): void {
     const file = (event.target as HTMLInputElement).files?.[0];
+    inputEl.value = ''; // reset so the same file can be re-selected
     if (!file) return;
     this.scanError.set(null);
-    const fileScanner = new Html5Qrcode(this.fileId);
+    this.scanning.set(true);
+    let fileScanner: Html5Qrcode | null = null;
+    try {
+      fileScanner = new Html5Qrcode(this.fileId);
+    } catch {
+      this.zone.run(() => {
+        this.scanning.set(false);
+        this.scanError.set('Error al iniciar el escáner de archivo.');
+      });
+      return;
+    }
+    const timeout = setTimeout(() => {
+      this.zone.run(() => {
+        this.scanning.set(false);
+        this.scanError.set('No se pudo leer el QR. Intenta con otra imagen.');
+      });
+    }, 8000);
     fileScanner
       .scanFile(file, false)
-      .then((text: string) => this.zone.run(() => this.scanned.emit(text)))
-      .catch(() =>
-        this.zone.run(() =>
-          this.scanError.set('No se encontró código QR en la imagen.')
-        )
-      );
+      .then((text: string) => {
+        clearTimeout(timeout);
+        this.zone.run(() => {
+          this.scanning.set(false);
+          this.scanned.emit(text);
+        });
+      })
+      .catch(() => {
+        clearTimeout(timeout);
+        this.zone.run(() => {
+          this.scanning.set(false);
+          this.scanError.set('No se encontró código QR en la imagen.');
+        });
+      });
   }
 
   close(): void {

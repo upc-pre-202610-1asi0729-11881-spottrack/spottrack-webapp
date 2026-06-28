@@ -12,6 +12,11 @@ app-layout {
   height: 100%;
 }
 
+/* CDK overlay must sit above all custom modals (modal-backdrop z-index: 2000) */
+.cdk-overlay-container {
+  z-index: 2001 !important;
+}
+
 /* Mat-select panel dark theme */
 .mat-mdc-select-panel {
   background: #1e1e1e !important;

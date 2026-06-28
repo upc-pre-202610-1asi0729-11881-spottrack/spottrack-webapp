@@ -62,14 +62,14 @@
       <div class="file-drop-zone">
         <mat-icon class="file-icon">qr_code</mat-icon>
         <p class="file-hint">Sube una imagen o toma una foto del código QR</p>
-        <label class="btn-file">
-          <mat-icon>add_photo_alternate</mat-icon>
-          Elegir imagen / Tomar foto
+        <label class="btn-file" [class.btn-file--scanning]="scanning()">
+          <mat-icon>{{ scanning() ? 'hourglass_top' : 'add_photo_alternate' }}</mat-icon>
+          {{ scanning() ? 'Procesando...' : 'Elegir imagen / Tomar foto' }}
           <input
+            #fileInput
             type="file"
             accept="image/*"
-            capture="environment"
-            (change)="onFileSelected($event)"
+            (change)="onFileSelected($event, fileInput)"
             hidden
           />
         </label>

@@ -209,11 +209,23 @@ $red:         #f43f5e;
   mat-icon { font-size: 18px; height: 18px; width: 18px; }
 
   &:hover { opacity: 0.85; }
+
+  &--scanning {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 }
 
 // ── Hidden file scanner container (html5-qrcode requirement) ─────────────────
+// Must NOT be display:none — html5-qrcode reads clientWidth for canvas sizing.
 .file-scan-hidden {
-  display: none;
+  position: absolute;
+  visibility: hidden;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 // ── Error ─────────────────────────────────────────────────────────────────────

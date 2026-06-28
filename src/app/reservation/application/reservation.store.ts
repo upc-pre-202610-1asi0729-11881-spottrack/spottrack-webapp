@@ -109,8 +109,8 @@ export class ReservationStore {
       equipmentId,
       startTime:   toTimeString(now),
       endTime:     toTimeString(endDate),
-      startedAt:   now.toISOString(),
-      timeExpiry:  activation.toISOString(),
+      startedAt:   now.toISOString().split('.')[0],
+      timeExpiry:  activation.toISOString().split('.')[0],
     }).subscribe({
       next: res => {
         this.gymState.createReservation(machineId, durationSeconds);
