@@ -211,27 +211,22 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  /* Blueprint grid */
-  background:
-    linear-gradient(rgba(96,165,250,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(96,165,250,0.06) 1px, transparent 1px),
-    #0a1628;
-  background-size: 36px 36px;
-  /* Blueprint outer wall */
-  border: 3px solid rgba(96,165,250,0.45);
-  border-radius: 10px;
+  background: #0c0c0c;
+  /* Outer structural wall — double-line effect like architectural drawings */
+  border: 3px solid #252525;
+  box-shadow: inset 0 0 0 1px #1a1a1a;
+  border-radius: 4px;
   overflow: hidden;
-  box-shadow: inset 0 0 40px rgba(0,10,30,0.6), 0 0 0 1px rgba(96,165,250,0.12);
 }
 
-/* Animated scan line — tinted blue for blueprint */
+/* Animated scan line — subtle yellow (app accent) */
 .scan-line {
   position: absolute;
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(96,165,250,0.25) 40%, rgba(96,165,250,0.45) 50%, rgba(96,165,250,0.25) 60%, transparent 100%);
-  animation: scan-move 9s linear infinite;
+  background: linear-gradient(90deg, transparent 0%, rgba(245,197,24,0.18) 40%, rgba(245,197,24,0.32) 50%, rgba(245,197,24,0.18) 60%, transparent 100%);
+  animation: scan-move 8s linear infinite;
   pointer-events: none;
   z-index: 2;
 }
@@ -239,101 +234,98 @@
 @keyframes scan-move {
   0%   { top: -2px; opacity: 0; }
   4%   { opacity: 1; }
-  94%  { opacity: 0.5; }
+  94%  { opacity: 0.7; }
   100% { top: 100%; opacity: 0; }
 }
 
-/* ── Blueprint structural elements ─────────────────────────── */
+/* ── Schematic structural elements (app-palette version) ────── */
 
-/* Horizontal divider between equipment areas */
-.bp-h-divider {
+/* Inner perimeter wall (like the double-line outer wall in the reference) */
+.bp-inner-perim {
   position: absolute;
-  left: 4%;
-  right: 4%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(96,165,250,0.25) 15%, rgba(96,165,250,0.25) 85%, transparent);
+  inset: 6px;
+  border: 1px solid #1e1e1e;
   pointer-events: none;
   z-index: 1;
 }
 
-/* Support room (locker/storage) bottom-left */
+/* Partition walls */
+.bp-wall-v,
+.bp-wall-h {
+  position: absolute;
+  background: #1e1e1e;
+  pointer-events: none;
+  z-index: 1;
+}
+.bp-wall-v { width: 1px; }
+.bp-wall-h { height: 1px; }
+
+/* Structural column dot (appears at wall intersections like in the reference) */
+.bp-col {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Support room box */
 .bp-support-room {
   position: absolute;
-  bottom: 6%;
-  left: 3%;
-  width: 14%;
-  height: 18%;
-  border: 1px solid rgba(96,165,250,0.22);
-  border-radius: 2px;
+  border: 1px solid #1e1e1e;
   pointer-events: none;
   z-index: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-}
-.bp-support-room mat-icon {
-  font-size: 13px; width: 13px; height: 13px;
-  color: rgba(96,165,250,0.35);
 }
 .bp-room-lbl {
   font-size: 7px;
   font-weight: 700;
-  letter-spacing: 1.2px;
-  color: rgba(96,165,250,0.35);
+  letter-spacing: 1.8px;
+  color: rgba(255,255,255,0.1);
+  text-transform: uppercase;
 }
 
-/* Entrance indicator bottom-right */
+/* Entrance gap (open side = no bottom border) */
 .bp-entrance {
   position: absolute;
-  bottom: 6%;
-  right: 3%;
-  width: 14%;
-  height: 18%;
-  border: 1px solid rgba(96,165,250,0.22);
-  border-radius: 2px;
-  border-bottom: 3px solid rgba(96,165,250,0.4);
+  border: 1px solid #1e1e1e;
+  border-bottom: none;
   pointer-events: none;
   z-index: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-}
-.bp-entrance mat-icon {
-  font-size: 13px; width: 13px; height: 13px;
-  color: rgba(96,165,250,0.35);
 }
 
-/* Zone labels */
+/* Zone labels — barely-there like architectural room labels */
 .zone-label {
   position: absolute;
   font-size: 8px;
   font-weight: 700;
-  letter-spacing: 2.5px;
-  color: rgba(96,165,250,0.28);
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.1);
   pointer-events: none;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  text-transform: uppercase;
 }
-.zone-label mat-icon { font-size: 11px; width: 11px; height: 11px; }
-.zone-label-top    { top: 9px; }
-.zone-label-bottom { bottom: 9px; }
-.zone-left  { left: 18px; }
-.zone-right { right: 18px; }
+.zone-label-top    { top: 10px; }
+.zone-label-bottom { bottom: 10px; }
+.zone-left  { left: 20px; }
+.zone-right { right: 20px; }
 
 /* Vertical zone divider */
 .zone-divider {
   position: absolute;
   left: 50%;
-  top: 8%;
-  height: 65%;
+  top: 6px;
+  bottom: 6px;
   width: 1px;
-  background: linear-gradient(to bottom, transparent, rgba(96,165,250,0.18) 20%, rgba(96,165,250,0.18) 80%, transparent);
+  background: #1a1a1a;
   pointer-events: none;
   z-index: 1;
 }
@@ -432,11 +424,7 @@
 
 /* ── HEATMAP VIEW ─────────────────────────────────────────────── */
 .heat-mode {
-  background:
-    linear-gradient(rgba(96,165,250,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(96,165,250,0.04) 1px, transparent 1px),
-    #080e1a;
-  background-size: 36px 36px;
+  background: #0c0c0c;
 }
 
 .heat-canvas {
@@ -468,10 +456,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(8,14,26,0.8);
-  border: 1px solid rgba(96,165,250,0.2);
+  background: rgba(18,18,18,0.85);
+  border: 1px solid #252525;
 }
-.ghost-icon { font-size: 10px; width: 10px; height: 10px; color: rgba(96,165,250,0.55); }
+.ghost-icon { font-size: 10px; width: 10px; height: 10px; color: rgba(255,255,255,0.35); }
 .usage-chip {
   background: rgba(30,30,30,0.9);
   border: 1px solid #2a2a2a;

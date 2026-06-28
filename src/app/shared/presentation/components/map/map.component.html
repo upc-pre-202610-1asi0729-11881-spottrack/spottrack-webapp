@@ -106,24 +106,26 @@
       <div class="floor-plan">
         <div class="scan-line" aria-hidden="true"></div>
 
-        <!-- Blueprint structural overlay -->
-        <div class="bp-h-divider" style="top:48%" aria-hidden="true"></div>
-        <div class="zone-divider"                  aria-hidden="true"></div>
+        <!-- Architectural schema overlay (dark-palette, no blue) -->
+        <div class="bp-inner-perim" aria-hidden="true"></div>
+        <div class="zone-divider"   aria-hidden="true"></div>
+        <div class="bp-wall-h" style="top:48%;left:6px;right:6px" aria-hidden="true"></div>
 
-        <div class="zone-label zone-left zone-label-top" aria-hidden="true">
-          <mat-icon>directions_run</mat-icon>CARDIO
-        </div>
-        <div class="zone-label zone-right zone-label-top" aria-hidden="true">
-          <mat-icon>fitness_center</mat-icon>STRENGTH
-        </div>
+        <!-- Structural column dots at wall intersections -->
+        <div class="bp-col" style="top:6px;left:50%"  aria-hidden="true"></div>
+        <div class="bp-col" style="top:48%;left:50%"  aria-hidden="true"></div>
+        <div class="bp-col" style="bottom:6px;left:50%" aria-hidden="true"></div>
+        <div class="bp-col" style="top:48%;left:6px"  aria-hidden="true"></div>
+        <div class="bp-col" style="top:48%;right:6px" aria-hidden="true"></div>
 
-        <div class="bp-support-room" aria-hidden="true">
-          <mat-icon>lock</mat-icon>
+        <div class="zone-label zone-left zone-label-top"  aria-hidden="true">CARDIO</div>
+        <div class="zone-label zone-right zone-label-top" aria-hidden="true">STRENGTH</div>
+
+        <div class="bp-support-room" style="bottom:6%;left:3%;width:14%;height:18%" aria-hidden="true">
           <span class="bp-room-lbl">LOCKER</span>
         </div>
-        <div class="bp-entrance" aria-hidden="true">
-          <mat-icon>sensor_door</mat-icon>
-          <span class="bp-room-lbl">ENTRANCE</span>
+        <div class="bp-entrance" style="bottom:6%;right:3%;width:14%;height:18%" aria-hidden="true">
+          <span class="bp-room-lbl">ENTRY</span>
         </div>
 
         @for (item of filteredEquipment; track item.eq.uuid) {
