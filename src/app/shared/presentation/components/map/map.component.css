@@ -212,10 +212,15 @@
   flex: 1;
   min-height: 0;
   background: #0c0c0c;
-  /* Outer structural wall — double-line effect like architectural drawings */
-  border: 3px solid #252525;
-  box-shadow: inset 0 0 0 1px #1a1a1a;
-  border-radius: 4px;
+  /* Chamfered corners — 45° structural wall cuts like the reference drawing */
+  clip-path: polygon(
+    18px 0%, calc(100% - 18px) 0%,
+    100% 18px, 100% calc(100% - 18px),
+    calc(100% - 18px) 100%, 18px 100%,
+    0% calc(100% - 18px), 0% 18px
+  );
+  /* Inset shadow acts as border and follows the clip-path shape */
+  box-shadow: inset 0 0 0 2px #272727, inset 0 0 0 5px #141414;
   overflow: hidden;
 }
 
@@ -260,13 +265,13 @@
 .bp-wall-v { width: 1px; }
 .bp-wall-h { height: 1px; }
 
-/* Structural column dot (appears at wall intersections like in the reference) */
+/* Structural column dot — filled circles at wall intersections like the reference */
 .bp-col {
   position: absolute;
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.22);
   transform: translate(-50%, -50%);
   z-index: 3;
   pointer-events: none;
@@ -391,8 +396,8 @@
   font-size: 9px;
   font-weight: 600;
   color: rgba(255,255,255,0.9);
-  background: rgba(6,16,40,0.88);
-  border: 1px solid rgba(96,165,250,0.25);
+  background: rgba(12,12,12,0.92);
+  border: 1px solid #252525;
   padding: 3px 7px;
   border-radius: 5px;
   white-space: nowrap;

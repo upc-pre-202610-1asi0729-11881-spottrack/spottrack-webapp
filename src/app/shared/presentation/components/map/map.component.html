@@ -106,26 +106,52 @@
       <div class="floor-plan">
         <div class="scan-line" aria-hidden="true"></div>
 
-        <!-- Architectural schema overlay (dark-palette, no blue) -->
+        <!-- Floor plan schema — dark adaptation of architectural reference drawing -->
         <div class="bp-inner-perim" aria-hidden="true"></div>
-        <div class="zone-divider"   aria-hidden="true"></div>
-        <div class="bp-wall-h" style="top:48%;left:6px;right:6px" aria-hidden="true"></div>
 
-        <!-- Structural column dots at wall intersections -->
-        <div class="bp-col" style="top:6px;left:50%"  aria-hidden="true"></div>
-        <div class="bp-col" style="top:48%;left:50%"  aria-hidden="true"></div>
-        <div class="bp-col" style="bottom:6px;left:50%" aria-hidden="true"></div>
-        <div class="bp-col" style="top:48%;left:6px"  aria-hidden="true"></div>
-        <div class="bp-col" style="top:48%;right:6px" aria-hidden="true"></div>
+        <!-- Partition walls -->
+        <div class="bp-wall-h" style="top:68%;left:0;right:0"        aria-hidden="true"></div>
+        <div class="bp-wall-v" style="left:50%;top:0;height:68%"     aria-hidden="true"></div>
+        <div class="bp-wall-v" style="left:22%;top:68%;bottom:0"     aria-hidden="true"></div>
+        <div class="bp-wall-v" style="left:78%;top:68%;bottom:0"     aria-hidden="true"></div>
 
+        <!-- Structural column dots: top edge -->
+        <div class="bp-col" style="top:0;left:20%"         aria-hidden="true"></div>
+        <div class="bp-col" style="top:0;left:50%"         aria-hidden="true"></div>
+        <div class="bp-col" style="top:0;left:80%"         aria-hidden="true"></div>
+        <!-- Structural column dots: left edge -->
+        <div class="bp-col" style="top:22%;left:0"         aria-hidden="true"></div>
+        <div class="bp-col" style="top:45%;left:0"         aria-hidden="true"></div>
+        <div class="bp-col" style="top:68%;left:0"         aria-hidden="true"></div>
+        <!-- Structural column dots: right edge -->
+        <div class="bp-col" style="top:22%;left:100%"      aria-hidden="true"></div>
+        <div class="bp-col" style="top:45%;left:100%"      aria-hidden="true"></div>
+        <div class="bp-col" style="top:68%;left:100%"      aria-hidden="true"></div>
+        <!-- Structural column dots: bottom edge -->
+        <div class="bp-col" style="top:100%;left:22%"      aria-hidden="true"></div>
+        <div class="bp-col" style="top:100%;left:50%"      aria-hidden="true"></div>
+        <div class="bp-col" style="top:100%;left:78%"      aria-hidden="true"></div>
+        <!-- Structural column dots: wall intersections -->
+        <div class="bp-col" style="top:68%;left:22%"       aria-hidden="true"></div>
+        <div class="bp-col" style="top:68%;left:50%"       aria-hidden="true"></div>
+        <div class="bp-col" style="top:68%;left:78%"       aria-hidden="true"></div>
+        <div class="bp-col" style="top:34%;left:50%"       aria-hidden="true"></div>
+        <div class="bp-col" style="top:100%;left:22%"      aria-hidden="true"></div>
+        <div class="bp-col" style="top:100%;left:78%"      aria-hidden="true"></div>
+
+        <!-- Zone labels -->
         <div class="zone-label zone-left zone-label-top"  aria-hidden="true">CARDIO</div>
         <div class="zone-label zone-right zone-label-top" aria-hidden="true">STRENGTH</div>
 
-        <div class="bp-support-room" style="bottom:6%;left:3%;width:14%;height:18%" aria-hidden="true">
+        <!-- Lower support rooms (below horizontal partition) -->
+        <div class="bp-support-room" style="top:69%;left:1%;width:20%;bottom:1%" aria-hidden="true">
           <span class="bp-room-lbl">LOCKER</span>
         </div>
-        <div class="bp-entrance" style="bottom:6%;right:3%;width:14%;height:18%" aria-hidden="true">
-          <span class="bp-room-lbl">ENTRY</span>
+        <div class="bp-support-room" style="top:69%;left:22%;right:22%;bottom:1%" aria-hidden="true">
+          <span class="bp-room-lbl">LOBBY</span>
+        </div>
+        <div class="bp-entrance" style="top:69%;right:1%;width:20%;bottom:1%" aria-hidden="true">
+          <span class="bp-room-lbl">OFFICE</span>
         </div>
 
         @for (item of filteredEquipment; track item.eq.uuid) {
