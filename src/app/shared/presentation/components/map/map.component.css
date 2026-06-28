@@ -335,79 +335,96 @@
   z-index: 1;
 }
 
-/* ── MACHINE PINS — compact dot style ───────────────────────── */
+/* ── MACHINE PINS ─────────────────────────────────────────────── */
 .machine-pin {
   position: absolute;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
   cursor: pointer;
   z-index: 10;
-  animation: pin-appear 0.35s ease both;
+  animation: pin-appear 0.4s ease both;
 }
 
 @keyframes pin-appear {
-  from { transform: translate(-50%,-50%) scale(0); opacity: 0; }
-  to   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  from { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
 }
 
-.pin-dot {
-  width: 16px;
-  height: 16px;
+.machine-pin:hover .pin-body  { transform: scale(1.12); }
+.machine-pin:active .pin-body { transform: scale(0.95); }
+
+/* Dual pulsing rings */
+.pin-ring {
+  position: absolute;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.55);
-  transition: transform 0.18s, box-shadow 0.18s;
+  border: 1.5px solid;
+  pointer-events: none;
+}
+.ring-a {
+  width: 62px; height: 62px;
+  animation: ring-out 2.2s ease-out infinite;
+}
+.ring-b {
+  width: 54px; height: 54px;
+  animation: ring-out 2.2s 0.55s ease-out infinite;
+}
+
+@keyframes ring-out {
+  0%   { transform: translate(-50%, -50%) scale(0.75); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.5);  opacity: 0; }
+}
+
+.pin-body {
   position: relative;
   z-index: 2;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #181818;
+  border: 2px solid transparent;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 
-.machine-pin:hover .pin-dot  { transform: scale(1.7); }
-.machine-pin:hover .pin-label { opacity: 1; transform: translateX(-50%) translateY(0); }
-.machine-pin:active .pin-dot  { transform: scale(1.2); }
-
-/* Status dot colours */
-.pin-available .pin-dot {
-  background: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76,175,80,0.2), 0 0 8px rgba(76,175,80,0.4);
-}
-.pin-in-use .pin-dot {
-  background: #f44336;
-  box-shadow: 0 0 0 3px rgba(244,67,54,0.2), 0 0 8px rgba(244,67,54,0.4);
-  animation: dot-pulse-red 1.6s ease-in-out infinite;
-}
-.pin-reserved .pin-dot {
-  background: #f5c518;
-  box-shadow: 0 0 0 3px rgba(245,197,24,0.2), 0 0 8px rgba(245,197,24,0.4);
-}
-.pin-pending .pin-dot {
-  background: #9c27b0;
-  box-shadow: 0 0 0 3px rgba(156,39,176,0.2), 0 0 8px rgba(156,39,176,0.4);
+.pin-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #ccc;
 }
 
-@keyframes dot-pulse-red {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(244,67,54,0.2), 0 0 8px rgba(244,67,54,0.4); }
-  50%       { box-shadow: 0 0 0 7px rgba(244,67,54,0),   0 0 14px rgba(244,67,54,0.2); }
-}
+/* Status colours */
+.pin-available .pin-body { border-color: #4caf50; background: #0d1f0e; box-shadow: 0 0 18px rgba(76,175,80,0.45); }
+.pin-available .pin-icon { color: #4caf50; }
+.pin-available .pin-ring { border-color: rgba(76,175,80,0.6); }
 
-/* Label — hidden by default, fades in on hover */
+.pin-in-use .pin-body    { border-color: #f44336; background: #1f0d0d; box-shadow: 0 0 18px rgba(244,67,54,0.45); }
+.pin-in-use .pin-icon    { color: #f44336; }
+.pin-in-use .pin-ring    { border-color: rgba(244,67,54,0.6); animation-duration: 1.4s; }
+
+.pin-reserved .pin-body  { border-color: #f5c518; background: #1e1a0d; box-shadow: 0 0 18px rgba(245,197,24,0.45); }
+.pin-reserved .pin-icon  { color: #f5c518; }
+.pin-reserved .pin-ring  { border-color: rgba(245,197,24,0.6); animation-duration: 1.8s; }
+
+.pin-pending .pin-body   { border-color: #9c27b0; background: #150d1f; box-shadow: 0 0 14px rgba(156,39,176,0.4); }
+.pin-pending .pin-icon   { color: #ce93d8; }
+.pin-pending .pin-ring   { border-color: rgba(156,39,176,0.5); }
+
+/* Pin label */
 .pin-label {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  font-size: 9px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.9);
-  background: rgba(12,12,12,0.92);
-  border: 1px solid #252525;
-  padding: 3px 7px;
-  border-radius: 5px;
+  font-size: 10px;
+  color: #888;
+  text-align: center;
   white-space: nowrap;
-  max-width: 120px;
+  max-width: 76px;
   overflow: hidden;
   text-overflow: ellipsis;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s, transform 0.15s;
-  z-index: 20;
 }
 
 /* ── FLOOR LEGEND (below the map) ────────────────────────────── */
