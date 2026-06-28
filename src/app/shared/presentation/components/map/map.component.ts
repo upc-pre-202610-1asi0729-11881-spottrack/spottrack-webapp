@@ -71,72 +71,86 @@ export class MapComponent {
     gym3: { inUse: 6, available: 3 },
   };
 
-  // Historical reservation counts — used only for ghost-pin numbers in HEATMAP mode
-  private readonly usageByMachineId = computed((): Record<string, number> => {
-    const history   = this.reservationStore.history();
-    const equipment = this.equipmentStore.equipment();
+  // Historical reservation counts keyed by equipmentId (UUID) — for ghost-pin numbers
+  private readonly usageByEquipmentId = computed((): Record<string, number> => {
     const counts: Record<string, number> = {};
-    for (const r of history) {
-      const eq = equipment.find(e => e.uuid === r.equipmentId);
-      if (eq) {
-        const mid = String(eq.id);
-        counts[mid] = (counts[mid] ?? 0) + 1;
-      }
+    for (const r of this.reservationStore.history()) {
+      if (r.equipmentId) counts[r.equipmentId] = (counts[r.equipmentId] ?? 0) + 1;
     }
     return counts;
   });
 
-  // Live [0–1] intensity from equipment API status — drives heatmap canvas colors
-  private readonly liveIntensityByMachineId = computed((): Record<string, number> => {
-    const equipment = this.equipmentStore.equipment();
-    const activeRes = this.reservationStore.activeReservations();
+  // Live [0–1] intensity keyed by equipmentId (UUID) — drives heatmap canvas colors
+  private readonly liveIntensityByEquipmentId = computed((): Record<string, number> => {
+    const activeRes    = this.reservationStore.activeReservations();
     const pendingUuids = new Set(activeRes.filter(r => !r.timerExpiry).map(r => r.equipmentId));
     const result: Record<string, number> = {};
-    for (const eq of equipment) {
-      const mid = String(eq.id);
+    for (const eq of this.equipmentStore.equipment()) {
       switch (eq.status) {
-        case EquipmentStatus.IN_USE:          result[mid] = 1.0;  break;
-        case EquipmentStatus.OUT_OF_SERVICE:  result[mid] = 0.55; break;
-        case EquipmentStatus.MAINTENANCE:     result[mid] = 0.45; break;
-        default: // AVAILABLE
-          result[mid] = pendingUuids.has(eq.uuid) ? 0.65 : 0.0;
+        case EquipmentStatus.IN_USE:         result[eq.uuid] = 1.0;  break;
+        case EquipmentStatus.OUT_OF_SERVICE: result[eq.uuid] = 0.55; break;
+        case EquipmentStatus.MAINTENANCE:    result[eq.uuid] = 0.45; break;
+        default:
+          result[eq.uuid] = pendingUuids.has(eq.uuid) ? 0.65 : 0.0;
       }
     }
     return result;
   });
 
-  // Intensity per gym for heatmap canvas (gym1 = live, gym2/3 = normalised mock)
+  // API equipment paired with floor-plan positions (index-matched against gymState slots)
+  readonly mappedEquipment = computed(() => {
+    const slots = this.gymState.machines();
+    return this.equipmentStore.equipment().map((eq, i) => ({
+      eq,
+      top:  slots[i]?.top  ?? `${10 + i * 10}%`,
+      left: slots[i]?.left ?? '50%',
+      icon: slots[i]?.icon ?? 'fitness_center',
+    }));
+  });
+
+  // Intensity per gym keyed by equipmentId (UUID for gym1, mock '1'-'9' for gym2/3)
   readonly currentGymIntensity = computed((): Record<string, number> => {
     const gymId = this.selectedGymId();
-    if (gymId === 'gym1') return this.liveIntensityByMachineId();
+    if (gymId === 'gym1') return this.liveIntensityByEquipmentId();
     const mock = this.gymMockUsage[gymId] ?? {};
     const max  = Math.max(1, ...Object.values(mock));
     return Object.fromEntries(Object.entries(mock).map(([k, v]) => [k, v / max]));
   });
 
-  // Historical usage counts used by ghost-pin chip numbers
+  // Usage counts per gym (UUID for gym1, mock '1'-'9' for gym2/3)
   readonly currentGymUsage = computed((): Record<string, number> => {
     const gymId = this.selectedGymId();
-    return gymId === 'gym1' ? this.usageByMachineId() : (this.gymMockUsage[gymId] ?? {});
+    return gymId === 'gym1' ? this.usageByEquipmentId() : (this.gymMockUsage[gymId] ?? {});
   });
 
-  // Per-gym intensity for mini-heatmaps in ALL_GYMS view
+  // Per-gym intensity for mini-heatmaps: gym1 keyed by UUID, gym2/3 by mock id
   private readonly allGymsIntensity = computed((): Record<string, Record<string, number>> => {
-    const gym1 = this.liveIntensityByMachineId();
     const toNormalised = (gymId: string): Record<string, number> => {
       const mock = this.gymMockUsage[gymId] ?? {};
       const max  = Math.max(1, ...Object.values(mock));
       return Object.fromEntries(Object.entries(mock).map(([k, v]) => [k, v / max]));
     };
-    return { gym1, gym2: toNormalised('gym2'), gym3: toNormalised('gym3') };
+    return {
+      gym1: this.liveIntensityByEquipmentId(),
+      gym2: toNormalised('gym2'),
+      gym3: toNormalised('gym3'),
+    };
   });
 
-  // Keep for gymTopMachineKey (historical popularity rank)
+  // Historical usage for gymTopMachineKey (gym1 keyed by UUID, gym2/3 by mock id)
   readonly allGymsUsage = computed((): Record<string, Record<string, number>> => ({
-    gym1: this.usageByMachineId(),
+    gym1: this.usageByEquipmentId(),
     gym2: this.gymMockUsage['gym2'] ?? {},
     gym3: this.gymMockUsage['gym3'] ?? {},
   }));
+
+  // Mini-map item list per gym: gym1 uses API equipment+positions, gym2/3 use gymState
+  getMiniMapItems(gymId: string): { top: string; left: string; icon: string; key: string }[] {
+    if (gymId === 'gym1') {
+      return this.mappedEquipment().map(({ eq, top, left, icon }) => ({ top, left, icon, key: eq.uuid }));
+    }
+    return this.gymState.machines().map(m => ({ top: m.top, left: m.left, icon: m.icon, key: m.id }));
+  }
 
   constructor() {
     effect(() => {
@@ -228,12 +242,15 @@ export class MapComponent {
     return Math.round((this.gymInUse(gymId) / 9) * 100);
   }
 
-  gymTopMachineKey(gymId: string): string {
+  gymTopMachineName(gymId: string): string {
     const usage   = this.allGymsUsage()[gymId] ?? {};
     const entries = Object.entries(usage);
     if (!entries.length) return '';
-    const [topId] = entries.sort(([, a], [, b]) => b - a)[0];
-    return this.gymState.machines().find(m => m.id === topId)?.nameKey ?? '';
+    const [topKey] = entries.sort(([, a], [, b]) => b - a)[0];
+    if (gymId === 'gym1') {
+      return this.equipmentStore.equipment().find(e => e.uuid === topKey)?.name ?? '';
+    }
+    return this.gymState.machines().find(m => m.id === topKey)?.nameKey ?? '';
   }
 
   // ── Heatmap CSS helpers (for mini-maps) ─────────────────────────────────
@@ -268,15 +285,17 @@ export class MapComponent {
     const ctx      = canvas.getContext('2d')!;
     ctx.clearRect(0, 0, W, H);
 
-    const machines  = this.gymState.machines();
+    const items     = this.selectedGymId() === 'gym1'
+      ? this.mappedEquipment().map(({ eq, top, left }) => ({ key: eq.uuid, top, left }))
+      : this.gymState.machines().map(m => ({ key: m.id, top: m.top, left: m.left }));
     const intensity = this.currentGymIntensity();
 
-    const sorted = [...machines].sort((a, b) => (intensity[a.id] ?? 0) - (intensity[b.id] ?? 0));
+    const sorted = [...items].sort((a, b) => (intensity[a.key] ?? 0) - (intensity[b.key] ?? 0));
 
-    for (const machine of sorted) {
-      const t         = intensity[machine.id] ?? 0;
-      const x         = (parseFloat(machine.left) / 100) * W;
-      const y         = (parseFloat(machine.top)  / 100) * H;
+    for (const item of sorted) {
+      const t         = intensity[item.key] ?? 0;
+      const x         = (parseFloat(item.left) / 100) * W;
+      const y         = (parseFloat(item.top)  / 100) * H;
       const radius    = 85 + t * 65;
       const [r, g, b] = this.rgbFromIntensity(t);
       const alpha     = t > 0 ? 0.14 + t * 0.46 : 0.07;

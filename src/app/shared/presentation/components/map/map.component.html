@@ -148,18 +148,22 @@
       <div class="floor-plan heat-mode">
         <canvas #heatCanvas class="heat-canvas"></canvas>
 
-        @for (machine of allMachines(); track machine.id) {
-          <div
-            class="machine-pin pin-ghost"
-            [style.top]="machine.top"
-            [style.left]="machine.left"
-          >
-            <div class="ghost-body">
-              <mat-icon class="ghost-icon">{{ machine.icon }}</mat-icon>
+        @if (selectedGymId() === 'gym1') {
+          @for (item of mappedEquipment(); track item.eq.uuid) {
+            <div class="machine-pin pin-ghost" [style.top]="item.top" [style.left]="item.left">
+              <div class="ghost-body"><mat-icon class="ghost-icon">{{ item.icon }}</mat-icon></div>
+              <span class="usage-chip">{{ (currentGymUsage()[item.eq.uuid] ?? 0) }}</span>
+              <span class="pin-label">{{ item.eq.name }}</span>
             </div>
-            <span class="usage-chip">{{ (currentGymUsage()[machine.id] ?? 0) }}</span>
-            <span class="pin-label">{{ 'machines.names.' + machine.nameKey | translate }}</span>
-          </div>
+          }
+        } @else {
+          @for (machine of allMachines(); track machine.id) {
+            <div class="machine-pin pin-ghost" [style.top]="machine.top" [style.left]="machine.left">
+              <div class="ghost-body"><mat-icon class="ghost-icon">{{ machine.icon }}</mat-icon></div>
+              <span class="usage-chip">{{ (currentGymUsage()[machine.id] ?? 0) }}</span>
+              <span class="pin-label">{{ 'machines.names.' + machine.nameKey | translate }}</span>
+            </div>
+          }
         }
       </div>
     </div>
@@ -189,24 +193,20 @@
               <div class="util-badge">{{ gymUtilization(gym.id) }}%</div>
             </div>
 
-            <!-- CSS-based mini heatmap -->
+            <!-- CSS-based mini heatmap (gym1 uses API equipment, gym2/3 use mock) -->
             <div class="mini-map">
-              @for (machine of allMachines(); track machine.id) {
+              @for (item of getMiniMapItems(gym.id); track item.key) {
                 <div
                   class="heat-blob"
-                  [style.top]="machine.top"
-                  [style.left]="machine.left"
-                  [style.background-color]="getHeatColor(gym.id, machine.id)"
-                  [style.opacity]="0.12 + getHeatOpacity(gym.id, machine.id) * 0.78"
+                  [style.top]="item.top"
+                  [style.left]="item.left"
+                  [style.background-color]="getHeatColor(gym.id, item.key)"
+                  [style.opacity]="0.12 + getHeatOpacity(gym.id, item.key) * 0.78"
                 ></div>
               }
-              @for (machine of allMachines(); track machine.id) {
-                <div
-                  class="mini-pin"
-                  [style.top]="machine.top"
-                  [style.left]="machine.left"
-                >
-                  <mat-icon class="mini-pin-icon">{{ machine.icon }}</mat-icon>
+              @for (item of getMiniMapItems(gym.id); track item.key) {
+                <div class="mini-pin" [style.top]="item.top" [style.left]="item.left">
+                  <mat-icon class="mini-pin-icon">{{ item.icon }}</mat-icon>
                 </div>
               }
             </div>
@@ -220,10 +220,10 @@
                 <span class="gym-stat-dot" style="background:#f44336"></span>
                 <span>{{ gymInUse(gym.id) }} in use</span>
               </div>
-              @if (gymTopMachineKey(gym.id)) {
+              @if (gymTopMachineName(gym.id)) {
                 <div class="gym-stat gym-stat--fire">
                   <mat-icon class="gym-stat-fire-icon">local_fire_department</mat-icon>
-                  <span>{{ 'machines.names.' + gymTopMachineKey(gym.id) | translate }}</span>
+                  <span>{{ gymTopMachineName(gym.id) }}</span>
                 </div>
               }
             </div>
