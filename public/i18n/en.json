@@ -136,6 +136,10 @@
       "create": "Create Reservation",
       "confirm": "Reserve"
     },
+    "error": {
+      "alreadyActive": "You already have an active reservation. Cancel it or wait for it to expire before creating a new one.",
+      "generic": "Could not create the reservation. Please try again."
+    },
     "history": {
       "title": "Reservation History",
       "subtitle": "All your past and active reservations",

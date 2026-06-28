@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { Component, signal, computed, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -65,6 +65,20 @@ export class MapComponent {
 
   gyms: Gym[] = [{ id: 'gym1' }, { id: 'gym2' }, { id: 'gym3' }];
 
+  constructor() {
+    effect(() => {
+      const err = this.reservationStore.reservationError();
+      if (!err) return;
+      this.snackBar.open(this.translate.instant(err), '✕', {
+        duration: 5000,
+        panelClass: ['error-snackbar'],
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+      this.reservationStore.clearError();
+    });
+  }
+
   get filteredMachines(): GymMachine[] {
     const f   = this.activeFilter();
     const all = this.gymState.machines();
@@ -94,8 +108,7 @@ export class MapComponent {
 
   openAlternatives(): void { this.showAlternativesPanel.set(true); }
 
-  private confirm(key: string): void {
-    this.closeMachineDetail();
+  private notify(key: string): void {
     this.snackBar.open(this.translate.instant(key), '✓', {
       duration: 3500,
       panelClass: ['routine-snackbar'],
@@ -104,14 +117,14 @@ export class MapComponent {
     });
   }
 
-  notifyWhenFree():   void { this.confirm('map.detail.notifications.notified'); }
-  reportAsFree():     void { this.confirm('map.detail.notifications.reportedFree'); }
-  reportAsOccupied(): void { this.confirm('map.detail.notifications.reportedOccupied'); }
+  notifyWhenFree():   void { this.notify('map.detail.notifications.notified'); }
+  reportAsFree():     void { this.notify('map.detail.notifications.reportedFree'); }
+  reportAsOccupied(): void { this.notify('map.detail.notifications.reportedOccupied'); }
 
   reserveMachine(): void {
     const machine = this.selectedMachine();
     if (!machine) return;
+    this.closeMachineDetail();
     this.reservationStore.createReservation(machine.id, 15 * 60);
-    this.confirm('map.detail.notifications.reserved');
   }
 }

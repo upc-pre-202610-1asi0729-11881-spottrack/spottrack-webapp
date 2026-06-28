@@ -281,6 +281,14 @@
           <p class="warning-text">{{ 'reservation.modal.warning' | translate }}</p>
         </div>
 
+        <!-- Conflict error -->
+        @if (reservationError()) {
+          <div class="modal-error">
+            <mat-icon class="modal-error-icon">error_outline</mat-icon>
+            <span>{{ reservationError()! | translate }}</span>
+          </div>
+        }
+
         <!-- Footer -->
         <div class="modal-footer">
           <button class="btn-cancel" (click)="closeModal()">
@@ -288,10 +296,14 @@
           </button>
           <button
             class="btn-create"
-            [disabled]="!selectedMachineId"
+            [disabled]="!selectedMachineId || creating()"
             (click)="createReservation()"
           >
-            {{ 'reservation.modal.create' | translate }}
+            @if (creating()) {
+              <mat-icon class="spinning">sync</mat-icon>
+            } @else {
+              {{ 'reservation.modal.create' | translate }}
+            }
           </button>
         </div>
 

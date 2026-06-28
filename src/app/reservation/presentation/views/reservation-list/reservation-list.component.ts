@@ -37,6 +37,8 @@ export class ReservationListComponent implements OnInit {
   readonly expiredReservations = this.store.expiredReservations;
   readonly history             = this.store.history;
   readonly historyLoading      = this.store.historyLoading;
+  readonly reservationError    = this.store.reservationError;
+  readonly creating            = this.store.creating;
 
   readonly pageSize  = 5;
   readonly pageIndex = signal(0);
@@ -76,8 +78,8 @@ export class ReservationListComponent implements OnInit {
   formatTimer(seconds: number):           string { return this.store.formatTimer(seconds); }
   getZoneKey(category: string):           string { return this.store.getZoneKey(category); }
 
-  openModal():  void { this.showModal = true; this.selectedMachineId = null; this.selectedDurationSeconds = 15 * 60; }
-  closeModal(): void { this.showModal = false; }
+  openModal():  void { this.showModal = true; this.selectedMachineId = null; this.selectedDurationSeconds = 15 * 60; this.store.clearError(); }
+  closeModal(): void { this.showModal = false; this.store.clearError(); }
 
   createReservation(): void {
     if (!this.selectedMachineId) return;

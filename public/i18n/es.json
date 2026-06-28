@@ -136,6 +136,10 @@
       "create": "Crear Reserva",
       "confirm": "Reservar"
     },
+    "error": {
+      "alreadyActive": "Ya tienes una reserva activa. Cancélala o espera a que expire antes de crear una nueva.",
+      "generic": "No se pudo crear la reserva. Por favor, inténtalo de nuevo."
+    },
     "history": {
       "title": "Historial de Reservas",
       "subtitle": "Todas tus reservas pasadas y activas",

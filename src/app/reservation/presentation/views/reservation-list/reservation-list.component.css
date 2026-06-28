@@ -393,6 +393,33 @@
 .warning-icon { font-size: 18px; width: 18px; height: 18px; color: #f5c518; flex-shrink: 0; margin-top: 1px; }
 .warning-text { font-size: 12px; color: #aaa; margin: 0; line-height: 1.5; }
 
+/* ---- Error ---- */
+.modal-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background-color: rgba(244, 67, 54, 0.08);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 0 20px;
+}
+
+.modal-error-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #f44336;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.modal-error span {
+  font-size: 12px;
+  color: #f44336;
+  line-height: 1.5;
+}
+
 /* ---- Footer ---- */
 .modal-footer {
   display: flex;
