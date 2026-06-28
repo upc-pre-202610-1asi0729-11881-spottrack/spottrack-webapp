@@ -1,6 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthStore } from '../../auth/application/auth.store';
 import { EquipmentStore } from '../../gym/application/equipment.store';
+import { EquipmentStatus } from '../../gym/domain/model/equipment.entity';
 import { GymStateService, GymMachine } from '../../shared/application/gym-state.service';
 import { ReservationApi } from '../infrastructure/reservation-api';
 import { ReservationResource } from '../infrastructure/reservation-response';
@@ -30,6 +31,9 @@ export class ReservationStore {
 
   readonly activeReservations  = computed(() => this.historySignal().filter(r => r.status === 'ACTIVE'));
   readonly availableMachines   = this.gymState.availableMachines;
+  readonly availableEquipment  = computed(() =>
+    this.equipmentStore.equipment().filter(e => e.status === EquipmentStatus.AVAILABLE)
+  );
   readonly expiredReservations = this.gymState.expiredReservations;
   readonly history             = this.historySignal.asReadonly();
   readonly historyLoading      = this.histLoadingSignal.asReadonly();
@@ -72,9 +76,11 @@ export class ReservationStore {
     const toTimeString = (d: Date)   =>
       `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 
+    const equipmentId = this.resolveEquipmentUuid(machineId);
+
     this.api.initiateExpressReservation({
       clientId,
-      equipmentId: machineId,
+      equipmentId,
       startTime:   toTimeString(now),
       endTime:     toTimeString(endDate),
       startedAt:   now.toISOString(),
@@ -171,6 +177,12 @@ export class ReservationStore {
     const byLocalId = this.gymState.machines().find(m => m.id === equipmentId);
     if (byLocalId) return byLocalId.nameKey;
     return equipmentId.length > 12 ? equipmentId.slice(0, 8) + '…' : equipmentId;
+  }
+
+  private resolveEquipmentUuid(machineId: string): string {
+    if (machineId.includes('-')) return machineId; // already a UUID
+    const n = parseInt(machineId, 10);
+    return this.equipmentStore.equipment().find(e => e.id === n)?.uuid ?? machineId;
   }
 
   private parseDurationMinutes(startTime: string, endTime: string): number {
