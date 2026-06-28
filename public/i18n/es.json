@@ -97,10 +97,10 @@
       "chest": "Pecho"
     }
   },
-  "booking": {
+  "reservation": {
     "title": "Mis Reservas",
     "subtitle": "Gestiona tus reservas activas y crea nuevas reservas",
-    "newBooking": "Nueva Reserva",
+    "newReservation": "Nueva Reserva",
     "timeRemaining": "Tiempo restante",
     "activationWindow": "Ventana de activación",
     "activate": "Iniciar Reserva",
@@ -124,6 +124,7 @@
       "subtitle": "Reserva una máquina disponible por un tiempo limitado",
       "machine": "Máquina",
       "selectMachine": "Selecciona una máquina",
+      "machinePlaceholder": "Selecciona una máquina",
       "duration": "Duración",
       "minutesSuffix": "minutos",
       "warning": "Tras crear la reserva, tienes 5 minutos para activarla. Si no la activas a tiempo, será cancelada automáticamente.",
@@ -132,7 +133,20 @@
       "option15m": "15 minutos",
       "option20m": "20 minutos",
       "cancel": "Cancelar",
-      "create": "Crear Reserva"
+      "create": "Crear Reserva",
+      "confirm": "Reservar"
+    },
+    "history": {
+      "title": "Historial de Reservas",
+      "subtitle": "Todas tus reservas pasadas y activas",
+      "loading": "Cargando reservas...",
+      "empty": "No se encontraron reservas",
+      "col": {
+        "equipment": "Equipo",
+        "status": "Estado",
+        "started": "Inicio",
+        "window": "Ventana horaria"
+      }
     }
   },
   "clientAlerts": {

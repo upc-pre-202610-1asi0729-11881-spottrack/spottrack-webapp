@@ -3,12 +3,12 @@
   <!-- ===== HEADER ===== -->
   <header class="booking-header">
     <div class="header-info">
-      <h1 class="booking-title">{{ 'booking.title' | translate }}</h1>
-      <p class="booking-subtitle">{{ 'booking.subtitle' | translate }}</p>
+      <h1 class="booking-title">{{ 'reservation.title' | translate }}</h1>
+      <p class="booking-subtitle">{{ 'reservation.subtitle' | translate }}</p>
     </div>
     <button class="new-booking-btn" (click)="openModal()">
       <mat-icon>add</mat-icon>
-      {{ 'booking.newBooking' | translate }}
+      {{ 'reservation.newReservation' | translate }}
     </button>
   </header>
 
@@ -38,7 +38,7 @@
           <div class="card-bottom">
             <div class="timer-label">
               <mat-icon class="clock-icon">hourglass_empty</mat-icon>
-              <span>{{ 'booking.activationWindow' | translate }}</span>
+              <span>{{ 'reservation.activationWindow' | translate }}</span>
             </div>
             <span class="timer-value">{{ formatTimer(machine.activationTimerSeconds ?? 0) }}</span>
           </div>
@@ -47,12 +47,12 @@
 
         <div class="pending-banner">
           <div class="pending-banner-info">
-            <span class="pending-title">{{ 'booking.pending.title' | translate }}</span>
-            <span class="pending-subtitle">{{ 'booking.pending.subtitle' | translate }}</span>
+            <span class="pending-title">{{ 'reservation.pending.title' | translate }}</span>
+            <span class="pending-subtitle">{{ 'reservation.pending.subtitle' | translate }}</span>
           </div>
           <button class="btn-activate" (click)="activateReservation(machine.id)">
             <mat-icon>play_arrow</mat-icon>
-            {{ 'booking.activate' | translate }}
+            {{ 'reservation.activate' | translate }}
           </button>
         </div>
       </mat-card>
@@ -85,7 +85,7 @@
           <div class="card-bottom">
             <div class="timer-label">
               <mat-icon class="clock-icon">schedule</mat-icon>
-              <span>{{ 'booking.timeRemaining' | translate }}</span>
+              <span>{{ 'reservation.timeRemaining' | translate }}</span>
             </div>
             <span class="timer-value">{{ formatTimer(machine.timerSeconds ?? 0) }}</span>
           </div>
@@ -119,7 +119,7 @@
           <div class="card-bottom">
             <div class="timer-label">
               <mat-icon class="clock-icon">schedule</mat-icon>
-              <span>{{ 'booking.timeRemaining' | translate }}</span>
+              <span>{{ 'reservation.timeRemaining' | translate }}</span>
             </div>
             <span class="timer-value">00:00</span>
           </div>
@@ -127,8 +127,8 @@
         </mat-card-content>
 
         <div class="expired-banner">
-          <span class="expired-title">{{ 'booking.expired.title' | translate }}</span>
-          <span class="expired-subtitle">{{ 'booking.expired.subtitle' | translate }}</span>
+          <span class="expired-title">{{ 'reservation.expired.title' | translate }}</span>
+          <span class="expired-subtitle">{{ 'reservation.expired.subtitle' | translate }}</span>
         </div>
       </mat-card>
     }
@@ -139,13 +139,13 @@
     <mat-card-content class="info-content">
       <div class="info-header">
         <mat-icon class="info-icon">info</mat-icon>
-        <span class="info-title">{{ 'booking.how.title' | translate }}</span>
+        <span class="info-title">{{ 'reservation.how.title' | translate }}</span>
       </div>
       <ul class="info-list">
-        <li>{{ 'booking.how.item1' | translate }}</li>
-        <li>{{ 'booking.how.item2' | translate }}</li>
-        <li>{{ 'booking.how.item3' | translate }}</li>
-        <li>{{ 'booking.how.item4' | translate }}</li>
+        <li>{{ 'reservation.how.item1' | translate }}</li>
+        <li>{{ 'reservation.how.item2' | translate }}</li>
+        <li>{{ 'reservation.how.item3' | translate }}</li>
+        <li>{{ 'reservation.how.item4' | translate }}</li>
       </ul>
     </mat-card-content>
   </mat-card>
@@ -155,8 +155,8 @@
 
     <div class="history-header">
       <div>
-        <h2 class="history-title">{{ 'booking.history.title' | translate }}</h2>
-        <p class="history-subtitle">{{ 'booking.history.subtitle' | translate }}</p>
+        <h2 class="history-title">{{ 'reservation.history.title' | translate }}</h2>
+        <p class="history-subtitle">{{ 'reservation.history.subtitle' | translate }}</p>
       </div>
       <button class="history-refresh-btn" (click)="refreshHistory()" [disabled]="historyLoading()">
         <mat-icon [class.spinning]="historyLoading()">refresh</mat-icon>
@@ -166,12 +166,12 @@
     @if (historyLoading()) {
       <div class="history-loading">
         <mat-icon class="spinning">sync</mat-icon>
-        <span>{{ 'booking.history.loading' | translate }}</span>
+        <span>{{ 'reservation.history.loading' | translate }}</span>
       </div>
     } @else if (history().length === 0) {
       <div class="history-empty">
         <mat-icon>history</mat-icon>
-        <span>{{ 'booking.history.empty' | translate }}</span>
+        <span>{{ 'reservation.history.empty' | translate }}</span>
       </div>
     } @else {
 
@@ -179,10 +179,10 @@
         <table class="history-table">
           <thead>
             <tr>
-              <th>{{ 'booking.history.col.equipment' | translate }}</th>
-              <th>{{ 'booking.history.col.status'    | translate }}</th>
-              <th>{{ 'booking.history.col.started'   | translate }}</th>
-              <th>{{ 'booking.history.col.window'    | translate }}</th>
+              <th>{{ 'reservation.history.col.equipment' | translate }}</th>
+              <th>{{ 'reservation.history.col.status'    | translate }}</th>
+              <th>{{ 'reservation.history.col.started'   | translate }}</th>
+              <th>{{ 'reservation.history.col.window'    | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -230,8 +230,8 @@
 
         <div class="modal-header">
           <div>
-            <h2 class="modal-title">{{ 'booking.modal.title' | translate }}</h2>
-            <p class="modal-subtitle">{{ 'booking.modal.subtitle' | translate }}</p>
+            <h2 class="modal-title">{{ 'reservation.modal.title' | translate }}</h2>
+            <p class="modal-subtitle">{{ 'reservation.modal.subtitle' | translate }}</p>
           </div>
           <button mat-icon-button class="modal-close" (click)="closeModal()">
             <mat-icon>close</mat-icon>
@@ -240,12 +240,12 @@
 
         <!-- Machine field -->
         <div class="field-group">
-          <label class="field-label">{{ 'booking.modal.machine' | translate }}</label>
+          <label class="field-label">{{ 'reservation.modal.machine' | translate }}</label>
           <div class="select-box">
             <mat-select
               [(ngModel)]="selectedMachineId"
               class="booking-select"
-              [placeholder]="'booking.modal.selectMachine' | translate"
+              [placeholder]="'reservation.modal.selectMachine' | translate"
               panelClass="booking-select-panel"
               disableRipple
             >
@@ -260,7 +260,7 @@
 
         <!-- Duration field -->
         <div class="field-group">
-          <label class="field-label">{{ 'booking.modal.duration' | translate }}</label>
+          <label class="field-label">{{ 'reservation.modal.duration' | translate }}</label>
           <div class="select-box">
             <mat-select
               [(ngModel)]="selectedDurationSeconds"
@@ -278,20 +278,20 @@
         <!-- Warning -->
         <div class="warning-box">
           <mat-icon class="warning-icon">warning</mat-icon>
-          <p class="warning-text">{{ 'booking.modal.warning' | translate }}</p>
+          <p class="warning-text">{{ 'reservation.modal.warning' | translate }}</p>
         </div>
 
         <!-- Footer -->
         <div class="modal-footer">
           <button class="btn-cancel" (click)="closeModal()">
-            {{ 'booking.modal.cancel' | translate }}
+            {{ 'reservation.modal.cancel' | translate }}
           </button>
           <button
             class="btn-create"
             [disabled]="!selectedMachineId"
             (click)="createReservation()"
           >
-            {{ 'booking.modal.create' | translate }}
+            {{ 'reservation.modal.create' | translate }}
           </button>
         </div>
 
