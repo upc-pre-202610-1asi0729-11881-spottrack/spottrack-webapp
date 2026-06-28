@@ -97,16 +97,65 @@ export class MapComponent {
     return result;
   });
 
-  // API equipment paired with floor-plan positions (index-matched against gymState slots)
+  // API equipment with auto-grid positions + icon/category derived from name
   readonly mappedEquipment = computed(() => {
-    const slots = this.gymState.machines();
-    return this.equipmentStore.equipment().map((eq, i) => ({
-      eq,
-      top:  slots[i]?.top  ?? `${10 + i * 10}%`,
-      left: slots[i]?.left ?? '50%',
-      icon: slots[i]?.icon ?? 'fitness_center',
-    }));
+    const equipment = this.equipmentStore.equipment();
+    const total     = equipment.length;
+    return equipment.map((eq, i) => {
+      const { top, left } = this.autoPosition(i, total);
+      return {
+        eq,
+        top,
+        left,
+        icon:     this.resolveIcon(eq.name),
+        category: this.equipmentCategory(eq.name),
+      };
+    });
   });
+
+  private readonly pendingEquipmentUuids = computed(() =>
+    new Set(
+      this.reservationStore.activeReservations()
+        .filter(r => !r.timerExpiry)
+        .map(r => r.equipmentId)
+    )
+  );
+
+  readonly selectedEquipment = computed(() => {
+    const uuid = this.selectedMachineId();
+    return uuid ? (this.mappedEquipment().find(m => m.eq.uuid === uuid) ?? null) : null;
+  });
+
+  readonly alternativeEquipment = computed(() => {
+    const sel = this.selectedEquipment();
+    if (!sel) return [];
+    return this.mappedEquipment().filter(m =>
+      m.eq.status === EquipmentStatus.AVAILABLE &&
+      m.eq.uuid !== sel.eq.uuid &&
+      m.category === sel.category
+    );
+  });
+
+  get filteredEquipment() {
+    const f = this.activeFilter();
+    const items = this.mappedEquipment();
+    if (f === 'ALL') return items;
+    return items.filter(m => m.category === f);
+  }
+
+  isPending(uuid: string): boolean {
+    return this.pendingEquipmentUuids().has(uuid);
+  }
+
+  pinStatusClass(uuid: string, status: EquipmentStatus): string {
+    if (this.pendingEquipmentUuids().has(uuid)) return 'pin-reserved';
+    switch (status) {
+      case EquipmentStatus.IN_USE:         return 'pin-in-use';
+      case EquipmentStatus.MAINTENANCE:    return 'pin-reserved';
+      case EquipmentStatus.OUT_OF_SERVICE: return 'pin-pending';
+      default:                             return 'pin-available';
+    }
+  }
 
   // Intensity per gym keyed by equipmentId (UUID for gym1, mock '1'-'9' for gym2/3)
   readonly currentGymIntensity = computed((): Record<string, number> => {
@@ -204,9 +253,9 @@ export class MapComponent {
 
   setFilter(f: FilterTab): void { this.activeFilter.set(f); }
 
-  openMachineDetail(machine: GymMachine, event: Event): void {
+  openEquipmentDetail(uuid: string, event: Event): void {
     event.stopPropagation();
-    this.selectedMachineId.set(machine.id);
+    this.selectedMachineId.set(uuid);
     this.showAlternativesPanel.set(false);
   }
 
@@ -219,10 +268,10 @@ export class MapComponent {
   }
 
   reserveMachine(): void {
-    const m = this.selectedMachine();
-    if (!m) return;
+    const eq = this.selectedEquipment();
+    if (!eq) return;
     this.closeMachineDetail();
-    this.reservationStore.createReservation(m.id, 15 * 60);
+    this.reservationStore.createReservation(eq.eq.uuid, 15 * 60);
   }
 
   formatTimer(s: number): string { return this.gymState.formatTimer(s); }
@@ -316,6 +365,35 @@ export class MapComponent {
     if (t < 0.5)  { const s = (t - 0.25) * 4; return [0, 150 + Math.round(s * 105), Math.round(255 * (1 - s))]; }
     if (t < 0.75) { const s = (t - 0.5)  * 4; return [Math.round(s * 255), 255, 0]; }
     const s = (t - 0.75) * 4; return [255, Math.round(255 * (1 - s)), 0];
+  }
+
+  private autoPosition(i: number, total: number): { top: string; left: string } {
+    const n    = Math.max(1, total);
+    const cols = Math.max(2, Math.min(8, Math.ceil(Math.sqrt(n * 1.5))));
+    const rows = Math.ceil(n / cols);
+    const col  = i % cols;
+    const row  = Math.floor(i / cols);
+    const cellW = 82 / cols;
+    const cellH = 74 / Math.max(rows, 1);
+    return {
+      left: `${9  + col * cellW + cellW * 0.5}%`,
+      top:  `${13 + row * cellH + cellH * 0.5}%`,
+    };
+  }
+
+  private resolveIcon(name: string): string {
+    const n = name.toLowerCase();
+    if (/treadmill|cinta|running/.test(n)) return 'directions_run';
+    if (/bike|cycl|bicicleta/.test(n))     return 'directions_bike';
+    if (/elliptic|elíptic/.test(n))         return 'directions_bike';
+    if (/row|remo/.test(n))                 return 'rowing';
+    return 'fitness_center';
+  }
+
+  private equipmentCategory(name: string): 'CARDIO' | 'STRENGTH' {
+    const n = name.toLowerCase();
+    return /treadmill|bike|cycl|elliptic|row|cardio|cinta|remo|bicicleta/.test(n)
+      ? 'CARDIO' : 'STRENGTH';
   }
 
   private notify(key: string): void {

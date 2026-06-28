@@ -110,26 +110,16 @@
         <div class="zone-divider"></div>
         <div class="zone-label zone-right">STRENGTH</div>
 
-        @for (machine of filteredMachines; track machine.id) {
+        @for (item of filteredEquipment; track item.eq.uuid) {
           <div
             class="machine-pin"
-            [class.pin-available]="machine.status === 'AVAILABLE'"
-            [class.pin-in-use]="machine.status === 'IN_USE'"
-            [class.pin-reserved]="machine.status === 'RESERVED'"
-            [class.pin-pending]="machine.status === 'PENDING'"
-            [style.top]="machine.top"
-            [style.left]="machine.left"
-            (click)="openMachineDetail(machine, $event)"
+            [ngClass]="pinStatusClass(item.eq.uuid, item.eq.status)"
+            [style.top]="item.top"
+            [style.left]="item.left"
+            (click)="openEquipmentDetail(item.eq.uuid, $event)"
           >
-            @if (machine.timerSeconds !== undefined) {
-              <div class="pin-timer">{{ formatTimer(machine.timerSeconds) }}</div>
-            }
-            <div class="pin-ring ring-a"></div>
-            <div class="pin-ring ring-b"></div>
-            <div class="pin-body">
-              <mat-icon class="pin-icon">{{ machine.icon }}</mat-icon>
-            </div>
-            <span class="pin-label">{{ 'machines.names.' + machine.nameKey | translate }}</span>
+            <div class="pin-dot"></div>
+            <span class="pin-label">{{ item.eq.name }}</span>
           </div>
         }
       </div>
@@ -245,7 +235,7 @@
 </div>
 
 <!-- ── MACHINE DETAIL POPUP ───────────────────────────────────── -->
-@if (selectedMachine()) {
+@if (selectedEquipment()) {
   <div class="detail-backdrop" (click)="closeMachineDetail()">
 
     @if (!showAlternativesPanel()) {
@@ -254,21 +244,24 @@
         <div class="detail-header">
           <div class="detail-header-info">
             <div class="detail-icon-wrap"
-              [class.detail-icon--available]="selectedMachine()!.status === 'AVAILABLE'"
-              [class.detail-icon--in-use]="selectedMachine()!.status === 'IN_USE'"
-              [class.detail-icon--reserved]="selectedMachine()!.status === 'RESERVED'"
+              [class.detail-icon--available]="selectedEquipment()!.eq.status === 'AVAILABLE'"
+              [class.detail-icon--in-use]="selectedEquipment()!.eq.status === 'IN_USE'"
+              [class.detail-icon--reserved]="selectedEquipment()!.eq.status === 'MAINTENANCE'"
             >
-              <mat-icon class="detail-icon">{{ selectedMachine()!.icon }}</mat-icon>
+              <mat-icon class="detail-icon">{{ selectedEquipment()!.icon }}</mat-icon>
             </div>
             <div>
-              <h3 class="detail-name">{{ 'machines.names.' + selectedMachine()!.nameKey | translate }}</h3>
+              <h3 class="detail-name">{{ selectedEquipment()!.eq.name }}</h3>
               <p class="detail-status-row">
                 Status:&nbsp;
                 <span
-                  [class.status-available]="selectedMachine()!.status === 'AVAILABLE'"
-                  [class.status-in-use]="selectedMachine()!.status === 'IN_USE'"
-                  [class.status-reserved]="selectedMachine()!.status === 'RESERVED'"
-                >{{ 'map.detail.status.' + selectedMachine()!.status | translate }}</span>
+                  [class.status-available]="selectedEquipment()!.eq.status === 'AVAILABLE' && !isPending(selectedEquipment()!.eq.uuid)"
+                  [class.status-reserved]="isPending(selectedEquipment()!.eq.uuid)"
+                  [class.status-in-use]="selectedEquipment()!.eq.status === 'IN_USE'"
+                >
+                  @if (isPending(selectedEquipment()!.eq.uuid)) { Reserved }
+                  @else { {{ selectedEquipment()!.eq.status }} }
+                </span>
               </p>
             </div>
           </div>
@@ -277,14 +270,13 @@
           </button>
         </div>
 
-        @if (selectedMachine()!.status === 'RESERVED') {
+        @if (isPending(selectedEquipment()!.eq.uuid)) {
           <div class="detail-body-reserved">
             <p class="reserved-msg">{{ 'map.detail.reservedByUser' | translate }}</p>
-            <div class="reserved-timer">{{ formatTimer(selectedMachine()!.timerSeconds ?? 0) }}</div>
           </div>
         }
 
-        @if (selectedMachine()!.status === 'IN_USE') {
+        @if (selectedEquipment()!.eq.status === 'IN_USE') {
           <div class="detail-actions">
             <button class="btn-action-cyan" (click)="notifyWhenFree()">
               <mat-icon>notifications</mat-icon>
@@ -301,7 +293,15 @@
           </div>
         }
 
-        @if (selectedMachine()!.status === 'AVAILABLE') {
+        @if (selectedEquipment()!.eq.status === 'MAINTENANCE' || selectedEquipment()!.eq.status === 'OUT_OF_SERVICE') {
+          <div class="detail-body-reserved">
+            <p class="reserved-msg">
+              {{ selectedEquipment()!.eq.status === 'MAINTENANCE' ? 'Under maintenance' : 'Out of service' }}
+            </p>
+          </div>
+        }
+
+        @if (selectedEquipment()!.eq.status === 'AVAILABLE' && !isPending(selectedEquipment()!.eq.uuid)) {
           <div class="detail-actions">
             <button class="btn-action-yellow" (click)="reserveMachine()">
               <mat-icon>event</mat-icon>
@@ -327,11 +327,11 @@
         </div>
         <p class="alt-subtitle">{{ 'map.alternatives.subtitle' | translate }}</p>
         <div class="alt-list">
-          @for (alt of alternativeMachines(); track alt.id) {
+          @for (alt of alternativeEquipment(); track alt.eq.uuid) {
             <div class="alt-item">
               <div class="alt-info">
-                <span class="alt-name">{{ 'machines.names.' + alt.nameKey | translate }}</span>
-                <span class="alt-group">{{ 'map.muscleGroups.' + alt.muscleGroupKey | translate }}</span>
+                <span class="alt-name">{{ alt.eq.name }}</span>
+                <span class="alt-group">{{ alt.category }}</span>
               </div>
               <div class="alt-status">
                 <span class="alt-free-dot"></span>
