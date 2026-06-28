@@ -145,6 +145,6 @@ export class ReservationListComponent implements OnInit {
   }
 
   trimTime(t: string): string {
-    return t ? t.slice(0, 5) : '—';
+    return t ? t.slice(0, 8) : '—';
   }
 }

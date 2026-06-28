@@ -186,10 +186,13 @@ export class ReservationStore {
   }
 
   private parseDurationMinutes(startTime: string, endTime: string): number {
-    const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-    let diff = toMin(endTime) - toMin(startTime);
-    if (diff <= 0) diff += 24 * 60;
-    return Math.max(1, diff);
+    const toSecs = (t: string) => {
+      const [h, m, s = 0] = t.split(':').map(Number);
+      return h * 3600 + m * 60 + s;
+    };
+    let diff = toSecs(endTime) - toSecs(startTime);
+    if (diff <= 0) diff += 24 * 3600;
+    return Math.max(1, Math.ceil(diff / 60));
   }
 
   private removeTracked(machineId: string): void {
