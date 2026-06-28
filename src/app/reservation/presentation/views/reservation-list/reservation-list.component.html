@@ -150,6 +150,76 @@
     </mat-card-content>
   </mat-card>
 
+  <!-- ===== RESERVATION HISTORY ===== -->
+  <div class="history-section">
+
+    <div class="history-header">
+      <div>
+        <h2 class="history-title">{{ 'booking.history.title' | translate }}</h2>
+        <p class="history-subtitle">{{ 'booking.history.subtitle' | translate }}</p>
+      </div>
+      <button class="history-refresh-btn" (click)="refreshHistory()" [disabled]="historyLoading()">
+        <mat-icon [class.spinning]="historyLoading()">refresh</mat-icon>
+      </button>
+    </div>
+
+    @if (historyLoading()) {
+      <div class="history-loading">
+        <mat-icon class="spinning">sync</mat-icon>
+        <span>{{ 'booking.history.loading' | translate }}</span>
+      </div>
+    } @else if (history().length === 0) {
+      <div class="history-empty">
+        <mat-icon>history</mat-icon>
+        <span>{{ 'booking.history.empty' | translate }}</span>
+      </div>
+    } @else {
+
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>{{ 'booking.history.col.equipment' | translate }}</th>
+              <th>{{ 'booking.history.col.status'    | translate }}</th>
+              <th>{{ 'booking.history.col.started'   | translate }}</th>
+              <th>{{ 'booking.history.col.window'    | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of paginatedHistory(); track r.id) {
+              <tr>
+                <td class="col-equipment">
+                  <mat-icon class="row-icon">fitness_center</mat-icon>
+                  <span class="equipment-id">{{ r.equipmentId }}</span>
+                </td>
+                <td>
+                  <span class="status-badge" [ngClass]="statusClass(r.status)">
+                    {{ r.status }}
+                  </span>
+                </td>
+                <td class="col-date">{{ formatDate(r.startedAt) }}</td>
+                <td class="col-window">{{ trimTime(r.startTime) }} – {{ trimTime(r.endTime) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="history-pagination">
+        <button class="page-btn" (click)="prevPage()" [disabled]="pageIndex() === 0">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="page-info">{{ pageIndex() + 1 }} / {{ totalPages() }}</span>
+        <button class="page-btn" (click)="nextPage()" [disabled]="pageIndex() >= totalPages() - 1">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+    }
+
+  </div>
+
 </div>
 
 <!-- ===== NEW RESERVATION MODAL ===== -->
