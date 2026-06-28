@@ -16,14 +16,16 @@ interface TrackedReservation {
 @Injectable({ providedIn: 'root' })
 export class ReservationStore {
 
-  private readonly api           = inject(ReservationApi);
-  private readonly auth          = inject(AuthStore);
-  private readonly gymState      = inject(GymStateService);
+  private readonly api            = inject(ReservationApi);
+  private readonly auth           = inject(AuthStore);
+  private readonly gymState       = inject(GymStateService);
   private readonly equipmentStore = inject(EquipmentStore);
 
-  private readonly tracked           = signal<Map<string, TrackedReservation>>(new Map());
-  private readonly historySignal     = signal<ReservationResource[]>([]);
-  private readonly histLoadingSignal = signal(false);
+  private readonly tracked            = signal<Map<string, TrackedReservation>>(new Map());
+  private readonly historySignal      = signal<ReservationResource[]>([]);
+  private readonly histLoadingSignal  = signal(false);
+  private readonly errorSignal        = signal<string | null>(null);
+  private readonly creatingSignal     = signal(false);
 
   readonly reservations        = this.gymState.reservedMachines;
   readonly pendingReservations = this.gymState.pendingMachines;
@@ -31,6 +33,8 @@ export class ReservationStore {
   readonly expiredReservations = this.gymState.expiredReservations;
   readonly history             = this.historySignal.asReadonly();
   readonly historyLoading      = this.histLoadingSignal.asReadonly();
+  readonly reservationError    = this.errorSignal.asReadonly();
+  readonly creating            = this.creatingSignal.asReadonly();
 
   loadHistory(): void {
     this.histLoadingSignal.set(true);
@@ -46,7 +50,8 @@ export class ReservationStore {
   createReservation(machineId: string, durationSeconds: number): void {
     const durationMinutes = Math.max(1, Math.ceil(durationSeconds / 60));
 
-    this.gymState.createReservation(machineId, durationSeconds);
+    this.creatingSignal.set(true);
+    this.errorSignal.set(null);
 
     const clientId   = this.auth.currentUser()?.id ?? 0;
     const now        = new Date();
@@ -66,6 +71,7 @@ export class ReservationStore {
       timeExpiry:  activation.toISOString(),
     }).subscribe({
       next: res => {
+        this.gymState.createReservation(machineId, durationSeconds);
         this.tracked.update(map => {
           const next = new Map(map);
           next.set(machineId, {
@@ -77,10 +83,20 @@ export class ReservationStore {
           });
           return next;
         });
+        this.creatingSignal.set(false);
       },
-      error: () => {},
+      error: (err) => {
+        const serverMsg: string = err?.error?.message ?? '';
+        const isConflict = serverMsg.toLowerCase().includes('active reservation');
+        this.errorSignal.set(
+          isConflict ? 'reservation.error.alreadyActive' : 'reservation.error.generic'
+        );
+        this.creatingSignal.set(false);
+      },
     });
   }
+
+  clearError(): void { this.errorSignal.set(null); }
 
   activateReservation(machineId: string): void {
     this.gymState.activateReservation(machineId);
@@ -130,8 +146,8 @@ export class ReservationStore {
     this.removeTracked(machineId);
   }
 
-  formatTimer(seconds: number): string  { return this.gymState.formatTimer(seconds); }
-  getZoneKey(category: string):  string  { return this.gymState.getZoneKey(category); }
+  formatTimer(seconds: number): string   { return this.gymState.formatTimer(seconds); }
+  getZoneKey(category: string):  string   { return this.gymState.getZoneKey(category); }
   isExpired(machine: GymMachine): boolean { return machine.timerSeconds === 0; }
 
   getEquipmentName(equipmentId: string): string {
