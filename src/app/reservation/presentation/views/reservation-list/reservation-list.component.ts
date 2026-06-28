@@ -31,8 +31,7 @@ import { ContextMenuItem } from '../../../../shared/application/context-menu.ser
 export class ReservationListComponent implements OnInit {
   readonly store = inject(ReservationStore);
 
-  readonly reservations        = this.store.reservations;
-  readonly pendingReservations = this.store.pendingReservations;
+  readonly activeReservations  = this.store.activeReservations;
   readonly availableMachines   = this.store.availableMachines;
   readonly expiredReservations = this.store.expiredReservations;
   readonly history             = this.store.history;
@@ -59,24 +58,27 @@ export class ReservationListComponent implements OnInit {
     { seconds: 20 * 60,   labelKey: 'reservation.modal.option20m' },
   ];
 
-  showModal                = false;
+  showModal               = false;
   selectedMachineId: string | null = null;
-  selectedDurationSeconds  = 15 * 60;
+  selectedDurationSeconds = 15 * 60;
 
   ngOnInit(): void {
     this.store.loadHistory();
   }
 
-  isExpired(machineId: string): boolean {
-    const m = this.reservations().find(r => r.id === machineId);
-    return m ? this.store.isExpired(m) : false;
+  activateReservation(reservationId: string, startTime: string, endTime: string): void {
+    this.store.activateReservation(reservationId, startTime, endTime);
   }
 
-  activateReservation(machineId: string): void { this.store.activateReservation(machineId); }
-  cancelReservation(machineId: string):   void { this.store.cancelReservation(machineId); }
-  dismissExpired(machineId: string):      void { this.store.dismissExpired(machineId); }
-  formatTimer(seconds: number):           string { return this.store.formatTimer(seconds); }
-  getZoneKey(category: string):           string { return this.store.getZoneKey(category); }
+  cancelReservation(reservationId: string): void { this.store.cancelReservation(reservationId); }
+  dismissExpired(machineId: string):        void { this.store.dismissExpired(machineId); }
+  formatTimer(seconds: number):             string { return this.store.formatTimer(seconds); }
+  getZoneKey(category: string):             string { return this.store.getZoneKey(category); }
+  equipmentName(equipmentId: string):       string { return this.store.getEquipmentName(equipmentId); }
+
+  timeRemaining(timerExpiry: string | null | undefined): number {
+    return this.store.timeRemainingSeconds(timerExpiry);
+  }
 
   openModal():  void { this.showModal = true; this.selectedMachineId = null; this.selectedDurationSeconds = 15 * 60; this.store.clearError(); }
   closeModal(): void { this.showModal = false; this.store.clearError(); }
@@ -95,16 +97,12 @@ export class ReservationListComponent implements OnInit {
     this.store.loadHistory();
   }
 
-  reservationMenu(machineId: string): ContextMenuItem[] {
+  reservationMenu(reservationId: string): ContextMenuItem[] {
     return [
-      { label: 'Cancel reservation', icon: 'cancel', action: () => this.cancelReservation(machineId) },
+      { label: 'Cancel reservation', icon: 'cancel', action: () => this.cancelReservation(reservationId) },
       { label: '', icon: '', separator: true, action: () => {} },
       { label: 'New reservation',    icon: 'add',    action: () => this.openModal() },
     ];
-  }
-
-  equipmentName(equipmentId: string): string {
-    return this.store.getEquipmentName(equipmentId);
   }
 
   statusClass(status: string): string {
