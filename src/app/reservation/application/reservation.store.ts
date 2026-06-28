@@ -132,6 +132,10 @@ export class ReservationStore {
   getZoneKey(category: string):  string  { return this.gymState.getZoneKey(category); }
   isExpired(machine: GymMachine): boolean { return machine.timerSeconds === 0; }
 
+  getEquipmentNameKey(equipmentId: string): string {
+    return this.gymState.machines().find(m => m.id === equipmentId)?.nameKey ?? equipmentId;
+  }
+
   private removeTracked(machineId: string): void {
     this.tracked.update(map => {
       const next = new Map(map);

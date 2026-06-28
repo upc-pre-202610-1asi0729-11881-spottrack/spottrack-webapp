@@ -547,12 +547,6 @@
   flex-shrink: 0;
 }
 
-.equipment-id {
-  color: #fff;
-  font-weight: 600;
-  font-size: 13px;
-  font-family: 'Courier New', monospace;
-}
 
 .col-date  { white-space: nowrap; color: #aaa; }
 .col-window { white-space: nowrap; color: #aaa; font-variant-numeric: tabular-nums; }

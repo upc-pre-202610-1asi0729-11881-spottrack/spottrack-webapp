@@ -101,6 +101,10 @@ export class ReservationListComponent implements OnInit {
     ];
   }
 
+  equipmentName(equipmentId: string): string {
+    return this.store.getEquipmentNameKey(equipmentId);
+  }
+
   statusClass(status: string): string {
     switch (status) {
       case 'ACTIVE':    return 'status-active';
