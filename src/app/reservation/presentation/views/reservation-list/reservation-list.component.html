@@ -190,7 +190,7 @@
               <tr>
                 <td class="col-equipment">
                   <mat-icon class="row-icon">fitness_center</mat-icon>
-                  <span>{{ 'machines.names.' + equipmentName(r.equipmentId) | translate }}</span>
+                  <span>{{ equipmentName(r.equipmentId) }}</span>
                 </td>
                 <td>
                   <span class="status-badge" [ngClass]="statusClass(r.status)">

@@ -102,7 +102,7 @@ export class ReservationListComponent implements OnInit {
   }
 
   equipmentName(equipmentId: string): string {
-    return this.store.getEquipmentNameKey(equipmentId);
+    return this.store.getEquipmentName(equipmentId);
   }
 
   statusClass(status: string): string {

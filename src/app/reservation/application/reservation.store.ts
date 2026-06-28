@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { AuthStore } from '../../auth/application/auth.store';
+import { EquipmentStore } from '../../gym/application/equipment.store';
 import { GymStateService, GymMachine } from '../../shared/application/gym-state.service';
 import { ReservationApi } from '../infrastructure/reservation-api';
 import { ReservationResource } from '../infrastructure/reservation-response';
@@ -15,9 +16,10 @@ interface TrackedReservation {
 @Injectable({ providedIn: 'root' })
 export class ReservationStore {
 
-  private readonly api      = inject(ReservationApi);
-  private readonly auth     = inject(AuthStore);
-  private readonly gymState = inject(GymStateService);
+  private readonly api           = inject(ReservationApi);
+  private readonly auth          = inject(AuthStore);
+  private readonly gymState      = inject(GymStateService);
+  private readonly equipmentStore = inject(EquipmentStore);
 
   private readonly tracked           = signal<Map<string, TrackedReservation>>(new Map());
   private readonly historySignal     = signal<ReservationResource[]>([]);
@@ -132,8 +134,12 @@ export class ReservationStore {
   getZoneKey(category: string):  string  { return this.gymState.getZoneKey(category); }
   isExpired(machine: GymMachine): boolean { return machine.timerSeconds === 0; }
 
-  getEquipmentNameKey(equipmentId: string): string {
-    return this.gymState.machines().find(m => m.id === equipmentId)?.nameKey ?? equipmentId;
+  getEquipmentName(equipmentId: string): string {
+    const byUuid = this.equipmentStore.equipment().find(e => e.uuid === equipmentId);
+    if (byUuid) return byUuid.name;
+    const byLocalId = this.gymState.machines().find(m => m.id === equipmentId);
+    if (byLocalId) return byLocalId.nameKey;
+    return equipmentId.length > 12 ? equipmentId.slice(0, 8) + '…' : equipmentId;
   }
 
   private removeTracked(machineId: string): void {
