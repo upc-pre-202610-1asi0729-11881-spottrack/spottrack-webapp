@@ -19,7 +19,7 @@ export class ReservationFormComponent {
   readonly reserved = output<void>();
   readonly cancelled = output<void>();
 
-  readonly availableMachines = this.store.availableMachines;
+  readonly availableEquipment = this.store.availableEquipment;
 
   durations = [
     { seconds: 10,        labelKey: 'reservation.modal.option10s' },

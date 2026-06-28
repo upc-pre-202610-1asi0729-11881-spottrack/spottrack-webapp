@@ -12,10 +12,8 @@
     <div class="form-group">
       <label>{{ 'reservation.modal.selectMachine' | translate }}</label>
       <mat-select [(ngModel)]="selectedMachineId" class="form-select" placeholder="{{ 'reservation.modal.machinePlaceholder' | translate }}">
-        @for (machine of availableMachines(); track machine.id) {
-          <mat-option [value]="machine.id">
-            {{ 'machines.names.' + machine.nameKey | translate }}
-          </mat-option>
+        @for (eq of availableEquipment(); track eq.uuid) {
+          <mat-option [value]="eq.uuid">{{ eq.name }}</mat-option>
         }
       </mat-select>
     </div>

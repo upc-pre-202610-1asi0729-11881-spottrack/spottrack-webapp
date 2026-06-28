@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -32,7 +32,7 @@ export class ReservationListComponent implements OnInit {
   readonly store = inject(ReservationStore);
 
   readonly activeReservations  = this.store.activeReservations;
-  readonly availableMachines   = this.store.availableMachines;
+  readonly availableEquipment  = this.store.availableEquipment;
   readonly expiredReservations = this.store.expiredReservations;
   readonly history             = this.store.history;
   readonly historyLoading      = this.store.historyLoading;
@@ -58,9 +58,22 @@ export class ReservationListComponent implements OnInit {
     { seconds: 20 * 60,   labelKey: 'reservation.modal.option20m' },
   ];
 
-  showModal               = false;
+  readonly showModal              = signal(false);
   selectedMachineId: string | null = null;
-  selectedDurationSeconds = 15 * 60;
+  selectedDurationSeconds          = 15 * 60;
+
+  private pendingModalClose = false;
+
+  constructor() {
+    effect(() => {
+      if (this.pendingModalClose && !this.creating()) {
+        this.pendingModalClose = false;
+        if (!this.reservationError()) {
+          this.showModal.set(false);
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.store.loadHistory();
@@ -80,13 +93,22 @@ export class ReservationListComponent implements OnInit {
     return this.store.timeRemainingSeconds(timerExpiry);
   }
 
-  openModal():  void { this.showModal = true; this.selectedMachineId = null; this.selectedDurationSeconds = 15 * 60; this.store.clearError(); }
-  closeModal(): void { this.showModal = false; this.store.clearError(); }
+  openModal(): void {
+    this.selectedMachineId = null;
+    this.selectedDurationSeconds = 15 * 60;
+    this.store.clearError();
+    this.showModal.set(true);
+  }
+
+  closeModal(): void {
+    this.store.clearError();
+    this.showModal.set(false);
+  }
 
   createReservation(): void {
     if (!this.selectedMachineId) return;
+    this.pendingModalClose = true;
     this.store.createReservation(this.selectedMachineId, this.selectedDurationSeconds);
-    this.closeModal();
   }
 
   prevPage(): void { this.pageIndex.update(i => Math.max(0, i - 1)); }

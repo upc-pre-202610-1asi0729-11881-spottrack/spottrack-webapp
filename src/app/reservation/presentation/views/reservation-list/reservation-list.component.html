@@ -193,7 +193,7 @@
 </div>
 
 <!-- ===== NEW RESERVATION MODAL ===== -->
-@if (showModal) {
+@if (showModal()) {
   <div class="modal-backdrop" (click)="closeModal()">
     <mat-card class="modal-card" (click)="$event.stopPropagation()">
       <mat-card-content class="modal-content">
@@ -219,10 +219,8 @@
               panelClass="booking-select-panel"
               disableRipple
             >
-              @for (machine of availableMachines(); track machine.id) {
-                <mat-option [value]="machine.id">
-                  {{ 'machines.names.' + machine.nameKey | translate }}
-                </mat-option>
+              @for (eq of availableEquipment(); track eq.uuid) {
+                <mat-option [value]="eq.uuid">{{ eq.name }}</mat-option>
               }
             </mat-select>
           </div>
