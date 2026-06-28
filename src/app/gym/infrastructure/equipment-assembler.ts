@@ -10,7 +10,7 @@ export class EquipmentAssembler implements BaseAssembler<Equipment, EquipmentRes
   toEntityFromResource(r: EquipmentResource): Equipment {
     return new Equipment({
       id:               r.id ?? 0,
-      uuid:             r.equipmentId ?? '',
+      uuid:             r.equipmentId ?? r.id?.toString() ?? '',
       zoneId:           Number(r.zoneId) || 0,
       name:             r.equipmentName ?? '',
       brand:            r.manufacturerId ?? '',
