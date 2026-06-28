@@ -45,7 +45,7 @@ export class AuthStore {
             const raw     = details.roles?.[0] ?? details.role ?? '';
             const roleStr = String(raw).toUpperCase();
             const role    = roleStr.includes('ADMIN') ? UserRole.ADMIN : UserRole.CLIENT;
-            const user: User = { email: res.username, name: res.username, role };
+            const user: User = { id: res.id, email: res.username, name: res.username, role };
             this.userSignal.set(user);
             localStorage.setItem(USER_KEY, JSON.stringify(user));
             this.router.navigate([role === UserRole.ADMIN ? '/dashboard' : '/map']);
