@@ -106,9 +106,25 @@
       <div class="floor-plan">
         <div class="scan-line" aria-hidden="true"></div>
 
-        <div class="zone-label zone-left">CARDIO</div>
-        <div class="zone-divider"></div>
-        <div class="zone-label zone-right">STRENGTH</div>
+        <!-- Blueprint structural overlay -->
+        <div class="bp-h-divider" style="top:48%" aria-hidden="true"></div>
+        <div class="zone-divider"                  aria-hidden="true"></div>
+
+        <div class="zone-label zone-left zone-label-top" aria-hidden="true">
+          <mat-icon>directions_run</mat-icon>CARDIO
+        </div>
+        <div class="zone-label zone-right zone-label-top" aria-hidden="true">
+          <mat-icon>fitness_center</mat-icon>STRENGTH
+        </div>
+
+        <div class="bp-support-room" aria-hidden="true">
+          <mat-icon>lock</mat-icon>
+          <span class="bp-room-lbl">LOCKER</span>
+        </div>
+        <div class="bp-entrance" aria-hidden="true">
+          <mat-icon>sensor_door</mat-icon>
+          <span class="bp-room-lbl">ENTRANCE</span>
+        </div>
 
         @for (item of filteredEquipment; track item.eq.uuid) {
           <div
