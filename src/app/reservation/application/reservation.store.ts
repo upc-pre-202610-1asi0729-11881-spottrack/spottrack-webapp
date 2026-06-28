@@ -1,41 +1,144 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { AuthStore } from '../../auth/application/auth.store';
 import { GymStateService, GymMachine } from '../../shared/application/gym-state.service';
+import { ReservationApi } from '../infrastructure/reservation-api';
+import { ReservationResource } from '../infrastructure/reservation-response';
+
+interface TrackedReservation {
+  reservationId:   string;
+  machineId:       string;
+  equipmentId:     string;
+  durationMinutes: number;
+  timerStarted:    boolean;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ReservationStore {
 
+  private readonly api      = inject(ReservationApi);
+  private readonly auth     = inject(AuthStore);
   private readonly gymState = inject(GymStateService);
+
+  private readonly tracked           = signal<Map<string, TrackedReservation>>(new Map());
+  private readonly historySignal     = signal<ReservationResource[]>([]);
+  private readonly histLoadingSignal = signal(false);
 
   readonly reservations        = this.gymState.reservedMachines;
   readonly pendingReservations = this.gymState.pendingMachines;
   readonly availableMachines   = this.gymState.availableMachines;
   readonly expiredReservations = this.gymState.expiredReservations;
+  readonly history             = this.historySignal.asReadonly();
+  readonly historyLoading      = this.histLoadingSignal.asReadonly();
+
+  loadHistory(): void {
+    this.histLoadingSignal.set(true);
+    const uid = this.auth.currentUser()?.id;
+    this.api.getAllReservations().subscribe({
+      next: all => {
+        const list = uid != null ? all.filter(r => r.clientId === uid) : all;
+        this.historySignal.set(list);
+        this.histLoadingSignal.set(false);
+      },
+      error: () => this.histLoadingSignal.set(false),
+    });
+  }
 
   createReservation(machineId: string, durationSeconds: number): void {
+    const durationMinutes = Math.max(1, Math.ceil(durationSeconds / 60));
+
     this.gymState.createReservation(machineId, durationSeconds);
+
+    const clientId   = this.auth.currentUser()?.id ?? 0;
+    const now        = new Date();
+    const endDate    = new Date(now.getTime() + durationSeconds * 1000);
+    const activation = new Date(now.getTime() + 5 * 60 * 1000);
+
+    const pad          = (n: number) => String(n).padStart(2, '0');
+    const toTimeString = (d: Date)   =>
+      `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+
+    this.api.initiateExpressReservation({
+      clientId,
+      equipmentId: machineId,
+      startTime:   toTimeString(now),
+      endTime:     toTimeString(endDate),
+      startedAt:   now.toISOString(),
+      timeExpiry:  activation.toISOString(),
+    }).subscribe({
+      next: res => {
+        this.tracked.update(map => {
+          const next = new Map(map);
+          next.set(machineId, {
+            reservationId:   res.id,
+            machineId,
+            equipmentId:     machineId,
+            durationMinutes,
+            timerStarted:    false,
+          });
+          return next;
+        });
+      },
+      error: () => {},
+    });
   }
 
   activateReservation(machineId: string): void {
     this.gymState.activateReservation(machineId);
+
+    const entry = this.tracked().get(machineId);
+    if (!entry) return;
+
+    this.api.startTimer(entry.reservationId, entry.durationMinutes).subscribe({
+      next: () => {
+        this.tracked.update(map => {
+          const next = new Map(map);
+          const cur  = next.get(machineId);
+          if (cur) next.set(machineId, { ...cur, timerStarted: true });
+          return next;
+        });
+      },
+      error: () => {},
+    });
   }
 
   cancelReservation(machineId: string): void {
     this.gymState.cancelReservation(machineId);
+
+    const entry = this.tracked().get(machineId);
+    if (!entry) return;
+
+    this.api.cancelReservation(entry.reservationId).subscribe({
+      next:  () => this.removeTracked(machineId),
+      error: () => this.removeTracked(machineId),
+    });
+  }
+
+  endReservation(machineId: string): void {
+    this.gymState.cancelReservation(machineId);
+
+    const entry = this.tracked().get(machineId);
+    if (!entry) return;
+
+    this.api.endReservation(entry.reservationId).subscribe({
+      next:  () => this.removeTracked(machineId),
+      error: () => this.removeTracked(machineId),
+    });
   }
 
   dismissExpired(machineId: string): void {
     this.gymState.dismissExpiredReservation(machineId);
+    this.removeTracked(machineId);
   }
 
-  formatTimer(seconds: number): string {
-    return this.gymState.formatTimer(seconds);
-  }
+  formatTimer(seconds: number): string  { return this.gymState.formatTimer(seconds); }
+  getZoneKey(category: string):  string  { return this.gymState.getZoneKey(category); }
+  isExpired(machine: GymMachine): boolean { return machine.timerSeconds === 0; }
 
-  getZoneKey(category: string): string {
-    return this.gymState.getZoneKey(category);
-  }
-
-  isExpired(machine: GymMachine): boolean {
-    return machine.timerSeconds === 0;
+  private removeTracked(machineId: string): void {
+    this.tracked.update(map => {
+      const next = new Map(map);
+      next.delete(machineId);
+      return next;
+    });
   }
 }
