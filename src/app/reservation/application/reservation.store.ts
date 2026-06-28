@@ -32,11 +32,9 @@ export class ReservationStore {
 
   loadHistory(): void {
     this.histLoadingSignal.set(true);
-    const uid = this.auth.currentUser()?.id;
     this.api.getAllReservations().subscribe({
       next: all => {
-        const list = uid != null ? all.filter(r => r.clientId === uid) : all;
-        this.historySignal.set(list);
+        this.historySignal.set(all);
         this.histLoadingSignal.set(false);
       },
       error: () => this.histLoadingSignal.set(false),
