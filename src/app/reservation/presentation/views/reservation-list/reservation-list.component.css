@@ -58,7 +58,14 @@
   transition: background-color 0.2s ease;
 }
 
-.new-booking-btn:hover { background-color: #e0b214; }
+.new-booking-btn:hover:not(:disabled) { background-color: #e0b214; }
+
+.new-booking-btn:disabled {
+  background-color: #2a2415;
+  color: #5a4e20;
+  cursor: not-allowed;
+  border: 1px solid #3a3218;
+}
 
 .new-booking-btn mat-icon {
   font-size: 18px;

@@ -1,23 +1,70 @@
 .shell {
   display: flex;
   height: 100vh;
-  background-color: #0d0d0d;
-  background-image:
-    radial-gradient(ellipse at center, rgba(245, 188, 54, 0.07), transparent 70%),
-    radial-gradient(ellipse at center, rgba(245, 188, 54, 0.05), transparent 70%),
-    radial-gradient(ellipse at center, rgba(245, 188, 54, 0.03), transparent 70%);
-  background-size: 600px 600px, 450px 450px, 350px 350px;
-  background-position: 12% 55%, 88% 18%, 50% 85%;
-  background-repeat: no-repeat;
-  animation: bg-drift 28s ease-in-out infinite alternate;
+  background: #0d0d0d;
 }
 
-@keyframes bg-drift {
-  0%   { background-position: 12% 55%, 88% 18%, 50% 85%; }
-  25%  { background-position: 20% 35%, 75% 42%, 38% 65%; }
-  50%  { background-position:  8% 72%, 92% 28%, 62% 90%; }
-  75%  { background-position: 22% 48%, 70% 22%, 55% 72%; }
-  100% { background-position: 15% 60%, 80% 12%, 45% 80%; }
+/* ── Background ambient orbs ─────────────────────────────── */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.orb-1 {
+  width: 700px;
+  height: 700px;
+  background: rgba(245, 188, 54, 0.14);
+  top: -180px;
+  left: -120px;
+  animation: orb-drift-1 22s ease-in-out infinite alternate;
+}
+
+.orb-2 {
+  width: 550px;
+  height: 550px;
+  background: rgba(245, 188, 54, 0.10);
+  bottom: -140px;
+  right: -100px;
+  animation: orb-drift-2 28s ease-in-out infinite alternate;
+  animation-delay: -12s;
+}
+
+.orb-3 {
+  width: 420px;
+  height: 420px;
+  background: rgba(245, 188, 54, 0.07);
+  top: 45%;
+  left: 48%;
+  animation: orb-drift-3 19s ease-in-out infinite alternate;
+  animation-delay: -6s;
+}
+
+@keyframes orb-drift-1 {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(90px, 70px); }
+  100% { transform: translate(-50px, 140px); }
+}
+
+@keyframes orb-drift-2 {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(-70px, -90px); }
+  100% { transform: translate(50px, -130px); }
+}
+
+@keyframes orb-drift-3 {
+  0%   { transform: translate(-50%, -50%); }
+  33%  { transform: translate(calc(-50% + 70px), calc(-50% - 50px)); }
+  66%  { transform: translate(calc(-50% - 50px), calc(-50% + 90px)); }
+  100% { transform: translate(-50%, calc(-50% + 40px)); }
 }
 
 .shell__body {
