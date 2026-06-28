@@ -273,8 +273,159 @@ $blue:         #60a5fa;
 
   mat-icon { font-size: 18px; height: 18px; width: 18px; }
 
+  &--qr     { color: $text-muted; &:hover { color: $teal;   background: rgba($teal, 0.1); } }
   &--edit   { color: $text-muted; &:hover { color: $accent; background: rgba($accent, 0.1); } }
   &--delete { color: $text-muted; &:hover { color: $red;    background: rgba($red, 0.1); } }
+}
+
+// ─── QR Modal ────────────────────────────────────────────────────────────────
+.qr-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.qr-modal {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.qr-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid $border;
+}
+
+.qr-modal__title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.qr-modal__icon {
+  color: $teal;
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.qr-modal__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.qr-modal__subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: $text-muted;
+}
+
+.qr-modal__close {
+  color: $text-muted;
+  &:hover { color: $text-primary; }
+}
+
+.qr-modal__body {
+  padding: 24px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.qr-image-wrap {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+.qr-image {
+  display: block;
+  width: 200px;
+  height: 200px;
+}
+
+.qr-uuid {
+  font-size: 11px;
+  font-family: 'Roboto Mono', monospace;
+  color: $text-muted;
+  word-break: break-all;
+  text-align: center;
+  margin: 0;
+}
+
+.qr-hint {
+  font-size: 13px;
+  color: $text-muted;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.qr-modal__footer {
+  padding: 16px 20px 20px;
+  border-top: 1px solid $border;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-test-qr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid $border;
+  border-radius: 8px;
+  color: $text-muted;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+
+  mat-icon { font-size: 16px; height: 16px; width: 16px; }
+
+  &:hover { border-color: $accent; color: $accent; }
+}
+
+.test-qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.test-qr-label {
+  font-size: 12px;
+  color: $text-muted;
+  margin: 0;
+}
+
+.test-qr-image {
+  display: block;
+  width: 140px;
+  height: 140px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px;
 }
 
 // ─── No data ─────────────────────────────────────────────────────────────────

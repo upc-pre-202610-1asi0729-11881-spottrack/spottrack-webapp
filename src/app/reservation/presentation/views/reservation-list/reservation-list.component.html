@@ -13,6 +13,14 @@
   </header>
 
   <!-- ===== RESERVATION CARDS (real-time from backend) ===== -->
+  <!-- ===== SCAN FEEDBACK ===== -->
+  @if (scanFeedback()) {
+    <div class="scan-feedback" [class.scan-feedback--ok]="scanFeedback()!.ok" [class.scan-feedback--err]="!scanFeedback()!.ok">
+      <mat-icon>{{ scanFeedback()!.ok ? 'check_circle' : 'error_outline' }}</mat-icon>
+      <span>{{ scanFeedback()!.msg }}</span>
+    </div>
+  }
+
   <div class="booking-list">
 
     @for (r of activeReservations(); track r.id) {
@@ -54,10 +62,16 @@
               <span class="pending-title">{{ 'reservation.pending.title' | translate }}</span>
               <span class="pending-subtitle">{{ 'reservation.pending.subtitle' | translate }}</span>
             </div>
-            <button class="btn-activate" (click)="activateReservation(r.id, r.startTime, r.endTime)">
-              <mat-icon>play_arrow</mat-icon>
-              {{ 'reservation.activate' | translate }}
-            </button>
+            <div class="pending-actions">
+              <button class="btn-scan-qr" (click)="openScanner()">
+                <mat-icon>qr_code_scanner</mat-icon>
+                Escanear QR
+              </button>
+              <button class="btn-activate-manual" (click)="activateReservation(r.id, r.startTime, r.endTime)">
+                <mat-icon>play_arrow</mat-icon>
+                {{ 'reservation.activate' | translate }}
+              </button>
+            </div>
           </div>
         }
       </mat-card>
@@ -191,6 +205,14 @@
   </div>
 
 </div>
+
+<!-- ===== QR SCANNER MODAL ===== -->
+@if (showScanner()) {
+  <app-qr-scanner
+    (scanned)="onQrScanned($event)"
+    (closed)="closeScanner()"
+  ></app-qr-scanner>
+}
 
 <!-- ===== NEW RESERVATION MODAL ===== -->
 @if (showModal()) {

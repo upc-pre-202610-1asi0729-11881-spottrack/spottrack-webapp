@@ -109,8 +109,8 @@ export class ReservationStore {
       equipmentId,
       startTime:   toTimeString(now),
       endTime:     toTimeString(endDate),
-      startedAt:   now.toISOString(),
-      timeExpiry:  activation.toISOString(),
+      startedAt:   now.toISOString().split('.')[0],
+      timeExpiry:  activation.toISOString().split('.')[0],
     }).subscribe({
       next: res => {
         this.gymState.createReservation(machineId, durationSeconds);
@@ -198,6 +198,14 @@ export class ReservationStore {
       next:  () => this.loadHistory(),
       error: () => this.loadHistory(),
     });
+  }
+
+  scanAndActivate(scannedEquipmentId: string): 'activated' | 'no_reservation' {
+    const reservation = this.activeReservations()
+      .find(r => r.equipmentId === scannedEquipmentId && !r.timerExpiry);
+    if (!reservation) return 'no_reservation';
+    this.activateReservation(reservation.id, reservation.startTime, reservation.endTime);
+    return 'activated';
   }
 
   dismissExpired(machineId: string): void {
