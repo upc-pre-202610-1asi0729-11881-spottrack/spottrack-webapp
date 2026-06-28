@@ -345,9 +345,9 @@ export class MapComponent {
       const t         = intensity[item.key] ?? 0;
       const x         = (parseFloat(item.left) / 100) * W;
       const y         = (parseFloat(item.top)  / 100) * H;
-      const radius    = 85 + t * 65;
+      const radius    = 150 + t * 110;
       const [r, g, b] = this.rgbFromIntensity(t);
-      const alpha     = t > 0 ? 0.14 + t * 0.46 : 0.07;
+      const alpha     = t > 0 ? 0.10 + t * 0.38 : 0.04;
 
       const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
       grad.addColorStop(0,   `rgba(${r},${g},${b},${alpha})`);
