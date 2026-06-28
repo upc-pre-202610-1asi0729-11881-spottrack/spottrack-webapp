@@ -373,10 +373,6 @@
   outline: none;
 }
 
-.booking-select .mat-mdc-select-trigger { color: #ffffff; }
-.booking-select .mat-mdc-select-value   { color: #ffffff; }
-.booking-select .mat-mdc-select-placeholder { color: #555; }
-.booking-select .mat-mdc-select-arrow  { color: #888; }
 
 /* ---- Warning ---- */
 .warning-box {
