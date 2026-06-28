@@ -48,6 +48,24 @@ app-layout {
   color: #aaa !important;
 }
 
+/* mat-select trigger text — component CSS can't pierce mat-select's encapsulation */
+.booking-select .mat-mdc-select-trigger,
+.booking-select .mat-mdc-select-value,
+.form-select .mat-mdc-select-trigger,
+.form-select .mat-mdc-select-value {
+  color: #fff !important;
+}
+
+.booking-select .mat-mdc-select-placeholder,
+.form-select .mat-mdc-select-placeholder {
+  color: #6b7280 !important;
+}
+
+.booking-select .mat-mdc-select-arrow,
+.form-select .mat-mdc-select-arrow {
+  color: #9ca3af !important;
+}
+
 /* Booking modal select panel */
 .booking-select-panel {
   background: #1a1a1a !important;

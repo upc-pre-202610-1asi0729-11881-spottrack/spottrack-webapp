@@ -9,6 +9,7 @@ export enum EquipmentStatus {
 
 export class Equipment implements BaseEntity {
   private _id:               number;
+  private _uuid:             string;
   private _zoneId:           number;
   private _name:             string;
   private _brand:            string;
@@ -19,6 +20,7 @@ export class Equipment implements BaseEntity {
 
   constructor(props: {
     id:               number;
+    uuid:             string;
     zoneId:           number;
     name:             string;
     brand:            string;
@@ -28,6 +30,7 @@ export class Equipment implements BaseEntity {
     status:           EquipmentStatus;
   }) {
     this._id               = props.id;
+    this._uuid             = props.uuid;
     this._zoneId           = props.zoneId;
     this._name             = props.name;
     this._brand            = props.brand;
@@ -39,6 +42,7 @@ export class Equipment implements BaseEntity {
 
   get id():               number          { return this._id; }
   set id(v:               number)         { this._id = v; }
+  get uuid():             string          { return this._uuid; }
   get zoneId():           number          { return this._zoneId; }
   set zoneId(v:           number)         { this._zoneId = v; }
   get name():             string          { return this._name; }

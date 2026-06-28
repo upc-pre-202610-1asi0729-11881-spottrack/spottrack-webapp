@@ -61,6 +61,7 @@ export class AddEquipmentDialogComponent {
     } else {
       const entity = new Equipment({
         id:               0,
+        uuid:             '',
         name:             val.name,
         brand:            val.brand,
         model:            val.model,

@@ -97,10 +97,10 @@
       "chest": "Chest"
     }
   },
-  "booking": {
+  "reservation": {
     "title": "My Reservations",
     "subtitle": "Manage your active reservations and create new ones",
-    "newBooking": "New Reservation",
+    "newReservation": "New Reservation",
     "timeRemaining": "Time remaining",
     "activationWindow": "Activation window",
     "activate": "Start Reservation",
@@ -124,6 +124,7 @@
       "subtitle": "Reserve an available machine for a limited time",
       "machine": "Machine",
       "selectMachine": "Select a machine",
+      "machinePlaceholder": "Select a machine",
       "duration": "Duration",
       "minutesSuffix": "minutes",
       "warning": "After creating the reservation, you have 5 minutes to activate it. If not activated in time, it will be automatically cancelled.",
@@ -132,7 +133,24 @@
       "option15m": "15 minutes",
       "option20m": "20 minutes",
       "cancel": "Cancel",
-      "create": "Create Reservation"
+      "create": "Create Reservation",
+      "confirm": "Reserve"
+    },
+    "error": {
+      "alreadyActive": "You already have an active reservation. Cancel it or wait for it to expire before creating a new one.",
+      "generic": "Could not create the reservation. Please try again."
+    },
+    "history": {
+      "title": "Reservation History",
+      "subtitle": "All your past and active reservations",
+      "loading": "Loading reservations...",
+      "empty": "No reservations found",
+      "col": {
+        "equipment": "Equipment",
+        "status": "Status",
+        "started": "Started",
+        "window": "Time window"
+      }
     }
   },
   "clientAlerts": {

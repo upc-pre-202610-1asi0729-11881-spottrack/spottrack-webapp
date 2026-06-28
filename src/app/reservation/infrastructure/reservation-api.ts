@@ -42,4 +42,8 @@ export class ReservationApi {
       `${this.reqBase}/${requestId}/release`, {}
     );
   }
+
+  getAllReservations(): Observable<ReservationResource[]> {
+    return this.http.get<ReservationResource[]>(this.base);
+  }
 }
