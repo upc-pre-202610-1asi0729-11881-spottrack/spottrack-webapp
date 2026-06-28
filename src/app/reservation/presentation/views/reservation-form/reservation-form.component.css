@@ -44,6 +44,10 @@
 }
 
 .form-select { width: 100%; }
+.form-select .mat-mdc-select-trigger { color: #fff; }
+.form-select .mat-mdc-select-value   { color: #fff; }
+.form-select .mat-mdc-select-placeholder { color: #6b7280; }
+.form-select .mat-mdc-select-arrow  { color: #9ca3af; }
 
 .form-actions {
   display: flex;
