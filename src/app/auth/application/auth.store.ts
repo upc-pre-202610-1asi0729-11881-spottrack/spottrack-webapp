@@ -1,25 +1,46 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { switchMap } from 'rxjs';
 import { AuthApiService } from '../infrastructure/auth-api.service';
+import { ProfileApiService } from '../infrastructure/profile-api.service';
 import { User, UserRole } from '../domain/model/user.model';
 
 const TOKEN_KEY = 'spottrack_token';
 const USER_KEY  = 'spottrack_user';
 
+// The public sign-up endpoint always grants ROLE_CLIENT — there is no
+// self-service path to ROLE_ADMIN today (sign-up-staff requires an existing
+// admin token). "businessIntent" only steers local navigation (into the
+// plan/payment flow); the persisted backend role is always CLIENT.
+export interface RegisterData {
+  firstName:      string;
+  lastName:       string;
+  dni:            string;
+  phoneNumber:    string;
+  email:          string;
+  password:       string;
+  businessIntent: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
-  private readonly api    = inject(AuthApiService);
-  private readonly router = inject(Router);
+  private readonly api        = inject(AuthApiService);
+  private readonly profileApi = inject(ProfileApiService);
+  private readonly router     = inject(Router);
 
   private readonly userSignal  = signal<User | null>(this.loadUser());
   private readonly tokenSignal = signal<string | null>(
     localStorage.getItem(TOKEN_KEY)
   );
-  private readonly errorSignal = signal<string | null>(null);
+  private readonly errorSignal         = signal<string | null>(null);
+  private readonly registerErrorSignal = signal<string | null>(null);
+  private readonly registerLoadingSignal = signal(false);
 
-  readonly currentUser     = this.userSignal.asReadonly();
-  readonly token           = this.tokenSignal.asReadonly();
-  readonly loginError      = this.errorSignal.asReadonly();
+  readonly currentUser      = this.userSignal.asReadonly();
+  readonly token            = this.tokenSignal.asReadonly();
+  readonly loginError       = this.errorSignal.asReadonly();
+  readonly registerError    = this.registerErrorSignal.asReadonly();
+  readonly registerLoading  = this.registerLoadingSignal.asReadonly();
   readonly isAuthenticated = computed(() => this.tokenSignal() !== null);
   readonly isAdmin         = computed(() =>
     this.userSignal()?.role === UserRole.ADMIN
@@ -61,6 +82,58 @@ export class AuthStore {
       error: () => this.errorSignal.set('auth.error.invalidCredentials'),
     });
   }
+
+  register(data: RegisterData): void {
+    this.registerErrorSignal.set(null);
+    this.registerLoadingSignal.set(true);
+
+    this.api.signUp({ username: data.email.trim(), password: data.password }).pipe(
+      switchMap(() => this.api.signIn({ username: data.email.trim(), password: data.password }))
+    ).subscribe({
+      next: res => {
+        // Token must be set before the next calls so the JWT interceptor attaches it
+        this.tokenSignal.set(res.token);
+        localStorage.setItem(TOKEN_KEY, res.token);
+
+        this.profileApi.createClientProfile({ userId: res.id, email: data.email.trim() }).pipe(
+          switchMap(() => this.profileApi.updateClientProfile({
+            firstName:   data.firstName.trim(),
+            lastName:    data.lastName.trim(),
+            phoneNumber: data.phoneNumber.trim(),
+            dni:         data.dni.trim(),
+          }))
+        ).subscribe({
+          next: () => {
+            const user: User = {
+              id:    res.id,
+              email: res.username,
+              name:  `${data.firstName.trim()} ${data.lastName.trim()}`,
+              role:  UserRole.CLIENT,
+            };
+            this.userSignal.set(user);
+            localStorage.setItem(USER_KEY, JSON.stringify(user));
+            this.registerLoadingSignal.set(false);
+
+            this.router.navigate(data.businessIntent ? ['/register/plans'] : ['/map']);
+          },
+          error: () => {
+            this.registerLoadingSignal.set(false);
+            this.registerErrorSignal.set('auth.error.profileFailed');
+          },
+        });
+      },
+      error: err => {
+        this.registerLoadingSignal.set(false);
+        this.registerErrorSignal.set(
+          err?.status === 409 || err?.status === 400
+            ? 'auth.error.emailTaken'
+            : 'auth.error.registerFailed'
+        );
+      },
+    });
+  }
+
+  clearRegisterError(): void { this.registerErrorSignal.set(null); }
 
   logout(): void {
     this.userSignal.set(null);

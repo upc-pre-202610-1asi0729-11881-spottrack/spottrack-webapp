@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface SignInRequest  { username: string; password: string; }
-export interface SignUpRequest  { username: string; password: string; roles: string[]; }
+export interface SignUpRequest  { username: string; password: string; }
 export interface AuthResponse   { id: number; username: string; token: string; roles?: string[]; role?: string; }
 
 @Injectable({ providedIn: 'root' })
