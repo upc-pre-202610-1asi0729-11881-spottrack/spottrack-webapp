@@ -22,6 +22,21 @@ export const routes: Routes = [
       import('./auth/presentation/views/register/register').then(m => m.RegisterComponent),
   },
   {
+    path: 'register/plans',
+    loadComponent: () =>
+      import('./auth/presentation/views/plan-selection/plan-selection').then(m => m.PlanSelectionComponent),
+  },
+  {
+    path: 'payment/success',
+    loadComponent: () =>
+      import('./auth/presentation/views/payment-result/payment-success').then(m => m.PaymentSuccessComponent),
+  },
+  {
+    path: 'payment/cancel',
+    loadComponent: () =>
+      import('./auth/presentation/views/payment-result/payment-cancel').then(m => m.PaymentCancelComponent),
+  },
+  {
     path: '',
     component: Layout,
     canActivate: [authGuard],
