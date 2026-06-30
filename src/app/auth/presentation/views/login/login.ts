@@ -40,6 +40,10 @@ export class LoginComponent {
     this.auth.clearError();
   }
 
+  goToRegister(): void {
+    this.router.navigate(['/register']);
+  }
+
   fillAdmin(): void {
     this.email    = 'admin@spottrack.com';
     this.password = 'demo1234';

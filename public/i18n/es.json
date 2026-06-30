@@ -18,9 +18,83 @@
       "demoTitle": "Credenciales de demostración",
       "demoPassword": "Contraseña: demo1234"
     },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Únete a SpotTrack para empezar a gestionar tu gimnasio",
+      "accountTypeLabel": "Quiero registrarme como",
+      "clientOption": "Cliente",
+      "clientOptionDesc": "Reservar equipos y seguir mis rutinas",
+      "businessOption": "Negocio",
+      "businessOptionDesc": "Administrar un gimnasio y suscribirme a un plan",
+      "firstNameLabel": "Nombres",
+      "firstNamePlaceholder": "Juan",
+      "lastNameLabel": "Apellidos",
+      "lastNamePlaceholder": "Pérez",
+      "dniLabel": "DNI",
+      "dniPlaceholder": "12345678",
+      "phoneLabel": "Número de teléfono",
+      "phonePlaceholder": "987654321",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Mínimo 8 caracteres",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Repite tu contraseña",
+      "submitBtn": "Crear cuenta",
+      "submitting": "Creando cuenta…",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Inicia sesión",
+      "error": {
+        "required": "Este campo es obligatorio",
+        "dni": "El DNI debe tener exactamente 8 dígitos",
+        "phone": "Ingresa un número de teléfono válido (7-15 dígitos)",
+        "email": "Ingresa un correo electrónico válido",
+        "password": "La contraseña debe tener al menos 8 caracteres",
+        "passwordMismatch": "Las contraseñas no coinciden"
+      }
+    },
+    "plans": {
+      "title": "Elige tu plan",
+      "subtitle": "Selecciona el plan que se ajuste a tu gimnasio y continúa con el pago",
+      "popularBadge": "Más popular",
+      "perMonth": "/mes",
+      "proceedBtn": "Continuar al pago",
+      "processing": "Redirigiendo al pago…",
+      "checkoutError": "El servicio de pago no está disponible. Inténtalo de nuevo más tarde.",
+      "tier": {
+        "basic": "Basic",
+        "mid": "Mid",
+        "platinum": "Platinum"
+      },
+      "feature": {
+        "plan20Equipment": "Hasta 20 equipos",
+        "planRealtimeMonitoring": "Monitoreo en tiempo real",
+        "planMaintenanceAlerts": "Alertas de mantenimiento",
+        "planEmailSupport": "Soporte por correo",
+        "plan60Equipment": "Hasta 60 equipos",
+        "planAdvancedAlerts": "Alertas y reportes avanzados",
+        "planPrioritySupport": "Soporte prioritario por correo",
+        "planAnalytics": "Panel de analíticas",
+        "planUnlimitedEquipment": "Equipos ilimitados",
+        "planCustomReports": "Alertas y reportes personalizados",
+        "plan24Support": "Soporte prioritario 24/7",
+        "planFullAnalytics": "Suite completa de analíticas"
+      }
+    },
+    "payment": {
+      "successTitle": "Pago exitoso",
+      "successSubtitle": "Tu suscripción ya está activa. Todo listo para empezar a usar SpotTrack.",
+      "continueBtn": "Continuar",
+      "cancelTitle": "Pago cancelado",
+      "cancelSubtitle": "Tu pago no se completó. Puedes elegir un plan nuevamente cuando quieras.",
+      "retryBtn": "Elegir un plan de nuevo"
+    },
     "error": {
       "emptyFields": "Por favor ingresa tu correo y contraseña",
-      "invalidCredentials": "Correo o contraseña incorrectos"
+      "invalidCredentials": "Correo o contraseña incorrectos",
+      "registerFailed": "No se pudo crear tu cuenta. Inténtalo de nuevo.",
+      "emailTaken": "Este correo ya está registrado. Usa uno diferente.",
+      "profileFailed": "Tu cuenta fue creada, pero no pudimos guardar tu perfil. Inténtalo de nuevo desde tu página de perfil."
     }
   },
   "machines": {
