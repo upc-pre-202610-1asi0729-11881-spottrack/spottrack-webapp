@@ -45,8 +45,8 @@ export class FinancialImpactStore {
         const stat        = stats.find(s => s.equipment_id === e.id);
         const dailyCount  = stat?.usage_count_daily ?? 0;
         const hours       = Math.max(24, Math.round(72 - dailyCount * 8));
-        const ratePerHour = Math.max(5, Math.round(e.purchase_price / 500));
-        return { machine: e.name, hours, ratePerHour, total: hours * ratePerHour };
+        const ratePerHour = Math.max(5, Math.round(e.purchaseAmount / 500));
+        return { machine: e.equipmentName, hours, ratePerHour, total: hours * ratePerHour };
       });
   });
 
