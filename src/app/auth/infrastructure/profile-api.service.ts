@@ -10,6 +10,17 @@ export interface UpdatePersonInfoRequest {
   dni:         string;
 }
 
+export interface UpdateAdminProfileRequest extends UpdatePersonInfoRequest {
+  companyName:  string;
+  ruc:          string;
+  legalType:    string;
+  companyPhone: string;
+  companyEmail: string;
+  street:       string;
+  city:         string;
+  district:     string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProfileApiService {
   private readonly base = `${environment.apiBase}/profiles`;
@@ -18,5 +29,9 @@ export class ProfileApiService {
 
   updateClientProfile(body: UpdatePersonInfoRequest): Observable<unknown> {
     return this.http.put(`${this.base}/clients/me`, body);
+  }
+
+  updateAdminProfile(body: UpdateAdminProfileRequest): Observable<unknown> {
+    return this.http.put(`${this.base}/admins/me`, body);
   }
 }

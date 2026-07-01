@@ -8,10 +8,8 @@ import { User, UserRole } from '../domain/model/user.model';
 const TOKEN_KEY = 'spottrack_token';
 const USER_KEY  = 'spottrack_user';
 
-// The public sign-up endpoint always grants ROLE_CLIENT — there is no
-// self-service path to ROLE_ADMIN today (sign-up-staff requires an existing
-// admin token). "businessIntent" only steers local navigation (into the
-// plan/payment flow); the persisted backend role is always CLIENT.
+// businessIntent selects /sign-up-business (grants ROLE_ADMIN) instead of the
+// default /sign-up (ROLE_CLIENT). Company fields are only required when true.
 export interface RegisterData {
   firstName:      string;
   lastName:       string;
@@ -20,6 +18,14 @@ export interface RegisterData {
   email:          string;
   password:       string;
   businessIntent: boolean;
+  companyName?:   string;
+  ruc?:           string;
+  legalType?:     string;
+  companyPhone?:  string;
+  companyEmail?:  string;
+  street?:        string;
+  city?:          string;
+  district?:      string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -87,7 +93,11 @@ export class AuthStore {
     this.registerErrorSignal.set(null);
     this.registerLoadingSignal.set(true);
 
-    this.api.signUp({ username: data.email.trim(), password: data.password }).pipe(
+    const signUp$ = data.businessIntent
+      ? this.api.signUpBusiness({ username: data.email.trim(), password: data.password })
+      : this.api.signUp({ username: data.email.trim(), password: data.password });
+
+    signUp$.pipe(
       switchMap(() => this.api.signIn({ username: data.email.trim(), password: data.password }))
     ).subscribe({
       next: res => {
@@ -95,21 +105,38 @@ export class AuthStore {
         this.tokenSignal.set(res.token);
         localStorage.setItem(TOKEN_KEY, res.token);
 
-        // Sign-up already auto-creates a blank Client profile server-side
-        // (RoleAssignedEventHandler), so calling POST /profiles/clients here
-        // would 409 against that row and skip the update below entirely.
-        this.profileApi.updateClientProfile({
-          firstName:   data.firstName.trim(),
-          lastName:    data.lastName.trim(),
-          phoneNumber: data.phoneNumber.trim(),
-          dni:         data.dni.trim(),
-        }).subscribe({
+        // Sign-up already auto-creates a blank Client/Admin profile server-side
+        // (RoleAssignedEventHandler), so calling the matching POST /profiles/*
+        // here would 409 against that row and skip the update below entirely.
+        const updateProfile$ = data.businessIntent
+          ? this.profileApi.updateAdminProfile({
+              firstName:    data.firstName.trim(),
+              lastName:     data.lastName.trim(),
+              phoneNumber:  data.phoneNumber.trim(),
+              dni:          data.dni.trim(),
+              companyName:  data.companyName!.trim(),
+              ruc:          data.ruc!.trim(),
+              legalType:    data.legalType!,
+              companyPhone: data.companyPhone!.trim(),
+              companyEmail: data.companyEmail!.trim(),
+              street:       data.street!.trim(),
+              city:         data.city!.trim(),
+              district:     data.district!.trim(),
+            })
+          : this.profileApi.updateClientProfile({
+              firstName:   data.firstName.trim(),
+              lastName:    data.lastName.trim(),
+              phoneNumber: data.phoneNumber.trim(),
+              dni:         data.dni.trim(),
+            });
+
+        updateProfile$.subscribe({
           next: () => {
             const user: User = {
               id:    res.id,
               email: res.username,
               name:  `${data.firstName.trim()} ${data.lastName.trim()}`,
-              role:  UserRole.CLIENT,
+              role:  data.businessIntent ? UserRole.ADMIN : UserRole.CLIENT,
             };
             this.userSignal.set(user);
             localStorage.setItem(USER_KEY, JSON.stringify(user));

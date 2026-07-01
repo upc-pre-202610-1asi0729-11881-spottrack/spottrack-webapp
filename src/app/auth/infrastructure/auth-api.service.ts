@@ -21,6 +21,10 @@ export class AuthApiService {
     return this.http.post<AuthResponse>(`${this.base}/sign-up`, body);
   }
 
+  signUpBusiness(body: SignUpRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.base}/sign-up-business`, body);
+  }
+
   getUser(id: number): Observable<any> {
     return this.http.get<any>(`${environment.apiBase}/users/${id}`);
   }

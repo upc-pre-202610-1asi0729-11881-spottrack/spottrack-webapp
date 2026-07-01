@@ -127,6 +127,30 @@
   gap: 12px;
 }
 
+// ── Company section ──────────────────────────────────────────────────────────
+.company-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: rgba(245, 188, 54, 0.04);
+}
+
+.company-section__label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #f5bc36;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+select.form-field__input {
+  appearance: none;
+  cursor: pointer;
+}
+
 // ── Form fields ──────────────────────────────────────────────────────────────
 .form-field {
   display: flex;

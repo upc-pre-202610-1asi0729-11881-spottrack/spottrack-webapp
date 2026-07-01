@@ -13,6 +13,10 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   return null;
 }
 
+const COMPANY_FIELD_NAMES = [
+  'companyName', 'ruc', 'legalType', 'companyPhone', 'companyEmail', 'street', 'city', 'district',
+] as const;
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -28,6 +32,8 @@ export class RegisterComponent {
   readonly registerError   = this.auth.registerError;
   readonly registerLoading = this.auth.registerLoading;
 
+  readonly legalTypes = ['SAC', 'SRL', 'SA', 'EIRL'] as const;
+
   showPass        = false;
   showConfirmPass = false;
   accountType: 'client' | 'business' = 'client';
@@ -41,15 +47,34 @@ export class RegisterComponent {
       email:           ['', [Validators.required, Validators.email]],
       password:        ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
+      companyName:     [''],
+      ruc:             ['', Validators.pattern(/^[0-9]{11}$/)],
+      legalType:       [''],
+      companyPhone:    ['', Validators.pattern(/^[0-9]{7,15}$/)],
+      companyEmail:    ['', Validators.email],
+      street:          [''],
+      city:            [''],
+      district:        [''],
     },
     { validators: passwordsMatch }
   );
 
   get f() { return this.form.controls; }
+  get isBusiness() { return this.accountType === 'business'; }
 
   selectAccountType(type: 'client' | 'business'): void {
     this.accountType = type;
     this.auth.clearRegisterError();
+
+    for (const name of COMPANY_FIELD_NAMES) {
+      const control = this.form.get(name)!;
+      if (type === 'business') {
+        control.addValidators(Validators.required);
+      } else {
+        control.removeValidators(Validators.required);
+      }
+      control.updateValueAndValidity();
+    }
   }
 
   onInputChange(): void {
@@ -70,7 +95,17 @@ export class RegisterComponent {
       phoneNumber:    v.phoneNumber!,
       email:          v.email!,
       password:       v.password!,
-      businessIntent: this.accountType === 'business',
+      businessIntent: this.isBusiness,
+      ...(this.isBusiness ? {
+        companyName:  v.companyName!,
+        ruc:          v.ruc!,
+        legalType:    v.legalType!,
+        companyPhone: v.companyPhone!,
+        companyEmail: v.companyEmail!,
+        street:       v.street!,
+        city:         v.city!,
+        district:     v.district!,
+      } : {}),
     });
   }
 
