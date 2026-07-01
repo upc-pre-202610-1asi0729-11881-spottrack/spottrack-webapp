@@ -1,14 +1,12 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin } from 'rxjs';
 import { FinancialImpactApi } from '../infrastructure/financial-impact-api';
 import {
-  EquipmentUsageStatResource,
-  EquipmentResource,
   MaintenanceTicketResource,
   MaintenanceLogResource,
   SparePartResource,
 } from '../infrastructure/financial-impact-response';
+import { FinancialStat } from '../domain/model/financial-impact.entity';
 
 export interface InactivityRow      { machine: string; hours: number; ratePerHour: number; total: number; }
 export interface MaintenanceTypeRow { label: string; amount: number; pct: number; color: string; }
@@ -25,28 +23,23 @@ export class FinancialImpactStore {
   private readonly api        = inject(FinancialImpactApi);
   private readonly destroyRef = inject(DestroyRef);
 
-  private readonly _usageStats  = signal<EquipmentUsageStatResource[]>([]);
-  private readonly _equipments  = signal<EquipmentResource[]>([]);
-  private readonly _tickets     = signal<MaintenanceTicketResource[]>([]);
-  private readonly _logs        = signal<MaintenanceLogResource[]>([]);
-  private readonly _spareParts  = signal<SparePartResource[]>([]);
-  private readonly _loading     = signal(false);
-  private readonly _error       = signal<string | null>(null);
+  private readonly _financialStats = signal<FinancialStat[]>([]);
+  private readonly _tickets        = signal<MaintenanceTicketResource[]>([]);
+  private readonly _logs           = signal<MaintenanceLogResource[]>([]);
+  private readonly _spareParts     = signal<SparePartResource[]>([]);
+  private readonly _loading        = signal(false);
+  private readonly _error          = signal<string | null>(null);
 
   readonly loading = this._loading.asReadonly();
   readonly error   = this._error.asReadonly();
 
   readonly inactivityLoss = computed<InactivityRow[]>(() => {
-    const equips = this._equipments();
-    const stats  = this._usageStats();
-    return equips
-      .filter(e => e.status === 'MAINTENANCE')
-      .map(e => {
-        const stat        = stats.find(s => s.equipment_id === e.id);
-        const dailyCount  = stat?.usage_count_daily ?? 0;
-        const hours       = Math.max(24, Math.round(72 - dailyCount * 8));
-        const ratePerHour = Math.max(5, Math.round(e.purchaseAmount / 500));
-        return { machine: e.equipmentName, hours, ratePerHour, total: hours * ratePerHour };
+    return this._financialStats()
+      .filter(s => s.status === 'MAINTENANCE')
+      .map(s => {
+        const hours       = Math.max(24, Math.round(72 - s.usageCountDaily * 8));
+        const ratePerHour = Math.max(5, Math.round(s.purchasePrice / 500));
+        return { machine: s.equipmentName, hours, ratePerHour, total: hours * ratePerHour };
       });
   });
 
@@ -99,27 +92,20 @@ export class FinancialImpactStore {
     this._loading.set(true);
     this._error.set(null);
 
-    forkJoin({
-      stats:      this.api.getUsageStats(),
-      equipments: this.api.getEquipments(),
-      tickets:    this.api.getMaintenanceTickets(),
-      logs:       this.api.getMaintenanceLogs(),
-      spareParts: this.api.getSpareParts(),
-    })
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe({
-      next: ({ stats, equipments, tickets, logs, spareParts }) => {
-        this._usageStats.set(stats);
-        this._equipments.set(equipments);
-        this._tickets.set(tickets);
-        this._logs.set(logs);
-        this._spareParts.set(spareParts);
-        this._loading.set(false);
-      },
-      error: (err: unknown) => {
-        this._error.set(err instanceof Error ? err.message : 'Error al cargar datos financieros');
-        this._loading.set(false);
-      },
-    });
+    this.api.getFinancialImpactData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ stats, tickets, logs, spareParts }) => {
+          this._financialStats.set(stats);
+          this._tickets.set(tickets);
+          this._logs.set(logs);
+          this._spareParts.set(spareParts);
+          this._loading.set(false);
+        },
+        error: (err: unknown) => {
+          this._error.set(err instanceof Error ? err.message : 'Error al cargar datos financieros');
+          this._loading.set(false);
+        },
+      });
   }
 }
