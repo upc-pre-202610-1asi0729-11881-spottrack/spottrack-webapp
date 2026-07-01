@@ -95,14 +95,15 @@ export class AuthStore {
         this.tokenSignal.set(res.token);
         localStorage.setItem(TOKEN_KEY, res.token);
 
-        this.profileApi.createClientProfile({ userId: res.id, email: data.email.trim() }).pipe(
-          switchMap(() => this.profileApi.updateClientProfile({
-            firstName:   data.firstName.trim(),
-            lastName:    data.lastName.trim(),
-            phoneNumber: data.phoneNumber.trim(),
-            dni:         data.dni.trim(),
-          }))
-        ).subscribe({
+        // Sign-up already auto-creates a blank Client profile server-side
+        // (RoleAssignedEventHandler), so calling POST /profiles/clients here
+        // would 409 against that row and skip the update below entirely.
+        this.profileApi.updateClientProfile({
+          firstName:   data.firstName.trim(),
+          lastName:    data.lastName.trim(),
+          phoneNumber: data.phoneNumber.trim(),
+          dni:         data.dni.trim(),
+        }).subscribe({
           next: () => {
             const user: User = {
               id:    res.id,
