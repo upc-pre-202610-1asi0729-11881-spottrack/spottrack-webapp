@@ -65,8 +65,8 @@ export class AnalyticsStore {
     const stats  = this._usageStats();
     const equips = this._equipments();
     if (branch === 'all') return stats;
-    // 'main' → only equipment in zone_id 1 (primary zone of Main Branch)
-    return stats.filter(s => equips.find(e => e.id === s.equipment_id)?.zone_id === 1);
+    // 'main' → only equipment in zoneId '1' (primary zone of Main Branch)
+    return stats.filter(s => equips.find(e => e.id === s.equipment_id)?.zoneId === '1');
   });
 
   // ── KPI stat cards ────────────────────────────────────────────────────────
@@ -154,7 +154,7 @@ export class AnalyticsStore {
     const branch   = this.selectedBranch();
     const allEquip = this._equipments();
     const equips   = branch === 'main'
-      ? allEquip.filter(e => e.zone_id === 1)
+      ? allEquip.filter(e => e.zoneId === '1')
       : allEquip;
 
     if (!equips.length) {
@@ -165,9 +165,9 @@ export class AnalyticsStore {
       ];
     }
 
-    const cardio    = equips.filter(e => e.zone_id === 1).length;
-    const fuerza    = equips.filter(e => e.zone_id === 2).length;
-    const funcional = equips.filter(e => e.zone_id !== 1 && e.zone_id !== 2).length;
+    const cardio    = equips.filter(e => e.zoneId === '1').length;
+    const fuerza    = equips.filter(e => e.zoneId === '2').length;
+    const funcional = equips.filter(e => e.zoneId !== '1' && e.zoneId !== '2').length;
     const total     = equips.length || 1;
 
     return [
@@ -196,8 +196,10 @@ export class AnalyticsStore {
     return stats
       .filter(s => {
         const eq = equips.find(e => e.id === s.equipment_id);
-        // Recommend relocation for equipment that is low-usage AND operational
-        return s.total_usage_hours < 100 && eq?.status === 'OPERATIONAL';
+        // Recommend relocation for equipment that is low-usage AND in service.
+        // 'OPERATIONAL' isn't a real EquipmentStatus value (AVAILABLE/IN_USE/
+        // MAINTENANCE/OUT_OF_SERVICE) — this never matched anything before.
+        return s.total_usage_hours < 100 && eq?.status === 'AVAILABLE';
       })
       .map((s, i): RelocationRec => {
         const eq          = equips.find(e => e.id === s.equipment_id)!;
@@ -208,7 +210,7 @@ export class AnalyticsStore {
           fromOcc < 30 ? 'HIGH' : fromOcc < 50 ? 'MEDIUM' : 'LOW';
 
         return {
-          machine:         eq.name,
+          machine:         eq.equipmentName,
           fromBranch:      BRANCHES[i % BRANCHES.length],
           fromOccupancy:   fromOcc,
           toBranch:        BRANCHES[(i + 2) % BRANCHES.length],
