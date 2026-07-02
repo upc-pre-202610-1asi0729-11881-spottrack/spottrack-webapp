@@ -305,8 +305,6 @@
       "subtitle": "Register cameras and motion sensors for IoT monitoring",
       "cameraTitle": "Camera Sensor",
       "motionTitle": "Motion Sensor",
-      "zoneId": "Zone ID",
-      "zoneIdPlaceholder": "Zone UUID",
       "equipment": "Equipment",
       "registerCamera": "Register Camera",
       "registerMotion": "Register Motion Sensor"
