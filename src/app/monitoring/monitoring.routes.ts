@@ -16,13 +16,6 @@ export const monitoringRoutes: Routes = [
       ),
   },
   {
-    path: 'monitoring/sessions',
-    loadComponent: () =>
-      import('./presentation/views/session-tracking/session-tracking').then(
-        m => m.SessionTrackingComponent
-      ),
-  },
-  {
     path: 'monitoring/anomalies/report',
     loadComponent: () =>
       import('./presentation/views/anomaly-report/anomaly-report').then(
