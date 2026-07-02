@@ -9,10 +9,8 @@ import {
   MotionSensorResource,
   AnomalyResource,
   SessionTrackerResource,
-  SessionTrackerCreatedResource,
 } from '../infrastructure/monitoring-response';
 import {
-  CreateSessionTrackerRequest,
   ReportAnomalyRequest,
 } from '../infrastructure/monitoring-request';
 
@@ -159,10 +157,10 @@ export class MonitoringStore {
       });
   }
 
-  captureCameraMotion(sessionTrackerId: string, movementDetectedViaVideo: boolean): void {
+  captureCameraMotion(equipmentId: string, movementDetectedViaVideo: boolean): void {
     this._actionLoading.set(true);
     this._actionError.set(null);
-    this.api.captureCameraMotion({ sessionTrackerId, movementDetectedViaVideo })
+    this.api.captureCameraMotion({ equipmentId, movementDetectedViaVideo })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: session => {
@@ -176,10 +174,10 @@ export class MonitoringStore {
       });
   }
 
-  captureMotionSensorReading(sessionTrackerId: string, movementDetectedViaSensor: boolean): void {
+  captureMotionSensorReading(equipmentId: string, movementDetectedViaSensor: boolean): void {
     this._actionLoading.set(true);
     this._actionError.set(null);
-    this.api.captureMotionSensorReading({ sessionTrackerId, movementDetectedViaSensor })
+    this.api.captureMotionSensorReading({ equipmentId, movementDetectedViaSensor })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: session => {
@@ -210,25 +208,18 @@ export class MonitoringStore {
       });
   }
 
-  createSessionTracker(request: CreateSessionTrackerRequest): void {
+  loadSessionTrackers(): void {
     this._actionLoading.set(true);
     this._actionError.set(null);
-    this.api.createSessionTracker(request)
+    this.api.getAllSessionTrackers()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (created: SessionTrackerCreatedResource) => {
-          this.upsertTrackedSession({
-            sessionTrackerId:    created.sessionTrackerId,
-            reservationId:       created.reservationId,
-            continouosActivitiy: created.continuousActivity,
-            seconds:             created.seconds,
-            sessionIsActive:     created.sessionIsActive,
-            sessionIsInactive:   created.sessionIsInactive,
-          });
+        next: sessions => {
+          this._trackedSessions.set(sessions);
           this._actionLoading.set(false);
         },
         error: err => {
-          this._actionError.set(this.formatError(err, 'No se pudo crear el rastreador de sesión'));
+          this._actionError.set(this.formatError(err, 'No se pudieron cargar las sesiones rastreadas'));
           this._actionLoading.set(false);
         },
       });
@@ -251,15 +242,19 @@ export class MonitoringStore {
       });
   }
 
+  /**
+   * Ending a session cascades server-side to calculating its final activity
+   * and deleting the tracker once that's reported to analytics, so the list
+   * is reloaded afterward rather than just patching this one row in place.
+   */
   endUsageSession(sessionTrackerId: string): void {
     this._actionLoading.set(true);
     this._actionError.set(null);
     this.api.endUsageSession(sessionTrackerId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: session => {
-          this.upsertTrackedSession(session);
-          this._actionLoading.set(false);
+        next: () => {
+          this.loadSessionTrackers();
         },
         error: err => {
           this._actionError.set(this.formatError(err, 'No se pudo finalizar la sesión'));
@@ -268,15 +263,17 @@ export class MonitoringStore {
       });
   }
 
+  /**
+   * Calculating time also deletes the tracker once reported (see endUsageSession).
+   */
   calculateSessionTime(sessionTrackerId: string): void {
     this._actionLoading.set(true);
     this._actionError.set(null);
     this.api.calculateSessionTime(sessionTrackerId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: session => {
-          this.upsertTrackedSession(session);
-          this._actionLoading.set(false);
+        next: () => {
+          this.loadSessionTrackers();
         },
         error: err => {
           this._actionError.set(this.formatError(err, 'No se pudo calcular el tiempo de sesión'));
