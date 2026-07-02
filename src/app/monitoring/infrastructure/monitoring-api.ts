@@ -47,6 +47,14 @@ export class MonitoringApi {
     return this.http.get<SensorReadingResource[]>(this.readingsUrl);
   }
 
+  getAllCameraSensors(): Observable<CameraSensorResource[]> {
+    return this.http.get<CameraSensorResource[]>(this.cameraSensorsUrl);
+  }
+
+  getAllMotionSensors(): Observable<MotionSensorResource[]> {
+    return this.http.get<MotionSensorResource[]>(this.motionSensorsUrl);
+  }
+
   registerCameraSensor(body: RegisterCameraSensorRequest): Observable<CameraSensorResource> {
     return this.http.post<CameraSensorResource>(this.cameraSensorsUrl, body);
   }
