@@ -21,30 +21,24 @@ export interface SensorReadingResource extends BaseResource {
 
 export type SensorReadingResponse = SensorReadingResource[];
 
-/**
- * Equipment details embedded in sensor resources, resolved cross-context by
- * the backend (monitoring calling gym's GymContextFacade). May be null if the
- * equipment could not be resolved.
- */
-export interface EquipmentSummaryResource {
-  equipmentId:   string;
-  equipmentName: string;
-  model:         string;
-  status:        string;
-}
-
 export interface CameraSensorResource extends BaseResource {
-  id:             number;
-  cameraSensorId: string;
-  equipment:      EquipmentSummaryResource | null;
-  registeredAt:   string;
+  id:              number;
+  cameraSensorId:  string;
+  equipmentId:     string;
+  equipmentName:   string | null;
+  equipmentModel:  string | null;
+  equipmentStatus: string | null;
+  registeredAt:    string;
 }
 
 export interface MotionSensorResource extends BaseResource {
-  id:             number;
-  motionSensorId: string;
-  equipment:      EquipmentSummaryResource | null;
-  registeredAt:   string;
+  id:              number;
+  motionSensorId:  string;
+  equipmentId:     string;
+  equipmentName:   string | null;
+  equipmentModel:  string | null;
+  equipmentStatus: string | null;
+  registeredAt:    string;
 }
 
 export interface AnomalyResource extends BaseResource {
