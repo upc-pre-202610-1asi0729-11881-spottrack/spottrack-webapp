@@ -36,24 +36,24 @@ export class SensorRegistrationComponent {
   readonly motionSensors = this.store.motionSensors;
   readonly equipment = this.equipmentStore.equipment;
 
-  cameraZoneId = '';
+  cameraEquipmentId: string | null = null;
   motionEquipmentId: string | null = null;
 
+  constructor() {
+    this.store.loadCameraSensors();
+    this.store.loadMotionSensors();
+  }
+
   submitCamera(): void {
-    const zoneId = this.cameraZoneId.trim();
-    if (!zoneId) return;
-    this.store.registerCameraSensor(zoneId);
-    this.cameraZoneId = '';
+    if (!this.cameraEquipmentId) return;
+    this.store.registerCameraSensor(this.cameraEquipmentId);
+    this.cameraEquipmentId = null;
   }
 
   submitMotion(): void {
     if (!this.motionEquipmentId) return;
     this.store.registerMotionSensor(this.motionEquipmentId);
     this.motionEquipmentId = null;
-  }
-
-  equipmentName(uuid: string): string {
-    return this.equipment().find(e => e.uuid === uuid)?.name ?? uuid;
   }
 
   back(): void {

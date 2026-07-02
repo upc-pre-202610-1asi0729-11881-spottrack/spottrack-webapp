@@ -27,13 +27,16 @@
       </div>
       <form class="reg-form" (ngSubmit)="submitCamera()">
         <div class="field">
-          <label class="field__label">{{ 'monitoring.sensors.zoneId' | translate }} *</label>
+          <label class="field__label">{{ 'monitoring.sensors.equipment' | translate }} *</label>
           <mat-form-field appearance="outline" class="field__mat">
-            <input matInput [(ngModel)]="cameraZoneId" name="cameraZoneId"
-                   [placeholder]="'monitoring.sensors.zoneIdPlaceholder' | translate" required />
+            <mat-select [(ngModel)]="cameraEquipmentId" name="cameraEquipmentId" required>
+              @for (eq of equipment(); track eq.uuid) {
+                <mat-option [value]="eq.uuid">{{ eq.name }}</mat-option>
+              }
+            </mat-select>
           </mat-form-field>
         </div>
-        <button type="submit" class="btn-submit" [disabled]="loading() || !cameraZoneId.trim()">
+        <button type="submit" class="btn-submit" [disabled]="loading() || !cameraEquipmentId">
           {{ 'monitoring.sensors.registerCamera' | translate }}
         </button>
       </form>
@@ -44,7 +47,7 @@
             <div class="registered-row">
               <mat-icon>videocam</mat-icon>
               <span class="mono">{{ s.cameraSensorId }}</span>
-              <span class="tag">{{ 'monitoring.sensors.zoneId' | translate }}: {{ s.zoneId }}</span>
+              <span class="tag">{{ s.equipment?.equipmentName ?? '—' }}</span>
             </div>
           }
         </div>
@@ -79,7 +82,7 @@
             <div class="registered-row">
               <mat-icon>sensors</mat-icon>
               <span class="mono">{{ s.motionSensorId }}</span>
-              <span class="tag">{{ equipmentName(s.equipmentId) }}</span>
+              <span class="tag">{{ s.equipment?.equipmentName ?? '—' }}</span>
             </div>
           }
         </div>
