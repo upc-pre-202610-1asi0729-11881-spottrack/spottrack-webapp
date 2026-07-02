@@ -7,12 +7,12 @@ export interface RegisterMotionSensorRequest {
 }
 
 export interface CaptureCameraMotionRequest {
-  sessionTrackerId: string;
+  equipmentId: string;
   movementDetectedViaVideo: boolean;
 }
 
 export interface CaptureMotionSensorReadingRequest {
-  sessionTrackerId: string;
+  equipmentId: string;
   movementDetectedViaSensor: boolean;
 }
 
@@ -21,13 +21,4 @@ export interface ReportAnomalyRequest {
   equipmentId: string;
   zoneId: string;
   anomalyDescription: string;
-}
-
-export interface CreateSessionTrackerRequest {
-  sessionTrackerId: string;
-  reservationId: string;
-  sessionIsActive: boolean;
-  sessionIsInactive: boolean;
-  seconds: string;
-  continuousActivity: string;
 }
