@@ -480,12 +480,6 @@ $session-blue:     #4fc3f7;
 
 .section-title { margin: 0; font-size: 1.4rem; font-weight: 700; color: #fff; }
 
-.layout-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
 .section-card {
   background: $session-bg-card;
   border: 1px solid $session-border;
@@ -514,41 +508,24 @@ $session-blue:     #4fc3f7;
   color: $session-blue;
 }
 
-.empty-msg { color: $session-muted; font-size: .9rem; }
-
-.reg-form { display: flex; flex-direction: column; gap: 12px; }
-.field-row { display: flex; gap: 12px; }
-.field-row .field { flex: 1; }
-
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field__label { font-size: .8125rem; font-weight: 600; color: $session-text; }
-.field__mat {
-  width: 100%;
-  ::ng-deep {
-    .mdc-notched-outline__leading,
-    .mdc-notched-outline__notch,
-    .mdc-notched-outline__trailing { border-color: $session-border !important; }
-    .mat-mdc-floating-label, .mdc-floating-label { color: $session-muted !important; }
-    .mat-mdc-select-value-text, .mdc-text-field input { color: $session-text !important; }
-    .mdc-text-field--focused .mdc-notched-outline__leading,
-    .mdc-text-field--focused .mdc-notched-outline__notch,
-    .mdc-text-field--focused .mdc-notched-outline__trailing { border-color: $session-accent !important; }
-  }
-}
-
-.btn-submit {
-  align-self: flex-start;
-  padding: 10px 24px;
-  background: $session-accent;
+.btn-refresh-inline {
+  background: none;
   border: none;
-  border-radius: 6px;
-  color: #000;
-  font-weight: 700;
-  font-size: .875rem;
+  color: $session-muted;
   cursor: pointer;
-  &:hover:not(:disabled) { opacity: .85; }
+  display: inline-flex;
+  padding: 2px;
+  &:hover:not(:disabled) { color: #fff; }
   &:disabled { opacity: .4; cursor: not-allowed; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }
+
+.tag {
+  font-size: .78rem;
+  color: $session-muted;
+}
+
+.empty-msg { color: $session-muted; font-size: .9rem; }
 
 .tracked-list { display: flex; flex-direction: column; gap: 8px; }
 
@@ -592,7 +569,7 @@ $session-blue:     #4fc3f7;
 
 .status-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
 }
 

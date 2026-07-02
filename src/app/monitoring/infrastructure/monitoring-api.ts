@@ -9,7 +9,6 @@ import {
   MotionSensorResource,
   AnomalyResource,
   SessionTrackerResource,
-  SessionTrackerCreatedResource,
 } from './monitoring-response';
 import {
   RegisterCameraSensorRequest,
@@ -17,7 +16,6 @@ import {
   CaptureCameraMotionRequest,
   CaptureMotionSensorReadingRequest,
   ReportAnomalyRequest,
-  CreateSessionTrackerRequest,
 } from './monitoring-request';
 
 @Injectable({ providedIn: 'root' })
@@ -75,8 +73,8 @@ export class MonitoringApi {
     return this.http.post<AnomalyResource>(this.anomaliesUrl, body);
   }
 
-  createSessionTracker(body: CreateSessionTrackerRequest): Observable<SessionTrackerCreatedResource> {
-    return this.http.post<SessionTrackerCreatedResource>(`${this.sessionTrackerUrl}/create`, body);
+  getAllSessionTrackers(): Observable<SessionTrackerResource[]> {
+    return this.http.get<SessionTrackerResource[]>(this.sessionTrackerUrl);
   }
 
   verifySessionUsage(sessionTrackerId: string): Observable<SessionTrackerResource> {

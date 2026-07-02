@@ -211,82 +211,43 @@
       </div>
     }
 
-    <div class="layout-grid">
-
-      <!-- Create session tracker -->
-      <div class="section-card">
-        <div class="section-header">
-          <mat-icon>add_circle</mat-icon>
-          <h2>{{ 'monitoring.sessionTracking.createTitle' | translate }}</h2>
-        </div>
-        <form class="reg-form" (ngSubmit)="createSession()">
-          <div class="field">
-            <label class="field__label">{{ 'monitoring.sessionTracking.sessionTrackerId' | translate }}</label>
-            <mat-form-field appearance="outline" class="field__mat">
-              <input matInput [(ngModel)]="sessionForm.sessionTrackerId" name="sessionTrackerId" readonly />
-            </mat-form-field>
-          </div>
-          <div class="field">
-            <label class="field__label">{{ 'monitoring.sessionTracking.reservationId' | translate }} *</label>
-            <mat-form-field appearance="outline" class="field__mat">
-              <input matInput [(ngModel)]="sessionForm.reservationId" name="reservationId"
-                     [placeholder]="'monitoring.sessionTracking.reservationIdPlaceholder' | translate" required />
-            </mat-form-field>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label class="field__label">{{ 'monitoring.sessionTracking.continuousActivity' | translate }}</label>
-              <mat-form-field appearance="outline" class="field__mat">
-                <input matInput type="time" step="1" [(ngModel)]="sessionForm.continuousActivity" name="continuousActivity" />
-              </mat-form-field>
-            </div>
-            <div class="field">
-              <label class="field__label">{{ 'monitoring.sessionTracking.seconds' | translate }}</label>
-              <mat-form-field appearance="outline" class="field__mat">
-                <input matInput type="time" step="1" [(ngModel)]="sessionForm.seconds" name="seconds" />
-              </mat-form-field>
-            </div>
-          </div>
-          <button type="submit" class="btn-submit" [disabled]="sessionLoading() || !sessionForm.reservationId.trim()">
-            {{ 'monitoring.sessionTracking.create' | translate }}
-          </button>
-        </form>
+    <!-- Tracked sessions list (created automatically: on reservation, or on the
+         first sensor motion detected for equipment with no reservation) -->
+    <div class="section-card">
+      <div class="section-header">
+        <mat-icon>list</mat-icon>
+        <h2>{{ 'monitoring.sessionTracking.trackedTitle' | translate }}</h2>
+        <span class="count-badge">{{ trackedSessions().length }}</span>
+        <button type="button" class="btn-refresh-inline" [disabled]="sessionLoading()" (click)="sessionStore.loadSessionTrackers()">
+          <mat-icon>refresh</mat-icon>
+        </button>
       </div>
-
-      <!-- Tracked sessions list -->
-      <div class="section-card">
-        <div class="section-header">
-          <mat-icon>list</mat-icon>
-          <h2>{{ 'monitoring.sessionTracking.trackedTitle' | translate }}</h2>
-          <span class="count-badge">{{ trackedSessions().length }}</span>
+      @if (trackedSessions().length === 0) {
+        <p class="empty-msg">{{ 'monitoring.sessionTracking.noneTracked' | translate }}</p>
+      } @else {
+        <div class="tracked-list">
+          @for (s of trackedSessions(); track s.sessionTrackerId) {
+            <button type="button" class="tracked-row"
+                    [class.tracked-row--selected]="s.sessionTrackerId === selectedSessionId()"
+                    (click)="selectSession(s.sessionTrackerId)">
+              <span class="mono">{{ s.sessionTrackerId }}</span>
+              <span class="tag">{{ s.reservationId ? ('monitoring.sessionTracking.reservationId' | translate) + ': ' + s.reservationId : ('monitoring.sessionTracking.walkUp' | translate) }}</span>
+              @if (s.sessionIsActive) {
+                <span class="status-badge status-badge--active">
+                  <mat-icon>play_circle</mat-icon>
+                  {{ 'monitoring.sessionTracking.active' | translate }}
+                </span>
+              }
+              @if (s.sessionIsInactive) {
+                <span class="status-badge status-badge--inactive">
+                  <mat-icon>pause_circle</mat-icon>
+                  {{ 'monitoring.sessionTracking.inactive' | translate }}
+                </span>
+              }
+            </button>
+          }
         </div>
-        @if (trackedSessions().length === 0) {
-          <p class="empty-msg">{{ 'monitoring.sessionTracking.noneTracked' | translate }}</p>
-        } @else {
-          <div class="tracked-list">
-            @for (s of trackedSessions(); track s.sessionTrackerId) {
-              <button type="button" class="tracked-row"
-                      [class.tracked-row--selected]="s.sessionTrackerId === selectedSessionId()"
-                      (click)="selectSession(s.sessionTrackerId)">
-                <span class="mono">{{ s.sessionTrackerId }}</span>
-                @if (s.sessionIsActive) {
-                  <span class="status-badge status-badge--active">
-                    <mat-icon>play_circle</mat-icon>
-                    {{ 'monitoring.sessionTracking.active' | translate }}
-                  </span>
-                }
-                @if (s.sessionIsInactive) {
-                  <span class="status-badge status-badge--inactive">
-                    <mat-icon>pause_circle</mat-icon>
-                    {{ 'monitoring.sessionTracking.inactive' | translate }}
-                  </span>
-                }
-              </button>
-            }
-          </div>
-        }
-      </div>
-
+      }
     </div>
 
     <!-- Session actions -->
@@ -299,8 +260,12 @@
 
         <div class="status-strip">
           <div class="status-cell">
+            <span class="status-cell__label">{{ 'monitoring.sessionTracking.equipmentId' | translate }}</span>
+            <span class="mono">{{ session.equipmentId }}</span>
+          </div>
+          <div class="status-cell">
             <span class="status-cell__label">{{ 'monitoring.sessionTracking.reservationId' | translate }}</span>
-            <span class="mono">{{ session.reservationId }}</span>
+            <span class="mono">{{ session.reservationId ?? ('monitoring.sessionTracking.walkUp' | translate) }}</span>
           </div>
           <div class="status-cell">
             <span class="status-cell__label">{{ 'monitoring.sessionTracking.continuousActivity' | translate }}</span>
