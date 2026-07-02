@@ -5,12 +5,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { IotStore } from '../../application/iot.store';
 import { Iot, IotStatus } from '../../domain/model/iot.entity';
 import { ContextMenuDirective } from '../../../shared/presentation/directives/context-menu.directive';
 import { ContextMenuItem } from '../../../shared/application/context-menu.service';
+import { MonitoringStore } from '../../../monitoring/application/monitoring.store';
+import { SessionTrackerResource } from '../../../monitoring/infrastructure/monitoring-response';
 
 @Component({
   selector: 'app-iot-monitoring',
@@ -23,6 +26,7 @@ import { ContextMenuItem } from '../../../shared/application/context-menu.servic
     MatIconModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
+    MatInputModule,
     MatSelectModule,
     ContextMenuDirective,
   ],
@@ -31,6 +35,7 @@ import { ContextMenuItem } from '../../../shared/application/context-menu.servic
 })
 export class IotMonitoringComponent {
   private store = inject(IotStore);
+  readonly sessionStore = inject(MonitoringStore);
 
   readonly IotStatus = IotStatus;
   readonly displayedColumns = [
@@ -117,5 +122,77 @@ export class IotMonitoringComponent {
       { label: '', icon: '', separator: true, action: () => {} },
       { label: 'Copy sensor ID',       icon: 'content_copy',  action: () => navigator.clipboard.writeText(this.sensorId(row.id)) },
     ];
+  }
+
+  // ── Session monitoring (usage detection, inactivity, session time) ─────────
+
+  readonly sessionLoading = this.sessionStore.actionLoading;
+  readonly sessionError = this.sessionStore.actionError;
+  readonly trackedSessions = this.sessionStore.trackedSessions;
+
+  readonly selectedSessionId = signal<string | null>(null);
+  readonly selectedSession = computed<SessionTrackerResource | undefined>(() =>
+    this.trackedSessions().find(s => s.sessionTrackerId === this.selectedSessionId())
+  );
+
+  sessionForm = {
+    sessionTrackerId: this.generateSessionId(),
+    reservationId: '',
+    continuousActivity: '01:00:00',
+    seconds: '00:00:00',
+  };
+
+  createSession(): void {
+    if (!this.sessionForm.sessionTrackerId.trim() || !this.sessionForm.reservationId.trim()) return;
+    this.sessionStore.createSessionTracker({
+      sessionTrackerId: this.sessionForm.sessionTrackerId.trim(),
+      reservationId: this.sessionForm.reservationId.trim(),
+      sessionIsActive: true,
+      sessionIsInactive: false,
+      seconds: this.sessionForm.seconds,
+      continuousActivity: this.sessionForm.continuousActivity,
+    });
+    this.selectedSessionId.set(this.sessionForm.sessionTrackerId.trim());
+    this.sessionForm = {
+      sessionTrackerId: this.generateSessionId(),
+      reservationId: '',
+      continuousActivity: '01:00:00',
+      seconds: '00:00:00',
+    };
+  }
+
+  selectSession(sessionTrackerId: string): void {
+    this.selectedSessionId.set(sessionTrackerId);
+  }
+
+  verifySession(): void {
+    const id = this.selectedSessionId();
+    if (id) this.sessionStore.verifySessionUsage(id);
+  }
+
+  endSession(): void {
+    const id = this.selectedSessionId();
+    if (id) this.sessionStore.endUsageSession(id);
+  }
+
+  calculateSessionTime(): void {
+    const id = this.selectedSessionId();
+    if (id) this.sessionStore.calculateSessionTime(id);
+  }
+
+  captureCameraMotion(detected: boolean): void {
+    const id = this.selectedSessionId();
+    if (id) this.sessionStore.captureCameraMotion(id, detected);
+  }
+
+  captureMotionReading(detected: boolean): void {
+    const id = this.selectedSessionId();
+    if (id) this.sessionStore.captureMotionSensorReading(id, detected);
+  }
+
+  private generateSessionId(): string {
+    return typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `session-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   }
 }
