@@ -91,10 +91,44 @@ export class MonitoringStore {
     });
   }
 
-  registerCameraSensor(zoneId: string): void {
+  loadCameraSensors(): void {
     this._actionLoading.set(true);
     this._actionError.set(null);
-    this.api.registerCameraSensor({ zoneId })
+    this.api.getAllCameraSensors()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: sensors => {
+          this._cameraSensors.set(sensors);
+          this._actionLoading.set(false);
+        },
+        error: err => {
+          this._actionError.set(this.formatError(err, 'No se pudieron cargar las cámaras registradas'));
+          this._actionLoading.set(false);
+        },
+      });
+  }
+
+  loadMotionSensors(): void {
+    this._actionLoading.set(true);
+    this._actionError.set(null);
+    this.api.getAllMotionSensors()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: sensors => {
+          this._motionSensors.set(sensors);
+          this._actionLoading.set(false);
+        },
+        error: err => {
+          this._actionError.set(this.formatError(err, 'No se pudieron cargar los sensores de movimiento registrados'));
+          this._actionLoading.set(false);
+        },
+      });
+  }
+
+  registerCameraSensor(equipmentId: string): void {
+    this._actionLoading.set(true);
+    this._actionError.set(null);
+    this.api.registerCameraSensor({ equipmentId })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: sensor => {

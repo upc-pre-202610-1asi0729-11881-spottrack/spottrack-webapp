@@ -1,5 +1,5 @@
 export interface RegisterCameraSensorRequest {
-  zoneId: string;
+  equipmentId: string;
 }
 
 export interface RegisterMotionSensorRequest {

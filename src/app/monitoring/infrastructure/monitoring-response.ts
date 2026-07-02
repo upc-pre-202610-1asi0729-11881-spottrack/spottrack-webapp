@@ -22,17 +22,23 @@ export interface SensorReadingResource extends BaseResource {
 export type SensorReadingResponse = SensorReadingResource[];
 
 export interface CameraSensorResource extends BaseResource {
-  id:            number;
-  cameraSensorId: string;
-  zoneId:         string;
-  registeredAt:   string;
+  id:              number;
+  cameraSensorId:  string;
+  equipmentId:     string;
+  equipmentName:   string | null;
+  equipmentModel:  string | null;
+  equipmentStatus: string | null;
+  registeredAt:    string;
 }
 
 export interface MotionSensorResource extends BaseResource {
-  id:             number;
-  motionSensorId: string;
-  equipmentId:    string;
-  registeredAt:   string;
+  id:              number;
+  motionSensorId:  string;
+  equipmentId:     string;
+  equipmentName:   string | null;
+  equipmentModel:  string | null;
+  equipmentStatus: string | null;
+  registeredAt:    string;
 }
 
 export interface AnomalyResource extends BaseResource {
