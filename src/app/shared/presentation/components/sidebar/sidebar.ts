@@ -16,7 +16,6 @@ const ADMIN_NAV: NavItem[] = [
   { path: '/dashboard', icon: 'home', labelKey: 'nav.dashboard' },
   { path: '/equipments', icon: 'fitness_center', labelKey: 'nav.equipment' },
   { path: '/iot', icon: 'sensors', labelKey: 'nav.iot' },
-  { path: '/monitoring', icon: 'monitor_heart', labelKey: 'nav.monitoring' },
   { path: '/maintenance', icon: 'build', labelKey: 'nav.maintenance' },
   { path: '/analytics', icon: 'bar_chart', labelKey: 'nav.analytics' },
   { path: '/financial-impact', icon: 'attach_money', labelKey: 'nav.financial' }, // <-- AQUÍ ESTÁ EL BOTÓN AÑADIDO

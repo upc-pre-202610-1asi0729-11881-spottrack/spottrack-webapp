@@ -287,7 +287,6 @@
     "dashboard": "Dashboard",
     "equipment": "Equipment",
     "iot": "IoT Monitoring",
-    "monitoring": "Session Monitoring",
     "maintenance": "Maintenance",
     "analytics": "Analytics",
     "alerts": "Alerts",
@@ -362,6 +361,10 @@
     "search": "Search by sensor ID, machine or zone...",
     "actions": {
       "refresh": "Refresh"
+    },
+    "quickActions": {
+      "registerSensors": "Register Sensors",
+      "reportAnomaly": "Report Anomaly"
     },
     "filter": {
       "status": "Status",
