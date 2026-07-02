@@ -363,6 +363,10 @@
     "actions": {
       "refresh": "Actualizar"
     },
+    "quickActions": {
+      "registerSensors": "Registrar Sensores",
+      "reportAnomaly": "Reportar Anomalía"
+    },
     "filter": {
       "status": "Estado",
       "allStatuses": "Todos los Estados"

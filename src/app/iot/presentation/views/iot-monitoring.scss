@@ -44,6 +44,34 @@
   &:hover { background: #81d4fa; }
 }
 
+// ── Quick actions ────────────────────────────────────────────────────────────
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: border-color 0.15s;
+
+  &:hover { border-color: #f5bc36; }
+
+  mat-icon:first-child { color: #f5bc36; }
+}
+
+.quick-action__arrow { margin-left: auto; color: #666; flex-shrink: 0; }
+
 // ── KPI Cards ────────────────────────────────────────────────────────────────
 .iot-stats {
   display: grid;

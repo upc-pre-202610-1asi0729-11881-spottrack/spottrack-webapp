@@ -12,6 +12,20 @@
     </button>
   </div>
 
+  <!-- Quick actions -->
+  <div class="quick-actions">
+    <a class="quick-action" routerLink="/monitoring/sensors">
+      <mat-icon>sensors</mat-icon>
+      <span>{{ 'iot.quickActions.registerSensors' | translate }}</span>
+      <mat-icon class="quick-action__arrow">chevron_right</mat-icon>
+    </a>
+    <a class="quick-action" routerLink="/monitoring/anomalies/report">
+      <mat-icon>warning_amber</mat-icon>
+      <span>{{ 'iot.quickActions.reportAnomaly' | translate }}</span>
+      <mat-icon class="quick-action__arrow">chevron_right</mat-icon>
+    </a>
+  </div>
+
   <!-- KPI Cards -->
   <div class="iot-stats">
     <div class="stat-card stat-card--online">

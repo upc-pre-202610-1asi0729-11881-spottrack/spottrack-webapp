@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +21,7 @@ import { SessionTrackerResource } from '../../../monitoring/infrastructure/monit
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     TranslateModule,
     MatTableModule,
     MatIconModule,

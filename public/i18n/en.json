@@ -363,6 +363,10 @@
     "actions": {
       "refresh": "Refresh"
     },
+    "quickActions": {
+      "registerSensors": "Register Sensors",
+      "reportAnomaly": "Report Anomaly"
+    },
     "filter": {
       "status": "Status",
       "allStatuses": "All Statuses"
