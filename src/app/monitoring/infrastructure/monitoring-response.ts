@@ -20,3 +20,56 @@ export interface SensorReadingResource extends BaseResource {
 }
 
 export type SensorReadingResponse = SensorReadingResource[];
+
+export interface CameraSensorResource extends BaseResource {
+  id:            number;
+  cameraSensorId: string;
+  zoneId:         string;
+  registeredAt:   string;
+}
+
+export interface MotionSensorResource extends BaseResource {
+  id:             number;
+  motionSensorId: string;
+  equipmentId:    string;
+  registeredAt:   string;
+}
+
+export interface AnomalyResource extends BaseResource {
+  id:                 number;
+  anomalyId:          string;
+  reservationId:      string;
+  equipmentId:        string;
+  zoneId:             string;
+  anomalyDescription: string;
+  emissionDate:       string;
+}
+
+/**
+ * Shape returned by the verify / end / capture-motion session-tracker
+ * endpoints (via SessionTrackerResourceFromEntity on the backend).
+ */
+export interface SessionTrackerResource {
+  sessionTrackerId:     string;
+  reservationId:        string;
+  continouosActivitiy:  string;
+  seconds:              string;
+  sessionIsActive:      boolean;
+  sessionIsInactive:    boolean;
+}
+
+/**
+ * The create-session-tracker endpoint returns the raw persistence entity
+ * instead of a SessionTrackerResource (a pre-existing backend inconsistency),
+ * so its JSON shape differs slightly — modeled here separately.
+ */
+export interface SessionTrackerCreatedResource {
+  id:                  number;
+  sessionTrackerId:    string;
+  reservationId:       string;
+  continuousActivity:  string;
+  seconds:             string;
+  sessionIsActive:     boolean;
+  sessionIsInactive:   boolean;
+  lastActivityAt:      string | null;
+}

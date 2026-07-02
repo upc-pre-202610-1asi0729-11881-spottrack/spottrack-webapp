@@ -60,6 +60,33 @@
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s;
+
+  &:hover { border-color: #f5bc36; }
+
+  mat-icon:first-child { color: #f5bc36; font-size: 26px; width: 26px; height: 26px; flex-shrink: 0; }
+}
+
+.quick-action__title { margin: 0; font-weight: 700; color: #fff; font-size: .9rem; }
+.quick-action__desc  { margin: 2px 0 0; color: #9ca3af; font-size: .78rem; }
+.quick-action__arrow { margin-left: auto; color: #666; flex-shrink: 0; }
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -177,6 +204,7 @@
 
 @media (max-width: 768px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .quick-actions { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {

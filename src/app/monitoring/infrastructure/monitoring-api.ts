@@ -2,12 +2,40 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { SensorSessionResource, SensorReadingResource } from './monitoring-response';
+import {
+  SensorSessionResource,
+  SensorReadingResource,
+  CameraSensorResource,
+  MotionSensorResource,
+  AnomalyResource,
+  SessionTrackerResource,
+  SessionTrackerCreatedResource,
+} from './monitoring-response';
+import {
+  RegisterCameraSensorRequest,
+  RegisterMotionSensorRequest,
+  CaptureCameraMotionRequest,
+  CaptureMotionSensorReadingRequest,
+  ReportAnomalyRequest,
+  CreateSessionTrackerRequest,
+} from './monitoring-request';
 
 @Injectable({ providedIn: 'root' })
 export class MonitoringApi {
-  private readonly sessionsUrl = `${environment.apiBase}/sensor-sessions`;
-  private readonly readingsUrl = `${environment.apiBase}/sensor-readings`;
+  private readonly sessionsUrl      = `${environment.apiBase}/sensor-sessions`;
+  private readonly readingsUrl      = `${environment.apiBase}/sensor-readings`;
+  private readonly cameraSensorsUrl = `${environment.apiBase}/monitoring/camera-sensors`;
+  private readonly motionSensorsUrl = `${environment.apiBase}/monitoring/motion-sensors`;
+  private readonly anomaliesUrl     = `${environment.apiBase}/anomalies`;
+
+  /**
+   * The session-tracker endpoints predate the /api/v1 prefix convention and
+   * live at the API root (e.g. /sessionTracker/create, not
+   * /api/v1/sessionTracker/create), so they're built from the origin instead
+   * of environment.apiBase directly.
+   */
+  private readonly apiOrigin        = environment.apiBase.replace(/\/api\/v1$/, '');
+  private readonly sessionTrackerUrl = `${this.apiOrigin}/sessionTracker`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -17,5 +45,41 @@ export class MonitoringApi {
 
   getReadings(): Observable<SensorReadingResource[]> {
     return this.http.get<SensorReadingResource[]>(this.readingsUrl);
+  }
+
+  registerCameraSensor(body: RegisterCameraSensorRequest): Observable<CameraSensorResource> {
+    return this.http.post<CameraSensorResource>(this.cameraSensorsUrl, body);
+  }
+
+  registerMotionSensor(body: RegisterMotionSensorRequest): Observable<MotionSensorResource> {
+    return this.http.post<MotionSensorResource>(this.motionSensorsUrl, body);
+  }
+
+  captureCameraMotion(body: CaptureCameraMotionRequest): Observable<SessionTrackerResource> {
+    return this.http.post<SessionTrackerResource>(`${this.cameraSensorsUrl}/capture-motion`, body);
+  }
+
+  captureMotionSensorReading(body: CaptureMotionSensorReadingRequest): Observable<SessionTrackerResource> {
+    return this.http.post<SessionTrackerResource>(`${this.motionSensorsUrl}/capture-motion`, body);
+  }
+
+  reportAnomaly(body: ReportAnomalyRequest): Observable<AnomalyResource> {
+    return this.http.post<AnomalyResource>(this.anomaliesUrl, body);
+  }
+
+  createSessionTracker(body: CreateSessionTrackerRequest): Observable<SessionTrackerCreatedResource> {
+    return this.http.post<SessionTrackerCreatedResource>(`${this.sessionTrackerUrl}/create`, body);
+  }
+
+  verifySessionUsage(sessionTrackerId: string): Observable<SessionTrackerResource> {
+    return this.http.get<SessionTrackerResource>(`${this.sessionTrackerUrl}/${sessionTrackerId}/verify`);
+  }
+
+  endUsageSession(sessionTrackerId: string): Observable<SessionTrackerResource> {
+    return this.http.patch<SessionTrackerResource>(`${this.sessionTrackerUrl}/${sessionTrackerId}/end`, {});
+  }
+
+  calculateSessionTime(sessionTrackerId: string): Observable<SessionTrackerResource> {
+    return this.http.get<SessionTrackerResource>(`${this.sessionTrackerUrl}/${sessionTrackerId}/time`);
   }
 }
