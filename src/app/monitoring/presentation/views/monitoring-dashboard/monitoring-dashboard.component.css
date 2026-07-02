@@ -81,11 +81,11 @@
   &:hover { border-color: #f5bc36; }
 
   mat-icon:first-child { color: #f5bc36; font-size: 26px; width: 26px; height: 26px; flex-shrink: 0; }
-
-  &__title { margin: 0; font-weight: 700; color: #fff; font-size: .9rem; }
-  &__desc  { margin: 2px 0 0; color: #9ca3af; font-size: .78rem; }
-  &__arrow { margin-left: auto; color: #666; flex-shrink: 0; }
 }
+
+.quick-action__title { margin: 0; font-weight: 700; color: #fff; font-size: .9rem; }
+.quick-action__desc  { margin: 2px 0 0; color: #9ca3af; font-size: .78rem; }
+.quick-action__arrow { margin-left: auto; color: #666; flex-shrink: 0; }
 
 .kpi-grid {
   display: grid;
