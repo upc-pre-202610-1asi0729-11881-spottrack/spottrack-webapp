@@ -27,6 +27,34 @@
 
   @if (!loading() && !error()) {
 
+    <!-- Quick actions -->
+    <div class="quick-actions">
+      <a class="quick-action" routerLink="/monitoring/sensors">
+        <mat-icon>sensors</mat-icon>
+        <div>
+          <p class="quick-action__title">Registrar Sensores</p>
+          <p class="quick-action__desc">Registrar cámaras y sensores de movimiento</p>
+        </div>
+        <mat-icon class="quick-action__arrow">chevron_right</mat-icon>
+      </a>
+      <a class="quick-action" routerLink="/monitoring/sessions">
+        <mat-icon>timer</mat-icon>
+        <div>
+          <p class="quick-action__title">Rastreo de Sesiones</p>
+          <p class="quick-action__desc">Detección de uso, inactividad y cálculo de tiempo</p>
+        </div>
+        <mat-icon class="quick-action__arrow">chevron_right</mat-icon>
+      </a>
+      <a class="quick-action" routerLink="/monitoring/anomalies/report">
+        <mat-icon>warning_amber</mat-icon>
+        <div>
+          <p class="quick-action__title">Reportar Anomalía</p>
+          <p class="quick-action__desc">Reportar manualmente un problema de equipo</p>
+        </div>
+        <mat-icon class="quick-action__arrow">chevron_right</mat-icon>
+      </a>
+    </div>
+
     <!-- KPI cards -->
     <div class="kpi-grid">
       <div class="kpi-card kpi-card--blue">

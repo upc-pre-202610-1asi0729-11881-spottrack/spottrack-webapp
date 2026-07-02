@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MonitoringStore } from '../../../application/monitoring.store';
@@ -7,7 +8,7 @@ import { MonitoringStore } from '../../../application/monitoring.store';
 @Component({
   selector: 'app-monitoring-dashboard',
   standalone: true,
-  imports: [CommonModule, MatIconModule, TranslateModule],
+  imports: [CommonModule, RouterLink, MatIconModule, TranslateModule],
   templateUrl: './monitoring-dashboard.component.html',
   styleUrl:    './monitoring-dashboard.component.css',
 })
